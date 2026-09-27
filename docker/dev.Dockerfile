@@ -41,6 +41,17 @@ RUN /tmp/install_kotlin.sh && rm /tmp/install_kotlin.sh
 # already carries JDK + Gradle from the runtime image). JAVA_HOME is inherited too.
 ENV PATH=/opt/kotlin/kotlinc/bin:/opt/kotlin/bin:$PATH
 
+# 3b) BeamNG mod tooling: headless Blender (scripted mesh edits + Collada .dae
+#     export; bookworm's 3.4 still ships the Collada exporter, which Blender 5
+#     drops), assimp CLI for mesh inspection/conversion, ImageMagick for texture
+#     resizing and .dds conversion, and git-lfs for large model/texture files.
+#     trimesh goes into the project venv for scripted mesh checks. Dev-only, so
+#     none of this reaches the runtime image.
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      blender assimp-utils imagemagick git-lfs \
+ && rm -rf /var/lib/apt/lists/* \
+ && VIRTUAL_ENV=/opt/venv uv pip install --no-cache trimesh numpy
+
 # 4) Colour aliases + bash completion (eco-dev style; TERM is set by dev.sh).
 RUN printf '%s\n' \
       'alias ls="ls --color=auto"' \
