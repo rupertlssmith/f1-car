@@ -1,0 +1,32 @@
+# Interactive dev container + its volume, in one place.
+#
+# tk-dev is built FROM the agent image (tk-agent), so build that base first:
+#   docker build -f docker/agent.Dockerfile -t tk-agent .
+#
+# Then bring up an interactive shell. Pass your host UID/GID so files written to
+# the bind-mounted /work stay owned by you:
+#   HOST_UID=$(id -u) HOST_GID=$(id -g) \
+#     docker compose -f docker/docker-compose.dev.yml run --build --rm dev
+#
+# Volumes: the ONLY named volume is tk-home, holding /home/dev (Claude Code login,
+# shell history). The repo is bind-mounted at /work and the agent writes its
+# runtime output to /work/runtime (visible on the host) — there is no runtime volume.
+services:
+  dev:
+    image: tk-dev
+    build:
+      context: ..
+      dockerfile: docker/dev.Dockerfile
+    working_dir: /work
+    stdin_open: true
+    tty: true
+    environment:
+      HOST_UID: "${HOST_UID:-1000}"
+      HOST_GID: "${HOST_GID:-1000}"
+      TERM: xterm-256color
+    volumes:
+      - ..:/work
+      - tk-home:/home/dev
+
+volumes:
+  tk-home:

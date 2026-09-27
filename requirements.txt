@@ -1,0 +1,13 @@
+# Python dependencies for the agent image (installed by docker/agent.Dockerfile
+# via `uv pip install -r requirements.txt`). This is a basic LangGraph starter
+# set — pin versions to taste, or replace entirely with your own project's deps.
+
+# Core: graph orchestration + LLM building blocks.
+langgraph
+langchain-core
+
+# An LLM provider. Swap for langchain-anthropic / another integration as needed.
+langchain-openai
+
+# Loads secrets from a local .env (e.g. OPENAI_API_KEY) during development.
+python-dotenv
