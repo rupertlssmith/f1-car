@@ -8,11 +8,15 @@ BeamNG.drive mods folder:
     vehicles/common/<mod>_*/...         shared parts it owns (e.g. wheels)
     mod_info/<mod>/...                  the manifest (info.json, icon, images)
 
+The zip is named <mod>_YYYYMMDD-HHMMSS.zip (local time of the build) so
+successive builds can be told apart. Keep only one of them in the game's mods
+folder at a time: each is a full copy of the same vehicle.
+
 The manifest's "hashes" list (xxHash64 of every file under vehicles/) is
 regenerated for the files actually packed, so it never goes stale.
 
 Usage:
-    python3 tools/build_mod.py                  # builds dist/redbull.zip
+    python3 tools/build_mod.py                  # builds dist/redbull_<timestamp>.zip
     python3 tools/build_mod.py --mod redbull --out dist
     python3 tools/build_mod.py --update-manifest   # also rewrite the hashes
                                                    # in mod_info/<mod>/info.json
@@ -20,6 +24,7 @@ Usage:
 Needs the `xxhash` Python package (pip install xxhash).
 """
 import argparse
+import datetime
 import json
 import os
 import sys
@@ -94,7 +99,8 @@ def main():
 
     out_dir = os.path.join(REPO, args.out)
     os.makedirs(out_dir, exist_ok=True)
-    zip_path = os.path.join(out_dir, f"{args.mod}.zip")
+    stamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+    zip_path = os.path.join(out_dir, f"{args.mod}_{stamp}.zip")
     tmp_path = zip_path + ".tmp"
     with zipfile.ZipFile(tmp_path, "w", zipfile.ZIP_DEFLATED, compresslevel=6) as zf:
         for rel in files:

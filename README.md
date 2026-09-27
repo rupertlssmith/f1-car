@@ -7,8 +7,9 @@ kept for reference in `vehicles/fr04/`.
 
 ## Building the mod
 
-The build script needs Python 3 and the `xxhash` package. It writes
-`dist/redbull.zip`.
+The build script needs Python 3 and the `xxhash` package. Each build
+writes a new timestamped zip, `dist/redbull_YYYYMMDD-HHMMSS.zip`, so successive
+builds can be told apart.
 
 **Linux (Debian / Ubuntu)** — system-wide `pip install` is blocked there
 (PEP 668), so use the distro package:
@@ -39,9 +40,10 @@ py tools\build_mod.py
 ./docker/dev.sh python tools/build_mod.py
 ```
 
-Copy `dist/redbull.zip` into your BeamNG mods folder
+Copy the zip into your BeamNG mods folder
 (`%LocalAppData%\BeamNG.drive\<version>\mods\` on Windows) and it appears in the
-vehicle selector.
+vehicle selector. Keep only one build there at a time — each is a full copy of
+the same vehicle, so remove the previous one first.
 
 Options: `--out <dir>` writes the zip somewhere else (e.g. straight into the
 mods folder); `--update-manifest` also writes the regenerated file hashes back
