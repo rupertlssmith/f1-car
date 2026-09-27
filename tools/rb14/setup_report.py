@@ -261,7 +261,8 @@ def stiffness(v, free, fixed_extra=()):
                 t1 = torsion_angle(*Q)
                 Q[i][c] -= 2 * h
                 t2 = torsion_angle(*Q)
-                gi[c] = (t1 - t2) / (2 * h)
+                d = (t1 - t2 + math.pi) % (2 * math.pi) - math.pi   # flat bars sit at +-180 deg
+                gi[c] = d / (2 * h)
             grads.append(gi)
         add(ns, grads, k)
     return K, idx
@@ -319,6 +320,25 @@ def preload_forces(v, free, idx, only=None):
             if n in idx:
                 f[3 * idx[n]:3 * idx[n] + 3] += sgn * k * dl * u
     return f
+
+
+def stability_report(v, dt=1 / 2000, top=5):
+    """BeamNG's explicit 2 kHz integration is stable while every vibration
+    mode of the node/beam network has omega * dt < 2. Eigenmodes of M^-1 K
+    over all nodes (beams and torsionbars; the wheels the game generates
+    from pressureWheels aren't in the model)."""
+    free = sorted(v.pos)
+    K, idx = stiffness(v, free)
+    m = np.repeat([max(v.mass[n], 1e-6) for n in free], 3)
+    Mi = 1 / np.sqrt(m)
+    w, V = np.linalg.eigh(K * Mi[:, None] * Mi[None, :])
+    wd = np.sqrt(np.clip(w, 0, None)) * dt
+    modes = []
+    for j in np.argsort(-wd)[:top]:
+        vec = V[:, j] ** 2
+        nodes = sorted(((vec[3 * i:3 * i + 3].sum(), n) for n, i in idx.items()), reverse=True)[:3]
+        modes.append("%.2f: %s" % (wd[j], ", ".join("%s %.1f kg" % (n, v.mass[n]) for _, n in nodes)))
+    return dict(max=float(wd.max()), over=int((wd >= 2).sum()), modes=modes)
 
 
 def corner_nodes(v, axle):
@@ -541,6 +561,9 @@ def main():
     pt_ice = powertrain_report(v, mr, aero, gripR, ice_only=True) if ers_params(v) else None
 
     print(f"== {args.mod} ({args.config or 'defaults'})")
+    st = stability_report(v)
+    print(f"stability   highest mode omega*dt {st['max']:.2f} (must stay < 2 at BeamNG's 2 kHz; {st['over']} over)  "
+          f"top: {st['modes'][0]}")
     print(f"mass        {mr['total']:.0f} kg (nodes {mr['nodes']:.0f}, wheels {sum(mr['wheels'].values()):.0f}, fuel {mr['fuel']:.0f})"
           f"  front {mr['front'] * 100:.1f}%  CoG z {mr['cog'][2]:.3f} m  wheelbase {mr['wheelbase']:.3f} m")
     for a in ("F", "R"):

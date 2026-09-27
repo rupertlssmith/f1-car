@@ -50,16 +50,119 @@ def mass():
         "rx1r": 4.2, "rx1l": 4.2, "rx2r": 4.2, "rx2l": 4.2, "rx3r": 4.2, "rx3l": 4.2, "rx4r": 4.2, "rx4l": 4.2})
     # uprights, brakes, wishbone ends: roughly half the F4's corner mass
     weights(f"{V}/redbull_suspension_F.jbeam", {
-        "fh1r": 4, "fh1l": 4, "fh2r": 1, "fh2l": 1, "fh3r": 3, "fh3l": 3, "fh4r": 3, "fh4l": 3, "fh5r": 2, "fh5l": 2})
+        "fh1r": 4, "fh1l": 4, "fh2r": 1, "fh2l": 1, "fh3r": 3, "fh3l": 3, "fh4r": 3, "fh4l": 3, "fh5r": 3, "fh5l": 3})
     weights(f"{V}/redbull_suspension_R.jbeam", {
         "rh1r": 4, "rh1l": 4, "rh3r": 3, "rh3l": 3, "rh4r": 3, "rh4l": 3})
     weights(f"{V}/redbull_suspension_F.jbeam", {"fh6r": 3, "fh6l": 3})      # steering rack ends
-    # plank ballast + ES (battery, ~25 kg) along the centre of the floor;
-    # sized so the car makes 733 kg with the driver, ~45.5 % front
-    # (solved with setup_report: +69.5 kg averaging y 0.94 on top of the rest)
-    weights(f"{V}/redbull_floor.jbeam", {
-        "fl1r": 9, "fl1l": 9, "fl2": 14, "fl2r": 6, "fl2l": 6,
-        "fl3": 25, "fl3r": 15, "fl3l": 15, "fl4": 20, "fl4r": 7, "fl4l": 7})
+    # chassis nodes that carry very stiff beams keep enough mass for the
+    # 2 kHz solver (see stiffness() below)
+    weights(f"{V}/redbull_body.jbeam", CHASSIS_MIN_MASS)
+    ballast()
+
+
+# Plank ballast + ES (battery, ~25 kg) along the centre of the floor. Solved
+# (setup_report) so the car makes 733 kg with the driver and no fuel and
+# 45.5 % front whatever the other node weights are: a front group and a rear
+# group of floor nodes are scaled from these shapes.
+BALLAST_F = {"fl1r": 9, "fl1l": 9, "fl2": 14, "fl2r": 6, "fl2l": 6}
+BALLAST_R = {"fl3": 25, "fl3r": 15, "fl3l": 15, "fl4": 20, "fl4r": 7, "fl4l": 7}
+DRY_MASS, FRONT = 733.0, 0.455
+
+
+def ballast():
+    import numpy as np
+    import setup_report as sr
+    f = f"{V}/redbull_floor.jbeam"
+    weights(f, {**BALLAST_F, **BALLAST_R})
+
+    def state():
+        v = sr.Vehicle("redbull", None)
+        v.variables["$fuel"] = 0
+        v._nodes()
+        mr = sr.mass_report(v)
+        return mr["total"], mr["front"] * mr["total"]
+
+    m0, f0 = state()
+    sF, sR = sum(BALLAST_F.values()), sum(BALLAST_R.values())
+    # front-axle share of each group (lever rule on the node positions)
+    v = sr.Vehicle("redbull", None)
+    mr = sr.mass_report(v)
+    share = lambda g: sum(w * (mr["yr"] - v.pos[n][1]) / (mr["yr"] - mr["yf"]) for n, w in g.items()) / sum(g.values())
+    aF, aR = share(BALLAST_F), share(BALLAST_R)
+    # solve for new group totals xF, xR
+    A = np.array([[1, 1], [aF, aR]])
+    b = np.array([DRY_MASS - (m0 - sF - sR), FRONT * DRY_MASS - (f0 - aF * sF - aR * sR)])
+    xF, xR = np.linalg.solve(A, b)
+    if xF < 0 or xR < 0:
+        raise ValueError(f"ballast would be negative (front {xF:.1f}, rear {xR:.1f} kg): car too heavy")
+    new = {n: round(w * xF / sF, 2) for n, w in BALLAST_F.items()}
+    new.update({n: round(w * xR / sR, 2) for n, w in BALLAST_R.items()})
+    weights(f, new)
+    print("ballast: front %.1f kg, rear %.1f kg" % (xF, xR))
+
+
+# ------------------------------------------------------------ stability
+# BeamNG integrates at 2 kHz; every vibration mode of the node/beam network
+# must stay below omega * dt = 2 or the solver pumps energy into it (the car
+# shakes and explodes on spawn). The F4 peaks at 1.69. setup_report computes
+# the modes; we keep ours <= MAX_OMEGA_DT. Lightening the uprights and wheel
+# carriers for F1 unsprung mass put them above the limit on the F4's very
+# stiff wishbone / hub beams (8-14 MN/m, 40-80x the wheel rate), so those
+# are capped instead of adding the mass back: the arms stay far stiffer than
+# the suspension, so handling is unchanged. Chassis nodes get mass instead
+# (taken from the ballast).
+MAX_OMEGA_DT = 1.8
+CHASSIS_MIN_MASS = {"mt3": 6, "rt4r": 4.5, "rt4l": 4.5}
+HUB_TORSION_F = 100000                       # was 200000 (F4)
+SPRING_CAP = {                               # part -> highest beamSpring (N/m)
+    "redbull_suspension_F": 6.0e6,
+    "redbull_steering": 6.0e6,
+    "redbull_suspension_R": 6.0e6,
+}
+SPRING_CAP_FILES = {"redbull_suspension_F": "suspension_F", "redbull_steering": "suspension_F",
+                    "redbull_suspension_R": "suspension_R"}
+
+
+def stiffness():
+    import re
+    for part, cap in SPRING_CAP.items():
+        name = SPRING_CAP_FILES[part]
+        f = f"{V}/redbull_{name}.jbeam"
+        orig = open(f"vehicles/fr04/fr04_{name}.jbeam", encoding="utf-8", newline="").read()
+        a0, b0 = _part_block(orig, part.replace("redbull", "fr04"))
+        text = je._read(f)
+        a, b = _part_block(text, part)
+        pat = re.compile(r'("beamSpring"\s*:\s*)(\d+(?:\.\d+)?)')
+        src = [float(m.group(2)) for m in pat.finditer(orig[a0:b0])]
+        block = text[a:b]
+        if len(pat.findall(block)) != len(src):
+            raise ValueError(f"{part}: beamSpring count differs from the F4")
+        it = iter(src)
+        block = pat.sub(lambda m: m.group(1) + "%d" % min(next(it), cap), block)
+        je._write(f, text[:a] + block + text[b:])
+    # the front steering-arm rigidifier torsionbar has ~0.13 m arms, so its
+    # 200 kNm/rad acts like a ~10 MN/m spring on the light upright nodes
+    je.set_in_part(f"{V}/redbull_suspension_F.jbeam", "redbull_suspension_F",
+                   r'\{"spring":\d+, "damp":0, "deform":25000, "strength":100000\}',
+                   '{"spring":%d, "damp":0, "deform":25000, "strength":100000}' % HUB_TORSION_F)
+    # generated wheel hubs: lighter hub nodes than the F4 (0.35 vs 0.55 kg),
+    # so the hub beams scale with them to keep the F4's (stable) frequencies
+    k = 0.35 / 0.55
+    for f in (f"{W}/redbull_wheels_F_13.jbeam", f"{W}/redbull_wheels_R_13.jbeam"):
+        je.set_all(f, r'\{"hubTreadBeamSpring":\d+,', '{"hubTreadBeamSpring":%d,' % (990900 * k))
+        je.set_all(f, r'\{"hubPeripheryBeamSpring":\d+,', '{"hubPeripheryBeamSpring":%d,' % (990900 * k))
+        je.set_all(f, r'\{"hubSideBeamSpring":\d+,', '{"hubSideBeamSpring":%d,' % (1601000 * k))
+
+
+def check_stability():
+    import setup_report as sr
+    worst = 0.0
+    for cfg in CONFIGS:
+        st = sr.stability_report(sr.Vehicle("redbull", cfg))
+        worst = max(worst, st["max"])
+        if st["max"] > MAX_OMEGA_DT:
+            raise SystemExit(f"{cfg}: highest mode omega*dt {st['max']:.2f} > {MAX_OMEGA_DT}: {st['modes'][0]}")
+    print("stability: highest mode omega*dt %.2f (limit 2, target <= %.1f)" % (worst, MAX_OMEGA_DT))
 
 
 def wheels():
@@ -699,10 +802,11 @@ def configs():
 
 if __name__ == "__main__":
     os.chdir(REPO)
-    mass()
+    stiffness()
     wheels()
     tyres()
     fuel()
+    mass()
     suspension()
     power_unit()
     gearbox()
@@ -711,4 +815,5 @@ if __name__ == "__main__":
     hybrid()
     ground_effect()
     configs()
+    check_stability()
     print("applied: mass, wheels, tyres, fuel, suspension, power unit, gearbox, brakes, ERS/DRS")

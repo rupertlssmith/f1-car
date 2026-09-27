@@ -189,8 +189,8 @@
 
          ["rt3r",-0.3996, 0.0569, 0.1233, {"group":["redbull_body","redbull_radduct_R"], "nodeWeight":12}],
          ["rt3l", 0.3996, 0.0569, 0.1233, {"group":["redbull_body","redbull_radduct_L"], "nodeWeight":12}],
-         ["rt4r",-0.3996, 0.0569, 0.71, {"group":["redbull_body","redbull_radduct_R"], "nodeWeight":3}],
-         ["rt4l", 0.3996, 0.0569, 0.71, {"group":["redbull_body","redbull_radduct_L"], "nodeWeight":3}],
+         ["rt4r",-0.3996, 0.0569, 0.71, {"group":["redbull_body","redbull_radduct_R"], "nodeWeight":4.5}],
+         ["rt4l", 0.3996, 0.0569, 0.71, {"group":["redbull_body","redbull_radduct_L"], "nodeWeight":4.5}],
          
          //mid tub
          {"nodeWeight":4.5},
@@ -203,7 +203,7 @@
          ["mt2l", 0.33, -0.3504, 0.71, {"group":["redbull_body","redbull_tierod_inner","redbull_radduct_L","redbull_halo"], "nodeWeight":3}],
          
          {"nodeWeight":6.0},
-         ["mt3", 0.0, -0.9097, 0.7017, {"group":["redbull_body","redbull_halo"], "nodeWeight":3}],
+         ["mt3", 0.0, -0.9097, 0.7017, {"group":["redbull_body","redbull_halo"], "nodeWeight":6}],
 
          //front tub/suspension mounts
          {"nodeMaterial":"|NM_METAL"},

@@ -252,8 +252,21 @@ Every config: 1.9 g at low speed, 5-6 g braking from 300 km/h.
 - **Mass:** 733 kg with driver and no fuel (777 kg with the configs' 60 L),
   45.5 % front, CoG 0.32 m. Power unit 145 kg, gearbox 34 kg, light
   corners, ballast in the plank.
-- **Suspension** (baseline, per wheel): heave 170 / 175 N/mm (5.6 / 5.1 Hz),
-  roll 317 / 238 N/mm (57 % front roll stiffness). Corner springs carry the
+- **Solver stability:** BeamNG integrates at 2 kHz, and every vibration
+  mode of the node/beam network must stay below omega*dt = 2 or the car
+  shakes itself apart on spawn (the first M4 build did: lighter uprights on
+  the F4's 8-14 MN/m wishbone and hub beams went to 2.43). `setup_report.py`
+  now computes the modes and `f1_setup.py` refuses a setup above 1.8 (the F4
+  peaks at 1.69). Fix: suspension beams capped at 6 MN/m (still ~35x the
+  wheel rate), the front steering-arm torsionbar halved, generated wheel hub
+  beams scaled with their lighter nodes, a little mass back on three chassis
+  nodes and the upright's rigidifier node -- all paid for by the plank
+  ballast, which is now solved automatically for 733 kg / 45.5 % front.
+  Highest mode now 1.77 in every config. (The pressureWheels-generated tyre
+  and hub nodes aren't in the offline model; they're kept at or below the
+  F4's stiffness-to-mass ratios.)
+- **Suspension** (baseline, per wheel): heave 167 / 172 N/mm (5.6 / 5.0 Hz),
+  roll 313 / 233 N/mm (57 % front roll stiffness). Corner springs carry the
   load; on top of them a **heave (third) spring** per axle -- a torsionbar
   about a lengthwise axis with the two hubs as its arms, so it resists both
   wheels rising together (aero load) but not roll -- and an anti-roll bar
