@@ -46,6 +46,11 @@ CAMERA_OVERRIDE = {"dash": (0.0, -0.08, 0.80)}
 NODE_OVERRIDE = {
     "fep2r": (-0.862, -1.975, 0.100), "fep4r": (-0.862, -1.975, 0.290),
     "fep2l": (0.862, -1.975, 0.100), "fep4l": (0.862, -1.975, 0.290),
+    # rear floor / diffuser edges: mapped, they sit 20-50 mm inside the 405 mm
+    # rear tyres' inner face; ~10 cm clearance leaves room for tyre bulge and
+    # suspension compliance
+    "fl4r": (-0.520, 1.378, 0.164), "fl4l": (0.520, 1.378, 0.164),
+    "fl5r": (-0.460, 2.045, 0.201), "fl5l": (0.460, 2.045, 0.201),
 }
 # Mirror view origins: offsets (vehicle axes) from the mirror's reference
 # node to the centre of the RB14 mirror glass.

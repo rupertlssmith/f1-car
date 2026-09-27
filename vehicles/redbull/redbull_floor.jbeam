@@ -62,13 +62,13 @@
          ["fl3l",  0.3996, 0.5968, 0.0999, {"nodeWeight":13.55}],
          ["fl3ll", 0.8058, 0.5968, 0.1461],
          
-         ["fl4r", -0.5968, 1.3779, 0.1637, {"nodeWeight":6.32}],
+         ["fl4r", -0.52, 1.378, 0.164, {"nodeWeight":6.32}],
          ["fl4",   0.0, 1.3779, 0.1218, {"nodeWeight":18.07}],
-         ["fl4l",  0.5968, 1.3779, 0.1637, {"nodeWeight":6.32}],
+         ["fl4l",  0.52, 1.378, 0.164, {"nodeWeight":6.32}],
          
-         ["fl5r",-0.5398, 2.0449, 0.2014],
+         ["fl5r",-0.46, 2.045, 0.201],
          ["fl5",  0.0, 2.0449, 0.2014],
-         ["fl5l", 0.5398, 2.0449, 0.2014],
+         ["fl5l", 0.46, 2.045, 0.201],
 
 
          {"group":""},
@@ -308,7 +308,7 @@
             {"triangleType":"NORMALTYPE"},
             //floor
             {"dragCoef":90},
-            {"liftCoef":72.9, "stallAngle":0.10}
+            {"liftCoef":79.4, "stallAngle":0.10}
             {"group":"redbull_floor"},
             {"groundModel":"plastic"},
             ["fl4l", "fl3l", "fl4"],
@@ -326,7 +326,7 @@
             
             //diffuser
             {"dragCoef":40},
-            {"liftCoef":291.6, "stallAngle":0.20}
+            {"liftCoef":317.6, "stallAngle":0.20}
             {"group":"redbull_floor"},
             {"groundModel":"plastic"},
             ["fl5r", "fl5", "fl4"],

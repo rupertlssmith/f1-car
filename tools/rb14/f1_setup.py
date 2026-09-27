@@ -151,8 +151,11 @@ def stiffness():
     # the front steering-arm rigidifier torsionbar has ~0.13 m arms, so its
     # 200 kNm/rad acts like a ~10 MN/m spring on the light upright nodes
     je.set_in_part(f"{V}/redbull_suspension_F.jbeam", "redbull_suspension_F",
-                   r'\{"spring":\d+, "damp":0, "deform":25000, "strength":100000\}',
-                   '{"spring":%d, "damp":0, "deform":25000, "strength":100000}' % HUB_TORSION_F)
+                   r'\{"spring":\d+, "damp":0, "deform":\d+, "strength":\d+\}',
+                   '{"spring":%d, "damp":0, "deform":%d, "strength":%d}' % (HUB_TORSION_F, 25000 * 4, 100000 * 4))
+    je.set_in_part(f"{V}/redbull_suspension_R.jbeam", "redbull_suspension_R",
+                   r'\{"spring":50000, "damp":0, "deform":\d+, "strength":\d+\}',
+                   '{"spring":50000, "damp":0, "deform":%d, "strength":%d}' % (35000 * 4, 100000 * 4))
     # generated wheel hubs: lighter hub nodes than the F4 (0.35 vs 0.55 kg),
     # so the hub beams scale with them to keep the F4's (stable) frequencies
     k = HUB_SPRING_SCALE
@@ -160,6 +163,17 @@ def stiffness():
         je.set_all(f, r'\{"hubTreadBeamSpring":\d+,', '{"hubTreadBeamSpring":%d,' % (990900 * k))
         je.set_all(f, r'\{"hubPeripheryBeamSpring":\d+,', '{"hubPeripheryBeamSpring":%d,' % (990900 * k))
         je.set_all(f, r'\{"hubSideBeamSpring":\d+,', '{"hubSideBeamSpring":%d,' % (1601000 * k))
+        je.set_all(f, r'\{"hubBeamDeform":\d+, "hubBeamStrength":\d+\}',
+                   '{"hubBeamDeform":%d, "hubBeamStrength":%d}' % (43600 * RIM_STRENGTH_SCALE, 78000 * RIM_STRENGTH_SCALE))
+    for axle, tread in (("F", (13000, 17000, 55000, 55000)), ("R", (12000, 16000, 50000, 50000))):
+        f = f"{W}/redbull_tires_{axle}_13.jbeam"
+        k = TYRE_STRENGTH_SCALE
+        je.set_all(f, r'\{"wheelSideBeamDeform":\d+,"wheelSideBeamStrength":\d+\}',
+                   '{"wheelSideBeamDeform":%d,"wheelSideBeamStrength":%d}' % (17000 * k, 22000 * k))
+        je.set_all(f, r'\{"wheelTreadBeamDeform":\d+,"wheelTreadBeamStrength":\d+\}',
+                   '{"wheelTreadBeamDeform":%d,"wheelTreadBeamStrength":%d}' % (tread[0] * k, tread[1] * k))
+        je.set_all(f, r'\{"wheelPeripheryBeamDeform":\d+,"wheelPeripheryBeamStrength":\d+\}',
+                   '{"wheelPeripheryBeamDeform":%d,"wheelPeripheryBeamStrength":%d}' % (tread[2] * k, tread[3] * k))
 
 
 # --------------------------------------------------------- torque paths
@@ -175,9 +189,20 @@ def stiffness():
 # (loads are 3.4-4.7x higher; the longer levers take the rest).
 DRIVE_REACTION = {"R": ("rdiff", "rx1r", "rx3l"), "L": ("rdiff", "rx1l", "rx3r")}
 BRAKE_ARM_R = {"R": "rh3r", "L": "rh3l"}      # upper upright node, 13 cm lever
-STRENGTH_SCALE = 3.0
-STRENGTH_PARTS = {"redbull_suspension_F": "suspension_F", "redbull_suspension_R": "suspension_R",
-                  "redbull_differential_R": "differential_R", "redbull_halfshafts_R": "differential_R"}
+# part -> (file, deform/strength multiple of the F4's). setup_report's
+# strength_report() load cases (aero at 300 km/h, 5 g braking, 4.7 g
+# cornering, traction, each with a 1.5x bump factor) must stay under half
+# of every corner beam's beamDeform (STRENGTH_MAX_RATIO).
+STRENGTH_PARTS = {"redbull_suspension_F": ("suspension_F", 4.0), "redbull_suspension_R": ("suspension_R", 5.0),
+                  "redbull_coilover_F": ("suspension_F", 4.0), "redbull_coilover_R": ("suspension_R", 4.0),
+                  "redbull_swaybar_F": ("suspension_F", 4.0), "redbull_swaybar_R": ("suspension_R", 4.0),
+                  "redbull_steering": ("suspension_F", 3.0),
+                  "redbull_differential_R": ("differential_R", 3.0), "redbull_halfshafts_R": ("differential_R", 3.0)}
+STRENGTH_MAX_RATIO = 0.5
+TORSION_DEFORM = 40000          # Nm, ARB and heave torsionbars (F4 ARB: 10000)
+# the F4's tyres and rims carried ~1.5 g on a 650 kg car; F1 loads are 3-4x
+TYRE_STRENGTH_SCALE = 3.0
+RIM_STRENGTH_SCALE = 3.0
 
 
 def torque_paths():
@@ -193,8 +218,8 @@ def torque_paths():
         if n != 1:
             raise ValueError(f"rear wheel {side}: pressureWheels row not found")
         je._write(f, text)
-    # beam strengths on the torque paths, from the F4 originals
-    for part, name in STRENGTH_PARTS.items():
+    # beam strengths on the load paths, from the F4 originals
+    for part, (name, scale) in STRENGTH_PARTS.items():
         f = f"{V}/redbull_{name}.jbeam"
         orig = open(f"vehicles/fr04/fr04_{name}.jbeam", encoding="utf-8", newline="").read()
         a0, b0 = _part_block(orig, part.replace("redbull", "fr04"))
@@ -207,7 +232,7 @@ def torque_paths():
             if len(pat.findall(block)) != len(src):
                 raise ValueError(f"{part}: {key} count differs from the F4")
             it = iter(src)
-            block = pat.sub(lambda m: m.group(1) + "%d" % (next(it) * STRENGTH_SCALE), block)
+            block = pat.sub(lambda m: m.group(1) + "%d" % (next(it) * scale), block)
         je._write(f, text[:a] + block + text[b:])
 
 
@@ -220,6 +245,21 @@ def check_stability():
         if st["max"] > MAX_OMEGA_DT:
             raise SystemExit(f"{cfg}: highest mode omega*dt {st['max']:.2f} > {MAX_OMEGA_DT}: {st['modes'][0]}")
     print("stability: highest mode omega*dt %.2f (limit 2, target <= %.2f)" % (worst, MAX_OMEGA_DT))
+    worst = None
+    for cfg in CONFIGS:
+        v = sr.Vehicle("redbull", cfg)
+        mr = sr.mass_report(v)
+        v._yf, v._yr = mr["yf"], mr["yr"]
+        aero, _ = sr.aero_report(v)
+        top = sr.strength_report(v, mr, aero)[0]
+        if worst is None or top[0] > worst[0]:
+            worst = top + (cfg,)
+    ratio, case, part, a, b, force, dfm, cfg = worst
+    msg = "strength: worst corner beam at %.2f of its deform limit (%s, %s %s-%s, %.1f kN / %.1f kN, %s)" % (
+        ratio, case, part, a, b, abs(force) / 1000, dfm / 1000, cfg)
+    if ratio > STRENGTH_MAX_RATIO:
+        raise SystemExit(msg + " > %.2f" % STRENGTH_MAX_RATIO)
+    print(msg)
 
 
 def wheels():
@@ -454,8 +494,8 @@ def _write_suspension():
         # packers: the coilover's progressive bump stop, gap in wheel travel
         _set_packers(f, a, hub)
         # ARB on its own variable (the F4's rear bar used the front one)
-        je.set_in_part(f, f"redbull_swaybar_{a}", r'\{"spring":"\$=\$arb_spring_[FR]\*[^"]*"',
-                       '{"spring":"$=$arb_spring_%s*%s"' % (a, ARB_ARM2[a]))
+        je.set_in_part(f, f"redbull_swaybar_{a}", r'\{"spring":"\$=\$arb_spring_[FR]\*[^"]*", "damp":10, "deform":\d+,',
+                       '{"spring":"$=$arb_spring_%s*%s", "damp":10, "deform":%d,' % (a, ARB_ARM2[a], TORSION_DEFORM))
         je.set_all(f, r'\["\$arb_spring_%s", "range", "N/m", "Suspension", [^\]]*\]' % a,
                    '["$arb_spring_%s", "range", "N/m", "Suspension", %d, 0, 400000, "Anti-Roll Bar", '
                    '"Extra wheel rate in roll from the anti-roll bar", {"stepDis":5000, "subCategory":"%s"}]' % (a, c["arb"], sub))
@@ -497,9 +537,9 @@ def _heave_spring(path, a, hub):
     row = ('    "torsionbars": [\r\n'
            '        ["id1:", "id2:", "id3:", "id4:"],\r\n'
            '        //heave (third) spring: lengthwise axis on the centreline, hubs as arms\r\n'
-           '        {"spring":"$=$heave_spring_%s*%s", "damp":"$=$heave_spring_%s*%s*0.03", "deform":10000, "strength":9999999},\r\n'
+           '        {"spring":"$=$heave_spring_%s*%s", "damp":"$=$heave_spring_%s*%s*0.03", "deform":%d, "strength":9999999},\r\n'
            '        ["%sr", "%s", "%s", "%sl"],\r\n'
-           '    ],\r\n') % (a, HEAVE_ARM2[a], a, HEAVE_ARM2[a], hub, axis[0], axis[1], hub)
+           '    ],\r\n') % (a, HEAVE_ARM2[a], a, HEAVE_ARM2[a], TORSION_DEFORM, hub, axis[0], axis[1], hub)
     import re
     # (re-runs) drop the block wherever it is, then insert it before the
     # coilover part's "beams" section
@@ -645,9 +685,9 @@ def brakes():
 # and the cooling the F4 doesn't model.
 AERO = {
     # factors solved with setup_report for ClA 5.0, 43 % front, floor 40 %
-    "redbull_wing_F": dict(lift=1.273, drag=1.273),   # L/D ~7 (in ground effect)
-    "redbull_wing_R": dict(lift=1.0, drag=4.3),       # L/D ~3.5, like a real high-AoA rear wing
-    "redbull_floor": dict(lift=3.645, drag=1.0),
+    "redbull_wing_F": dict(lift=1.257, drag=1.257),   # L/D ~7 (in ground effect)
+    "redbull_wing_R": dict(lift=1.015, drag=4.3),       # L/D ~3.5, like a real high-AoA rear wing
+    "redbull_floor": dict(lift=3.97, drag=1.0),
     "redbull_body": dict(lift=1.0, drag=2.0),         # + exposed wheels, cooling
 }
 AERO_FILES = {"redbull_wing_F": "wing_F", "redbull_wing_R": "wing_R", "redbull_floor": "floor", "redbull_body": "body"}

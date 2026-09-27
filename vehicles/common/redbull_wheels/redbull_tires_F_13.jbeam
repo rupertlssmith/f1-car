@@ -69,9 +69,9 @@
             {"softnessCoef":1},
     
             //deform values
-            {"wheelSideBeamDeform":17000,"wheelSideBeamStrength":22000},
-            {"wheelTreadBeamDeform":13000,"wheelTreadBeamStrength":17000},
-            {"wheelPeripheryBeamDeform":55000,"wheelPeripheryBeamStrength":55000},
+            {"wheelSideBeamDeform":51000,"wheelSideBeamStrength":66000},
+            {"wheelTreadBeamDeform":39000,"wheelTreadBeamStrength":51000},
+            {"wheelPeripheryBeamDeform":165000,"wheelPeripheryBeamStrength":165000},
         ],
     },
 "tire_F_redbull_wet": {
@@ -144,9 +144,9 @@
         {"softnessCoef":0.8},
 
         //deform values
-        {"wheelSideBeamDeform":17000,"wheelSideBeamStrength":22000},
-        {"wheelTreadBeamDeform":13000,"wheelTreadBeamStrength":17000},
-        {"wheelPeripheryBeamDeform":55000,"wheelPeripheryBeamStrength":55000},
+        {"wheelSideBeamDeform":51000,"wheelSideBeamStrength":66000},
+        {"wheelTreadBeamDeform":39000,"wheelTreadBeamStrength":51000},
+        {"wheelPeripheryBeamDeform":165000,"wheelPeripheryBeamStrength":165000},
     ],
 },
 }

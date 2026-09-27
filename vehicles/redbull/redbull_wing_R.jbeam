@@ -308,18 +308,18 @@
             {"groundModel":"metal"},
             {"dragCoef":1075},
             {"group":"redbull_wing_F"},
-            ["rwg2","rwg2r","rwg1r",{"liftCoef":250, "stallAngle":0.44}],
-            ["rwg2","rwg1r","rwg1", {"liftCoef":250, "stallAngle":0.44}],
-            ["rwg2l","rwg2","rwg1l",{"liftCoef":250, "stallAngle":0.44}],
-            ["rwg1l","rwg2","rwg1", {"liftCoef":250, "stallAngle":0.44}],
+            ["rwg2","rwg2r","rwg1r",{"liftCoef":253.7, "stallAngle":0.44}],
+            ["rwg2","rwg1r","rwg1", {"liftCoef":253.7, "stallAngle":0.44}],
+            ["rwg2l","rwg2","rwg1l",{"liftCoef":253.7, "stallAngle":0.44}],
+            ["rwg1l","rwg2","rwg1", {"liftCoef":253.7, "stallAngle":0.44}],
             
             //beam wing
             {"dragCoef":559},
             {"group":"redbull_wing_F"},
-            ["bwg2","bwg2r","bwg1r",{"liftCoef":340, "stallAngle":0.27}],
-            ["bwg2","bwg1r","bwg1", {"liftCoef":340, "stallAngle":0.27}],
-            ["bwg2l","bwg2","bwg1l",{"liftCoef":340, "stallAngle":0.27}],
-            ["bwg1l","bwg2","bwg1", {"liftCoef":340, "stallAngle":0.27}],
+            ["bwg2","bwg2r","bwg1r",{"liftCoef":345.1, "stallAngle":0.27}],
+            ["bwg2","bwg1r","bwg1", {"liftCoef":345.1, "stallAngle":0.27}],
+            ["bwg2l","bwg2","bwg1l",{"liftCoef":345.1, "stallAngle":0.27}],
+            ["bwg1l","bwg2","bwg1", {"liftCoef":345.1, "stallAngle":0.27}],
             
             
             //rear wing endplates

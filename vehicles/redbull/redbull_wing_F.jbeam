@@ -546,7 +546,7 @@
             ["id1:","id2:","id3:"],
             //front nosecone
             {"groundModel":"plastic"},
-            {"dragCoef":25.5},
+            {"dragCoef":25.1},
             {"group":"redbull_nose"},
             ["nc4l", "nc4r", "nc5r"],
             ["nc5l", "nc5r", "nc6l"],
@@ -571,21 +571,21 @@
             
             //front wing
             {"groundModel":"metal"},
-            {"dragCoef":229.1},
+            {"dragCoef":226.3},
             {"group":"redbull_wing_F"},
-            ["fwg2r","fwg2rr","fwg1rr", {"liftCoef":267.3, "stallAngle":0.22}],
-            ["fwg2r","fwg1rr","fwg1r",  {"liftCoef":267.3, "stallAngle":0.22}],
-            ["fwg2l","fwg1ll","fwg2ll", {"liftCoef":267.3, "stallAngle":0.22}],
-            ["fwg2l","fwg1l","fwg1ll",  {"liftCoef":267.3, "stallAngle":0.22}],
+            ["fwg2r","fwg2rr","fwg1rr", {"liftCoef":264, "stallAngle":0.22}],
+            ["fwg2r","fwg1rr","fwg1r",  {"liftCoef":264, "stallAngle":0.22}],
+            ["fwg2l","fwg1ll","fwg2ll", {"liftCoef":264, "stallAngle":0.22}],
+            ["fwg2l","fwg1l","fwg1ll",  {"liftCoef":264, "stallAngle":0.22}],
             //double it and give it to the next person (prevents shit assymetrical forces because wing isn't centered on 1 node, basically just fixing shite beamng aero)
-            ["fwg2l","fwg2r","fwg1r",   {"liftCoef":152.8, "stallAngle":0.22}],
-            ["fwg2l","fwg1r","fwg1l",   {"liftCoef":152.8, "stallAngle":0.22}],
-            ["fwg2l","fwg2r","fwg1l",   {"liftCoef":152.8, "stallAngle":0.22}],
-            ["fwg2r","fwg1r","fwg1l",   {"liftCoef":152.8, "stallAngle":0.22}],
+            ["fwg2l","fwg2r","fwg1r",   {"liftCoef":150.8, "stallAngle":0.22}],
+            ["fwg2l","fwg1r","fwg1l",   {"liftCoef":150.8, "stallAngle":0.22}],
+            ["fwg2l","fwg2r","fwg1l",   {"liftCoef":150.8, "stallAngle":0.22}],
+            ["fwg2r","fwg1r","fwg1l",   {"liftCoef":150.8, "stallAngle":0.22}],
             
             //front wing endplates
             {"groundModel":"metal"},
-            {"dragCoef":50.9},
+            {"dragCoef":50.3},
             {"group":"redbull_wing_F_endplates"},
             ["fep3r","fep4r","fep2r"],
             ["fep3r","fep2r","fep1r"],

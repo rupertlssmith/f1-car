@@ -403,6 +403,76 @@ def stability_report(v, dt=1 / 2000, top=5):
     return dict(max=float(wd.max()), over=int((wd >= 2).sum()), modes=modes)
 
 
+def strength_report(v, massr, aero, bump=1.5):
+    """Linear corner model (chassis held) under hard load cases: forces in
+    every corner beam vs its beamDeform (where it starts to yield; the
+    F4-derived coilover/arm/bump-stop beams sit in the arms' breakGroups,
+    so a yield there drops the wheel). Loads per wheel, at the axle nodes,
+    with the tyre's contact moment as a vertical couple across them.
+    Returns worst ratios per load case: [(ratio, case, part, a, b, force, deform)]."""
+    m, fr = massr["total"], massr["front"]
+    h = massr["cog"][2]
+    L = massr["wheelbase"]
+    track = 1.31
+    q = aero[300]
+    downF, downR = q["down"] * q["front"] / 2, q["down"] * (1 - q["front"]) / 2
+    stF, stR = m * G * fr / 2, m * G * (1 - fr) / 2
+    radius = massr.get("radius_R", 0.335)
+    cases = {
+        # name: {axle: (Fz, Fx, Fy)} per wheel, before the bump factor
+        "aero 300 km/h": {"F": (stF + downF, 0, 0), "R": (stR + downR, 0, 0)},
+        "braking 5 g": {"F": (stF + downF + m * 5 * G * h / L / 2, -0.57 * m * 5 * G / 2, 0),
+                        "R": (max(stR + downR - m * 5 * G * h / L / 2, 0), -0.43 * m * 5 * G / 2, 0)},
+        "cornering 4.7 g": {"F": (stF + downF + 0.57 * m * 4.7 * G * h / track, 0, 0.45 * m * 4.7 * G * 1.2 / 2),
+                            "R": (stR + downR + 0.43 * m * 4.7 * G * h / track, 0, 0.55 * m * 4.7 * G * 1.2 / 2)},
+        "traction": {"F": (stF + downF, 0, 0), "R": (stR + downR, 1.3 * (stR + downR), 0)},
+    }
+    out = []
+    for axle in ("F", "R"):
+        free = corner_nodes(v, axle)
+        K, idx = stiffness(v, free)
+        K += np.eye(len(K)) * 1e-3
+        wl = {"F": ("fw1l", "fw1ll", "fw1r", "fw1rr"), "R": ("rw1l", "rw1ll", "rw1r", "rw1rr")}[axle]
+        pre = preload_forces(v, free, idx)
+        sprung = (m * (fr if axle == "F" else 1 - fr) - 0) / 2
+        base = pre.copy()
+        for n in wl:
+            base[3 * idx[n] + 2] += 0  # preload only; loads below are totals
+        for cname, per in cases.items():
+            Fz, Fx, Fy = per[axle]
+            f = pre.copy()
+            # right wheel only (inner node wl[2], outer wl[3]); forward = -y
+            inner, outer = wl[2], wl[3]
+            span = np.linalg.norm(v.pos[outer] - v.pos[inner])
+            couple = Fy * radius / span
+            for n, fz in ((inner, Fz * bump / 2 - couple), (outer, Fz * bump / 2 + couple)):
+                f[3 * idx[n] + 2] += fz
+                f[3 * idx[n] + 1] += -Fx / 2
+                f[3 * idx[n] + 0] += -Fy / 2        # towards the car's centre (right wheel: +x is inboard)
+            u = np.linalg.solve(K, f)
+            U = lambda n: u[3 * idx[n]:3 * idx[n] + 3] if n in idx else np.zeros(3)
+            for pname, r in v.section("beams"):
+                a, b = r.get("id1:"), r.get("id2:")
+                if a not in v.pos or b not in v.pos or (a not in idx and b not in idx):
+                    continue
+                if not (a.endswith("r") or b.endswith("r") or a.endswith("rr") or b.endswith("rr")):
+                    continue
+                bt = str(r.get("beamType", "|NORMAL"))
+                k = v.val(r.get("beamSpring"), 0)
+                if "SUPPORT" in bt or k == 0:
+                    continue
+                d = v.pos[b] - v.pos[a]
+                Lb = np.linalg.norm(d)
+                ext = np.dot(U(b) - U(a), d / Lb)
+                rng = r.get("precompressionRange")
+                dl = v.val(rng, 0) if rng not in (None, "") else (v.val(r.get("beamPrecompression"), 1.0) - 1) * Lb
+                force = k * (ext - dl)
+                dfm = v.val(r.get("beamDeform"), 1e30)
+                out.append((abs(force) / dfm, cname, pname, a, b, force, dfm))
+    out.sort(reverse=True)
+    return out
+
+
 def corner_nodes(v, axle):
     """Nodes that move with the wheels (unsprung + linkage) for one axle."""
     pat = {"F": r"^(fh[1-5]|fw\d|fps1|fs2|fs3|rkf|rbf|rbmf)", "R": r"^(rh\d|rw\d|rps1|rs2|rs3|rkr|rbr|rbmr)"}[axle]

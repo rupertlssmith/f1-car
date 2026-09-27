@@ -272,8 +272,21 @@ Every config: 1.9 g at low speed, 5-6 g braking from 300 km/h.
   doesn't exist and a torque arm 2 cm from the axle line; its rear brake arm
   was 7 cm from the axle. Now: coupling at the differential, arms on the
   gearbox 40-48 cm away (drive ~10-12 kN instead of hundreds), rear brake
-  arm on the upper upright (13 cm, 16.5 kN). Suspension and diff-mount beam
-  deform/break thresholds are 3x the F4's (loads are 3.4-4.7x).
+  arm on the upper upright (13 cm, 16.5 kN).
+- **Strength for F1 loads:** the F4's beams yield at forces sized for a
+  650 kg car at ~1.5 g. `setup_report.strength_report()` loads each corner
+  with aero at 300 km/h, 5 g braking, 4.7 g cornering and full traction
+  (each x1.5 for bumps) and compares every beam with its beamDeform;
+  `f1_setup.py` refuses anything above 50 %. The F4 values put the coilover
+  springs at 105 % in cornering (they yield and shorten: the "bending
+  struts" of the fourth test). Now: arms and wishbones 4x (rear 5x),
+  coilovers, bump stops and anti-roll / heave bars 4x, steering 3x, rims
+  and tyre beams 3x the F4's. Worst beam: 40 % (rear lower wishbone in
+  4.7 g cornering). Note the linear model says arm stiffness isn't the
+  visible flex (12 kN sideways moves a wheel 2-3 mm); yielding beams were.
+- **Rear tyre clearance:** the rear floor / diffuser edge nodes sat 20-50 mm
+  inside the 405 mm rear tyres' inner face; moved ~8 cm inboard (aero
+  factors re-solved for the smaller floor).
 - **Front wing endplates:** their rear jbeam nodes (collision surfaces)
   sat 15 cm behind the visible RB14 endplate, inside the 305 mm front tyres'
   steering sweep, so turning the wheels bent the wing. Moved to the visible
