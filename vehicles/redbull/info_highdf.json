@@ -1,0 +1,13 @@
+{
+  "Config Type": "Factory",
+  "Configuration": "High Downforce",
+  "Description": "Maximum downforce for tight, twisty circuits, Monaco style. Most cornering grip, least top speed.",
+  "Drivetrain": "RWD",
+  "Fuel Type": "Gasoline",
+  "Induction Type": "Turbo",
+  "Propulsion": "Hybrid",
+  "Transmission": "Sequential",
+  "Off-Road Score": 0,
+  "Population": 0,
+  "Value": 12000000
+}

@@ -100,55 +100,6 @@
     "order_simset": 1852795252,
     "version": 1.5
   },
-  "redbull_glass": {
-    "name": "redbull_glass",
-    "mapTo": "redbull_glass",
-    "class": "Material",
-    "Stages": [
-      {
-        "baseColorMap": "vehicles/redbull/redbull_lights_b.color.png",
-        "metallicFactor": 0.5,
-        "normalMap": "/vehicles/redbull/redbull_lights_n.normal.png",
-        "opacityMap": "/vehicles/redbull/redbull_lights_o.data.png",
-        "pixelSpecular": true,
-        "roughnessFactor": 0.0
-      },
-      {},
-      {},
-      {}
-    ],
-    "alphaRef": 0,
-    "castShadows": false,
-    "dynamicCubemap": true,
-    "materialTag0": "lucasbe",
-    "materialTag1": "vehicle",
-    "translucent": true,
-    "translucentBlendOp": "PreMulAlpha",
-    "translucentRecvShadows": true,
-    "version": 1.5
-  },
-  "redbull_lights": {
-    "name": "redbull_lights",
-    "mapTo": "redbull_lights",
-    "class": "Material",
-    "Stages": [
-      {
-        "baseColorMap": "vehicles/redbull/redbull_lights_b.color.png",
-        "metallicFactor": 0.5,
-        "normalMap": "/vehicles/redbull/redbull_lights_n.normal.png",
-        "pixelSpecular": true,
-        "roughnessFactor": 0.5
-      },
-      {},
-      {},
-      {}
-    ],
-    "alphaRef": 0,
-    "dynamicCubemap": true,
-    "materialTag0": "lucasbe",
-    "materialTag1": "vehicle",
-    "version": 1.5
-  },
   "redbull_lights_on": {
     "name": "redbull_lights_on",
     "mapTo": "redbull_lights_on",
@@ -158,35 +109,6 @@
         "baseColorMap": "vehicles/redbull/redbull_lights_b.color.png",
         "metallicFactor": 0.5,
         "emissiveIntensityNits": 10000,
-        "emissiveFactor": [
-          1,
-          1,
-          1
-        ],
-        "emissiveMap": "/vehicles/redbull/redbull_lights_g.color.png",
-        "normalMap": "/vehicles/redbull/redbull_lights_n.normal.png",
-        "pixelSpecular": true,
-        "roughnessFactor": 0.5
-      },
-      {},
-      {},
-      {}
-    ],
-    "alphaRef": 0,
-    "dynamicCubemap": true,
-    "materialTag0": "lucasbe",
-    "materialTag1": "vehicle",
-    "version": 1.5
-  },
-  "redbull_lights_on_intense": {
-    "name": "redbull_lights_on_intense",
-    "mapTo": "redbull_lights_on_intense",
-    "class": "Material",
-    "Stages": [
-      {
-        "baseColorMap": "vehicles/redbull/redbull_lights_b.color.png",
-        "metallicFactor": 0.5,
-        "emissiveIntensityNits": 500000,
         "emissiveFactor": [
           1,
           1,
@@ -280,13 +202,6 @@
   "redbull_shiftlights_l8": {
     "name": "redbull_shiftlights_l8",
     "mapTo": "redbull_shiftlights_l8",
-    "class": "Material",
-    "materialTag0": "lucasbe",
-    "materialTag1": "vehicle"
-  },
-  "redbull_rainlight": {
-    "name": "redbull_rainlight",
-    "mapTo": "redbull_rainlight",
     "class": "Material",
     "materialTag0": "lucasbe",
     "materialTag1": "vehicle"

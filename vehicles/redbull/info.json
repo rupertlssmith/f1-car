@@ -1,30 +1,30 @@
 {
-  "Author":"LucasBE",
-  "Body Style":"Single-Seater",
-  "Brand":"Red Bull",
-  "Country":"Italy",
-  "Derby Class":"Formula 4",
-  "Name":"RB14",
-  "Performance Class":"9",
-  "Type":"Car",
-  "Years":{
-    "max":2023,
-    "min":2021
+  "Author": "LucasBE (F4 base), f1-car project (RB14 conversion)",
+  "Body Style": "Formula",
+  "Brand": "Red Bull",
+  "Country": "Austria",
+  "Derby Class": "Formula 1",
+  "Name": "RB14",
+  "Performance Class": "9",
+  "Type": "Car",
+  "Years": {
+    "min": 2018,
+    "max": 2018
   },
-  "defaultPaintName1":"Silver Metallic",
-  "default_pc":"okudai_baseline",
-  "paints":{
-    "Silver Metallic":{
-      "baseColor":[
-        0.65,
-        0.65,
-        0.65,
-        1.2
+  "defaultPaintName1": "Matte Navy",
+  "default_pc": "baseline",
+  "paints": {
+    "Matte Navy": {
+      "baseColor": [
+        0.11,
+        0.13,
+        0.22,
+        1.0
       ],
-      "clearcoat":1,
-      "clearcoatRoughness":0.1,
-      "metallic":1.0,
-      "roughness":0.5
+      "clearcoat": 0.2,
+      "clearcoatRoughness": 0.6,
+      "metallic": 0.0,
+      "roughness": 0.55
     }
   }
 }

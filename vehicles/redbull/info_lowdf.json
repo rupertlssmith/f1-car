@@ -1,0 +1,13 @@
+{
+  "Config Type": "Factory",
+  "Configuration": "Low Downforce",
+  "Description": "Low-drag setup for long straights, Monza style. Less grip in the corners, more top speed.",
+  "Drivetrain": "RWD",
+  "Fuel Type": "Gasoline",
+  "Induction Type": "Turbo",
+  "Propulsion": "Hybrid",
+  "Transmission": "Sequential",
+  "Off-Road Score": 0,
+  "Population": 0,
+  "Value": 12000000
+}

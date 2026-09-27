@@ -1,0 +1,13 @@
+{
+  "Config Type": "Factory",
+  "Configuration": "Aggressive",
+  "Description": "Sharper turn-in with a more rearward balance. Fastest in skilled hands, less forgiving at the limit.",
+  "Drivetrain": "RWD",
+  "Fuel Type": "Gasoline",
+  "Induction Type": "Turbo",
+  "Propulsion": "Hybrid",
+  "Transmission": "Sequential",
+  "Off-Road Score": 0,
+  "Population": 0,
+  "Value": 12000000
+}

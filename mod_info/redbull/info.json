@@ -1,19 +1,19 @@
 {
     "attachments": [
         {
-            "data_filename": "1042582.png",
-            "original_filename": "F4_1.png",
-            "thumb_filename": "thumbs/1042582.jpg"
+            "data_filename": "rb14_1.png",
+            "original_filename": "rb14_1.png",
+            "thumb_filename": "thumbs/rb14_1.jpg"
         },
         {
-            "data_filename": "1042583.png",
-            "original_filename": "F4_2.png",
-            "thumb_filename": "thumbs/1042583.jpg"
+            "data_filename": "rb14_2.png",
+            "original_filename": "rb14_2.png",
+            "thumb_filename": "thumbs/rb14_2.jpg"
         },
         {
-            "data_filename": "1042585.png",
-            "original_filename": "screenshot_2023-07-14_20-18-48.png",
-            "thumb_filename": "thumbs/1042585.jpg"
+            "data_filename": "rb14_3.png",
+            "original_filename": "rb14_3.png",
+            "thumb_filename": "thumbs/rb14_3.jpg"
         }
     ],
     "resource_id": 27561,
@@ -28,15 +28,15 @@
     "resource_category_id": 3,
     "resource_date": 1689451988,
     "review_count": 150,
-    "tag_line": "A fun to drive open-wheeler made for entry-level racing.",
+    "tag_line": "The 2018 Red Bull RB14 Formula 1 car.",
     "update_count": 3,
     "path": "redbull/62537/",
-    "filename": "f4_lucasbe.zip",
+    "filename": "redbull.zip",
     "title": "Red Bull RB14",
     "user_id": 101002,
     "username": "LucasBE",
     "tagid": "redbull",
-    "message": "[CENTER][ATTACH]1042582[/ATTACH]\n\n[B][SIZE=6]Carbonworks F4\n[/SIZE][/B]\n[SIZE=4]Based off of real-life Formula 4 cars, this single-seater is built with accessibility in mind. This makes it one of the most popular racing series in the world, and is generally the second step on the ladder to F1 after karting.\n\n[HR][/HR]\nPowered by a 180hp Inline 4, and with a dry weight of 580kg, this thing is a blast to drive even with the limited amounts of downforce it generates. This is the perfect car if you're looking for close racing and beginner-friendly handling.\n[/SIZE]\n[ATTACH]1042583[/ATTACH] [ATTACH]1042588[/ATTACH] [ATTACH]1042589[/ATTACH]\n\n[HR][/HR]\nDesigned from the ground up to be as detailed as possible, it also features a fully-accurate drivetrain, detailed and animated mechanical parts, as well as fully-adjustable aero.\n\n[ATTACH]1042585[/ATTACH] [ATTACH]1042586[/ATTACH] [ATTACH]1042587[/ATTACH][ATTACH]1042591[/ATTACH] [ATTACH]1042590[/ATTACH]\n\n[HR][/HR]\nThe Jbeam was also fully scratch-made with realism and close racing in mind. Everything has collisions, even the wheels and suspension. Say goodbye to wheels phasing through the car and through each other.\n\n[ATTACH]1042593[/ATTACH] [ATTACH]1042592[/ATTACH]\n\n[HR][/HR][/CENTER]\n[B][SIZE=5]Features :\n[/SIZE][/B]\n[SIZE=4]- Pit limiter and \"on-the-fly\" adjustable brake bias :\n[MEDIA=streamable]993s16[/MEDIA]\n[/SIZE]\n[LEFT][SIZE=4]- 10 detailed skins, an unpainted, raw carbon-fiber variant, and a single-coloured variant. Skin UVs are included in the mod files for skin-makers.\n[ATTACH]1046512[/ATTACH]  [ATTACH]1042595[/ATTACH] [ATTACH]1042596[/ATTACH][/SIZE][/LEFT]\n[SIZE=4] \n\n- Black and Silver wheels\n[ATTACH]1046508[/ATTACH] [ATTACH]1046509[/ATTACH] \n\n- 2 different tire compounds : slick and rain\n[ATTACH]1046511[/ATTACH] [ATTACH]1046510[/ATTACH] \n\n[HR][/HR][/SIZE]\n[SIZE=5][B][B][SIZE=5]Credits:[/SIZE][/B][/B]\n\n[SIZE=4][USER=355924]@TrackpadUser[/USER] - Animated pushrod suspension idea, Racetec screen base[/SIZE][/SIZE]\n[SIZE=5][SIZE=4][USER=352746]@DaddelZeit[/USER] - Brake bias LUA help[/SIZE][/SIZE]\n[SIZE=5][SIZE=4]My beta testers - beta testing[/SIZE][/SIZE]\n[SIZE=5][SIZE=4]Me - The other 99.9% :p[/SIZE][/SIZE]\n\n[SIZE=5][SIZE=4][HR][/HR][/SIZE][/SIZE]\n[B][SIZE=5]Notes:\n[/SIZE][/B]\n[SIZE=4]The lack of customization is intentional. These cars operate under a very restrictive ruleset IRL, and I wanted to replicate that. This mod aims to achieve ultimate realism and a sim-like experience for anyone interested in sim racing. It's therefore aimed at people that do online races and/or competitive time trials, or those that just want to squeeze every millisecond out of a setup.\n\nIf you want customization and endless levels of crazyness, please do consider downloading other mods from this community's awesome modders, or download add-ons for the F4, as I will not be adding \"unrealistic\" parts to this mod. Bombing the reviews section with 1-star reviews that basically say \"bad because it has no customization\" has no use, so please avoid doing so.\n\nIt's absolutely fine if you prefer fun experiences to serious sim racing ones. But please understand that this mod is not meant for that.\n[/SIZE]\n[B][SIZE=5]Have fun! :D[/SIZE][/B]",
+    "message": "[CENTER][ATTACH]rb14_1[/ATTACH]\n\n[B][SIZE=6]Red Bull RB14[/SIZE][/B]\n[SIZE=4]The 2018 Red Bull Racing Formula 1 car: 1.6 L V6 turbo hybrid, 8-speed seamless gearbox, pushrod front / pullrod rear suspension and Red Bull's trademark high-rake aero platform.[/SIZE]\n\n[ATTACH]rb14_2[/ATTACH] [ATTACH]rb14_3[/ATTACH][/CENTER]\n\n[B][SIZE=5]Configurations[/SIZE][/B]\n[SIZE=4]- Low Downforce, Baseline, High Downforce, Aggressive\n- Adjustable front, rear and beam wing angles, springs, dampers, anti-roll bars, ride height, camber, caster\n- On-the-fly brake bias and pit limiter\n- Slicks and wets[/SIZE]\n\n[B][SIZE=5]Credits[/SIZE][/B]\n[SIZE=4]- Chassis and physics based on the Carbonworks F4 by LucasBE (the author's permission is needed before sharing this mod - see the project notes)\n- RB14 3D model: see the project notes for its source[/SIZE]",
     "category_title": "",
     "prefix_title": "",
     "via": "packed by repo on Mon, 03 Aug 2026 12:17:14 GMT",
@@ -58,34 +58,6 @@
             "8a37db70d5213ca6"
         ],
         [
-            "vehicles/common/redbull_wheels/redbull_tire_01a_b.color.dds",
-            "d92b25732efa8dad"
-        ],
-        [
-            "vehicles/common/redbull_wheels/redbull_tire_01a_m.data.dds",
-            "b0cf0710387655c7"
-        ],
-        [
-            "vehicles/common/redbull_wheels/redbull_tire_01a_n.normal.dds",
-            "7869d31d1f2d2b7d"
-        ],
-        [
-            "vehicles/common/redbull_wheels/redbull_tire_01a_r.data.dds",
-            "911fb229f0daa7f0"
-        ],
-        [
-            "vehicles/common/redbull_wheels/redbull_tire_01b_b.color.dds",
-            "18962a039c8bc513"
-        ],
-        [
-            "vehicles/common/redbull_wheels/redbull_tire_01b_n.normal.dds",
-            "b5395120bf74b21d"
-        ],
-        [
-            "vehicles/common/redbull_wheels/redbull_tire_01b_r.data.dds",
-            "30e29d3d3e711aa5"
-        ],
-        [
             "vehicles/common/redbull_wheels/redbull_tires_F_13.jbeam",
             "1627f4db137638ae"
         ],
@@ -94,36 +66,8 @@
             "283d71d6576d854b"
         ],
         [
-            "vehicles/common/redbull_wheels/redbull_wheel_01a_ao.data.dds",
-            "c10090439391e783"
-        ],
-        [
-            "vehicles/common/redbull_wheels/redbull_wheel_01a_b.color.dds",
-            "d171621b2c9424c9"
-        ],
-        [
-            "vehicles/common/redbull_wheels/redbull_wheel_01a_m.data.dds",
-            "81ac7caf09ebfeed"
-        ],
-        [
-            "vehicles/common/redbull_wheels/redbull_wheel_01a_n.normal.dds",
-            "f2734498398fd401"
-        ],
-        [
-            "vehicles/common/redbull_wheels/redbull_wheel_01a_r.data.dds",
-            "78e79f1736a8dead"
-        ],
-        [
-            "vehicles/common/redbull_wheels/redbull_wheel_01b_b.color.dds",
-            "1e571cc463610f35"
-        ],
-        [
             "vehicles/common/redbull_wheels/redbull_wheels.dae",
             "c82ed765a64bee78"
-        ],
-        [
-            "vehicles/common/redbull_wheels/redbull_wheels.materials.json",
-            "c16f546d1b96ba1f"
         ],
         [
             "vehicles/common/redbull_wheels/redbull_wheels_F_13.jbeam",
@@ -134,384 +78,64 @@
             "68b5c446086bd8c1"
         ],
         [
-            "vehicles/redbull/campus_aggressive.jpg",
-            "e5efa7f73c3faac2"
+            "vehicles/redbull/aggressive.jpg",
+            "63565a5465637b96"
         ],
         [
-            "vehicles/redbull/campus_aggressive.pc",
-            "7db9f889fe116cae"
+            "vehicles/redbull/aggressive.pc",
+            "1640915e85e5b13a"
         ],
         [
-            "vehicles/redbull/campus_baseline.jpg",
-            "184bd58ba90a2e17"
+            "vehicles/redbull/baseline.jpg",
+            "87ed47ff71a1f69c"
         ],
         [
-            "vehicles/redbull/campus_baseline.pc",
-            "100b1655f23697de"
-        ],
-        [
-            "vehicles/redbull/campus_highdf.jpg",
-            "a242673dd0b416e0"
-        ],
-        [
-            "vehicles/redbull/campus_highdf.pc",
-            "c8e3ac596973f0ac"
-        ],
-        [
-            "vehicles/redbull/campus_lowdf.jpg",
-            "d800fd0f7e6e91c7"
-        ],
-        [
-            "vehicles/redbull/campus_lowdf.pc",
-            "25c9a1e3c4c176ef"
-        ],
-        [
-            "vehicles/redbull/cpr_aggressive.jpg",
-            "6e2dac63a4ecbfae"
-        ],
-        [
-            "vehicles/redbull/cpr_aggressive.pc",
-            "40a68866e67a5bed"
-        ],
-        [
-            "vehicles/redbull/cpr_baseline.jpg",
-            "b7fdf99dff37bbdc"
-        ],
-        [
-            "vehicles/redbull/cpr_baseline.pc",
-            "83d2ce22544f7eec"
-        ],
-        [
-            "vehicles/redbull/cpr_highdf.jpg",
-            "6acf8364606c6ffe"
-        ],
-        [
-            "vehicles/redbull/cpr_highdf.pc",
-            "d30cac1203970a88"
-        ],
-        [
-            "vehicles/redbull/cpr_lowdf.jpg",
-            "c21ecbae4d02e8fa"
-        ],
-        [
-            "vehicles/redbull/cpr_lowdf.pc",
-            "791e9e9ec395ff40"
-        ],
-        [
-            "vehicles/redbull/css_aggressive.jpg",
-            "e65c5bc44d452d67"
-        ],
-        [
-            "vehicles/redbull/css_aggressive.pc",
-            "a92f5bf4156db4cd"
-        ],
-        [
-            "vehicles/redbull/css_baseline.jpg",
-            "31c4ef4d03fa23a5"
-        ],
-        [
-            "vehicles/redbull/css_baseline.pc",
-            "62a93f644d3607c9"
-        ],
-        [
-            "vehicles/redbull/css_highdf.jpg",
-            "96028bcb13c80931"
-        ],
-        [
-            "vehicles/redbull/css_highdf.pc",
-            "005ae4631227fdee"
-        ],
-        [
-            "vehicles/redbull/css_lowdf.jpg",
-            "9d3d38b9bdea78f3"
-        ],
-        [
-            "vehicles/redbull/css_lowdf.pc",
-            "49fff1de4ef9ab09"
-        ],
-        [
-            "vehicles/redbull/deadbull_aggressive.jpg",
-            "d9588acb11314ae0"
-        ],
-        [
-            "vehicles/redbull/deadbull_aggressive.pc",
-            "c3718725433e4d22"
-        ],
-        [
-            "vehicles/redbull/deadbull_baseline.jpg",
-            "3ccbf65126ef28a6"
-        ],
-        [
-            "vehicles/redbull/deadbull_baseline.pc",
-            "00ae773dc6f7ac3a"
-        ],
-        [
-            "vehicles/redbull/deadbull_highdf.jpg",
-            "457578bd68b13221"
-        ],
-        [
-            "vehicles/redbull/deadbull_highdf.pc",
-            "d2e4bea00a8a3cd7"
-        ],
-        [
-            "vehicles/redbull/deadbull_lowdf.jpg",
-            "0efd28d614d573f6"
-        ],
-        [
-            "vehicles/redbull/deadbull_lowdf.pc",
-            "82dfced2cc40222a"
+            "vehicles/redbull/baseline.pc",
+            "185ed624c26be51b"
         ],
         [
             "vehicles/redbull/default.jpg",
-            "dcb59ddae173c4da"
+            "87ed47ff71a1f69c"
+        ],
+        [
+            "vehicles/redbull/highdf.jpg",
+            "8903a12d1cd09e00"
+        ],
+        [
+            "vehicles/redbull/highdf.pc",
+            "41f8b8dd3640a0d7"
         ],
         [
             "vehicles/redbull/info.json",
-            "c7fe4e12d698d553"
+            "9a209c9b572cd879"
         ],
         [
-            "vehicles/redbull/info_campus_aggressive.json",
-            "2ab700118bee4821"
+            "vehicles/redbull/info_aggressive.json",
+            "11ae912c6922e464"
         ],
         [
-            "vehicles/redbull/info_campus_baseline.json",
-            "192ae6fcbd824734"
+            "vehicles/redbull/info_baseline.json",
+            "49c81b4e7d82bf4e"
         ],
         [
-            "vehicles/redbull/info_campus_highdf.json",
-            "46d41ffd7ac7833f"
+            "vehicles/redbull/info_highdf.json",
+            "d6bd5512a5ab7c8d"
         ],
         [
-            "vehicles/redbull/info_campus_lowdf.json",
-            "68e120183e3bc550"
-        ],
-        [
-            "vehicles/redbull/info_cpr_aggressive.json",
-            "2328cb4f70fbb1a2"
-        ],
-        [
-            "vehicles/redbull/info_cpr_baseline.json",
-            "bbf0948473d7ca44"
-        ],
-        [
-            "vehicles/redbull/info_cpr_highdf.json",
-            "c23d671d2d5befff"
-        ],
-        [
-            "vehicles/redbull/info_cpr_lowdf.json",
-            "85a7704ae805f545"
-        ],
-        [
-            "vehicles/redbull/info_css_aggressive.json",
-            "b5e3b97699dcc9b0"
-        ],
-        [
-            "vehicles/redbull/info_css_baseline.json",
-            "12c31ec6132eedda"
-        ],
-        [
-            "vehicles/redbull/info_css_highdf.json",
-            "94dc1d9c7b2a3b15"
-        ],
-        [
-            "vehicles/redbull/info_css_lowdf.json",
-            "6608b160423278a2"
-        ],
-        [
-            "vehicles/redbull/info_deadbull_aggressive.json",
-            "c03aec12432372d2"
-        ],
-        [
-            "vehicles/redbull/info_deadbull_baseline.json",
-            "7d6ad9dd1b390e5d"
-        ],
-        [
-            "vehicles/redbull/info_deadbull_highdf.json",
-            "4de517545a11fea9"
-        ],
-        [
-            "vehicles/redbull/info_deadbull_lowdf.json",
-            "84c534ce4701e033"
-        ],
-        [
-            "vehicles/redbull/info_karlen_aggressive.json",
-            "dc8438fbabd2bf9a"
-        ],
-        [
-            "vehicles/redbull/info_karlen_baseline.json",
-            "7923abf51a7a9730"
-        ],
-        [
-            "vehicles/redbull/info_karlen_highdf.json",
-            "e349d0f39ebf0acb"
-        ],
-        [
-            "vehicles/redbull/info_karlen_lowdf.json",
-            "ab905623a07ddc03"
-        ],
-        [
-            "vehicles/redbull/info_lotech_aggressive.json",
-            "3cd27d83164d6632"
-        ],
-        [
-            "vehicles/redbull/info_lotech_baseline.json",
-            "122e26179bb935e5"
-        ],
-        [
-            "vehicles/redbull/info_lotech_highdf.json",
-            "e47d7f42f55e6a93"
-        ],
-        [
-            "vehicles/redbull/info_lotech_lowdf.json",
-            "eb34effa90bb9657"
-        ],
-        [
-            "vehicles/redbull/info_okudai_aggressive.json",
-            "eb118630fd0470fe"
-        ],
-        [
-            "vehicles/redbull/info_okudai_baseline.json",
-            "79b70dea85a25c5d"
-        ],
-        [
-            "vehicles/redbull/info_okudai_highdf.json",
-            "e437593538f64c02"
-        ],
-        [
-            "vehicles/redbull/info_okudai_lowdf.json",
-            "dd123d4dfb95001d"
-        ],
-        [
-            "vehicles/redbull/info_parma_aggressive.json",
-            "5252efe0f76b3467"
-        ],
-        [
-            "vehicles/redbull/info_parma_baseline.json",
-            "fb4a38e1b9b6f867"
-        ],
-        [
-            "vehicles/redbull/info_parma_highdf.json",
-            "da730fdb93d7ae8c"
-        ],
-        [
-            "vehicles/redbull/info_parma_lowdf.json",
-            "77b67041e6ba1169"
-        ],
-        [
-            "vehicles/redbull/info_pu_aggressive.json",
-            "e1d650679f491097"
-        ],
-        [
-            "vehicles/redbull/info_pu_baseline.json",
-            "2160a261192b7d57"
-        ],
-        [
-            "vehicles/redbull/info_pu_highdf.json",
-            "f8cfcb859e27af9b"
-        ],
-        [
-            "vehicles/redbull/info_pu_lowdf.json",
-            "77372124ce15a5a7"
-        ],
-        [
-            "vehicles/redbull/info_torment_aggressive.json",
-            "61250edef8003a7a"
-        ],
-        [
-            "vehicles/redbull/info_torment_baseline.json",
-            "7c2bbc2b03a94894"
-        ],
-        [
-            "vehicles/redbull/info_torment_highdf.json",
-            "8a44e66157928c7f"
-        ],
-        [
-            "vehicles/redbull/info_torment_lowdf.json",
-            "c3413219abb1fd53"
-        ],
-        [
-            "vehicles/redbull/info_unpainted_aggressive.json",
-            "c3f47843c743ddfa"
-        ],
-        [
-            "vehicles/redbull/info_unpainted_baseline.json",
-            "06a0b9db42ecc61d"
-        ],
-        [
-            "vehicles/redbull/info_unpainted_highdf.json",
-            "21f141d4c60db66b"
-        ],
-        [
-            "vehicles/redbull/info_unpainted_lowdf.json",
-            "0d5a056493537f0b"
+            "vehicles/redbull/info_lowdf.json",
+            "4de203e768323d1c"
         ],
         [
             "vehicles/redbull/inputmaps/keyboard.json",
             "35f350c0d3c06518"
         ],
         [
-            "vehicles/redbull/karlen_aggressive.jpg",
-            "faff692cd0812fcb"
+            "vehicles/redbull/lowdf.jpg",
+            "65c6a01adf7f3b5c"
         ],
         [
-            "vehicles/redbull/karlen_aggressive.pc",
-            "2fd7a06444055c24"
-        ],
-        [
-            "vehicles/redbull/karlen_baseline.jpg",
-            "d5a2e38be9a620e4"
-        ],
-        [
-            "vehicles/redbull/karlen_baseline.pc",
-            "3869e095c0d4f566"
-        ],
-        [
-            "vehicles/redbull/karlen_highdf.jpg",
-            "a409e691c32b2503"
-        ],
-        [
-            "vehicles/redbull/karlen_highdf.pc",
-            "19b3762adea0c9fe"
-        ],
-        [
-            "vehicles/redbull/karlen_lowdf.jpg",
-            "3230663c86ef81df"
-        ],
-        [
-            "vehicles/redbull/karlen_lowdf.pc",
-            "d6a28ed93b50e369"
-        ],
-        [
-            "vehicles/redbull/lotech_aggressive.jpg",
-            "6d31cc008843f1ee"
-        ],
-        [
-            "vehicles/redbull/lotech_aggressive.pc",
-            "098863567cc42fd1"
-        ],
-        [
-            "vehicles/redbull/lotech_baseline.jpg",
-            "7d1051ffac5a9541"
-        ],
-        [
-            "vehicles/redbull/lotech_baseline.pc",
-            "3733588908438cc9"
-        ],
-        [
-            "vehicles/redbull/lotech_highdf.jpg",
-            "a0213de8c0321044"
-        ],
-        [
-            "vehicles/redbull/lotech_highdf.pc",
-            "4b15250c8afd523b"
-        ],
-        [
-            "vehicles/redbull/lotech_lowdf.jpg",
-            "de9d16ac6a22591a"
-        ],
-        [
-            "vehicles/redbull/lotech_lowdf.pc",
-            "db30cecdd76d8b36"
+            "vehicles/redbull/lowdf.pc",
+            "ba86581ac8034634"
         ],
         [
             "vehicles/redbull/lua/controller/flyBrakeBias.lua",
@@ -523,103 +147,7 @@
         ],
         [
             "vehicles/redbull/main.materials.json",
-            "62beeaff260c531b"
-        ],
-        [
-            "vehicles/redbull/okudai_aggressive.jpg",
-            "fb336fc81e90cd6e"
-        ],
-        [
-            "vehicles/redbull/okudai_aggressive.pc",
-            "ded477db5f3c8bb6"
-        ],
-        [
-            "vehicles/redbull/okudai_baseline.jpg",
-            "dcb59ddae173c4da"
-        ],
-        [
-            "vehicles/redbull/okudai_baseline.pc",
-            "2f4549dec2f5eb5d"
-        ],
-        [
-            "vehicles/redbull/okudai_highdf.jpg",
-            "719d6d37934b9ff7"
-        ],
-        [
-            "vehicles/redbull/okudai_highdf.pc",
-            "adb668cbdf37c180"
-        ],
-        [
-            "vehicles/redbull/okudai_lowdf.jpg",
-            "5885180aa1d8f929"
-        ],
-        [
-            "vehicles/redbull/okudai_lowdf.pc",
-            "16beba3cc82907af"
-        ],
-        [
-            "vehicles/redbull/parma_aggressive.jpg",
-            "19dfa4167cb52cac"
-        ],
-        [
-            "vehicles/redbull/parma_aggressive.pc",
-            "9118675b81009502"
-        ],
-        [
-            "vehicles/redbull/parma_baseline.jpg",
-            "9fbefdd38533d6c4"
-        ],
-        [
-            "vehicles/redbull/parma_baseline.pc",
-            "9b7fc61c72344fad"
-        ],
-        [
-            "vehicles/redbull/parma_highdf.jpg",
-            "3de772587f6bb1bc"
-        ],
-        [
-            "vehicles/redbull/parma_highdf.pc",
-            "6e5c9f9fd8b7a0b5"
-        ],
-        [
-            "vehicles/redbull/parma_lowdf.jpg",
-            "6c39f0626a21f5a3"
-        ],
-        [
-            "vehicles/redbull/parma_lowdf.pc",
-            "faacf0551ebde34e"
-        ],
-        [
-            "vehicles/redbull/pu_aggressive.jpg",
-            "ad65b3169152a37e"
-        ],
-        [
-            "vehicles/redbull/pu_aggressive.pc",
-            "1954c12eefd7e110"
-        ],
-        [
-            "vehicles/redbull/pu_baseline.jpg",
-            "b3606d0da6aab456"
-        ],
-        [
-            "vehicles/redbull/pu_baseline.pc",
-            "9741eb3c9ea13beb"
-        ],
-        [
-            "vehicles/redbull/pu_highdf.jpg",
-            "a45f71fd048f5c7a"
-        ],
-        [
-            "vehicles/redbull/pu_highdf.pc",
-            "da4edbd78a678192"
-        ],
-        [
-            "vehicles/redbull/pu_lowdf.jpg",
-            "45825c4e1cc77658"
-        ],
-        [
-            "vehicles/redbull/pu_lowdf.pc",
-            "d8f318dbe3266755"
+            "a197f4d19ea63085"
         ],
         [
             "vehicles/redbull/rb14.materials.json",
@@ -715,7 +243,7 @@
         ],
         [
             "vehicles/redbull/redbull.jbeam",
-            "32fd1a3c909eaf37"
+            "a09c555cae11d84f"
         ],
         [
             "vehicles/redbull/redbull_accessory.data.dds",
@@ -806,10 +334,6 @@
             "58e78a59feba1750"
         ],
         [
-            "vehicles/redbull/redbull_lights_o.data.dds",
-            "31a549c01085e63a"
-        ],
-        [
             "vehicles/redbull/redbull_main_ao.data.dds",
             "b88c9c9aa7de44b8"
         ],
@@ -818,20 +342,12 @@
             "e0fd9944cd762785"
         ],
         [
-            "vehicles/redbull/redbull_main_c.data.dds",
-            "a4797de24e0d3fab"
-        ],
-        [
             "vehicles/redbull/redbull_main_m.data.dds",
             "f26c1363d2b0afcc"
         ],
         [
             "vehicles/redbull/redbull_main_n.normal.dds",
             "dcc8640071db6fc3"
-        ],
-        [
-            "vehicles/redbull/redbull_main_p.color.dds",
-            "de504f3bcb76a084"
         ],
         [
             "vehicles/redbull/redbull_main_r.data.dds",
@@ -868,110 +384,6 @@
         [
             "vehicles/redbull/redbull_sidepods.jbeam",
             "980fd1b278957699"
-        ],
-        [
-            "vehicles/redbull/redbull_skin_UV.png",
-            "ea15412dbe177ae5"
-        ],
-        [
-            "vehicles/redbull/redbull_skin_campus_b.color.dds",
-            "f40329018cdcd4c3"
-        ],
-        [
-            "vehicles/redbull/redbull_skin_campus_c.data.dds",
-            "21061b19fc1c3c3a"
-        ],
-        [
-            "vehicles/redbull/redbull_skin_campus_m.data.dds",
-            "3aa276116fc2bd67"
-        ],
-        [
-            "vehicles/redbull/redbull_skin_cpr_b.color.dds",
-            "d921b421fc86b5df"
-        ],
-        [
-            "vehicles/redbull/redbull_skin_cpr_c.data.dds",
-            "78760874cdf3d2c7"
-        ],
-        [
-            "vehicles/redbull/redbull_skin_cpr_m.data.dds",
-            "3b56903f85006825"
-        ],
-        [
-            "vehicles/redbull/redbull_skin_css_b.color.dds",
-            "8076098dd08a5949"
-        ],
-        [
-            "vehicles/redbull/redbull_skin_css_c.data.dds",
-            "40a790bc64984b56"
-        ],
-        [
-            "vehicles/redbull/redbull_skin_deadbull_b.color.dds",
-            "baee352d86937731"
-        ],
-        [
-            "vehicles/redbull/redbull_skin_deadbull_c.data.dds",
-            "90df24e9fa8a79b0"
-        ],
-        [
-            "vehicles/redbull/redbull_skin_karlen_b.color.dds",
-            "0d37fd0949eec69e"
-        ],
-        [
-            "vehicles/redbull/redbull_skin_karlen_c.data.dds",
-            "82f1e63d7b75c028"
-        ],
-        [
-            "vehicles/redbull/redbull_skin_lotech_b.color.dds",
-            "e6c0594ef9d2d71f"
-        ],
-        [
-            "vehicles/redbull/redbull_skin_lotech_c.data.dds",
-            "45597f6ac61f6dfd"
-        ],
-        [
-            "vehicles/redbull/redbull_skin_lotech_m.data.dds",
-            "86349616ead2c63d"
-        ],
-        [
-            "vehicles/redbull/redbull_skin_okudai_b.color.dds",
-            "0fce045740fbe9e8"
-        ],
-        [
-            "vehicles/redbull/redbull_skin_okudai_c.data.dds",
-            "0b7b9c3d7489c7f6"
-        ],
-        [
-            "vehicles/redbull/redbull_skin_okudai_m.data.dds",
-            "cfb2c489d3c38ce6"
-        ],
-        [
-            "vehicles/redbull/redbull_skin_parma_b.color.dds",
-            "28b5fc4107164ee7"
-        ],
-        [
-            "vehicles/redbull/redbull_skin_parma_c.data.dds",
-            "2b72ce0102cce346"
-        ],
-        [
-            "vehicles/redbull/redbull_skin_pu_b.color.dds",
-            "ba68621a1eacbb96"
-        ],
-        [
-            "vehicles/redbull/redbull_skin_pu_c.data.dds",
-            "21ad21efd037193e"
-        ],
-        [
-            "vehicles/redbull/redbull_skin_torment_b.color.dds",
-            "dd3f34d643966686"
-        ],
-        [
-            "vehicles/redbull/redbull_skin_torment_c.data.dds",
-            "eb3b7847bf7229c9"
-        ],
-        [
-            "vehicles/redbull/redbull_skin_torment_m.data.dds",
-            "5e8a41d0795f30cc"
         ],
         [
             "vehicles/redbull/redbull_steeringwheels.jbeam",
@@ -1016,74 +428,6 @@
         [
             "vehicles/redbull/screens.materials.json",
             "7aa4f99352164a06"
-        ],
-        [
-            "vehicles/redbull/skin.materials.json",
-            "0e354d84da1ca621"
-        ],
-        [
-            "vehicles/redbull/torment_aggressive.jpg",
-            "0cc501c3fca25a60"
-        ],
-        [
-            "vehicles/redbull/torment_aggressive.pc",
-            "249667667c38e408"
-        ],
-        [
-            "vehicles/redbull/torment_baseline.jpg",
-            "eef57ae15461e484"
-        ],
-        [
-            "vehicles/redbull/torment_baseline.pc",
-            "2445eeafc0cd38f3"
-        ],
-        [
-            "vehicles/redbull/torment_highdf.jpg",
-            "1e4a0eebaff12234"
-        ],
-        [
-            "vehicles/redbull/torment_highdf.pc",
-            "0bebcdb36c12bfd8"
-        ],
-        [
-            "vehicles/redbull/torment_lowdf.jpg",
-            "1d493c630762bd83"
-        ],
-        [
-            "vehicles/redbull/torment_lowdf.pc",
-            "ba3a990ef1033a3e"
-        ],
-        [
-            "vehicles/redbull/unpainted_aggressive.jpg",
-            "94f86fc1be514d01"
-        ],
-        [
-            "vehicles/redbull/unpainted_aggressive.pc",
-            "d901727ebc36421f"
-        ],
-        [
-            "vehicles/redbull/unpainted_baseline.jpg",
-            "aaec48b39c3510db"
-        ],
-        [
-            "vehicles/redbull/unpainted_baseline.pc",
-            "a34198c1520023eb"
-        ],
-        [
-            "vehicles/redbull/unpainted_highdf.jpg",
-            "58a21db987e0d9e9"
-        ],
-        [
-            "vehicles/redbull/unpainted_highdf.pc",
-            "6766648410e9a6ad"
-        ],
-        [
-            "vehicles/redbull/unpainted_lowdf.jpg",
-            "6fed6d73434e0f5a"
-        ],
-        [
-            "vehicles/redbull/unpainted_lowdf.pc",
-            "58df8d1dd186dd56"
         ]
     ]
 }

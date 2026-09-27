@@ -1,0 +1,13 @@
+{
+  "Config Type": "Factory",
+  "Configuration": "Baseline",
+  "Description": "Balanced default setup. A good starting point, and the one the AI drives best.",
+  "Drivetrain": "RWD",
+  "Fuel Type": "Gasoline",
+  "Induction Type": "Turbo",
+  "Propulsion": "Hybrid",
+  "Transmission": "Sequential",
+  "Off-Road Score": 0,
+  "Population": 0,
+  "Value": 12000000
+}

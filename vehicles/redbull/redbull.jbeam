@@ -8,7 +8,6 @@
     "slots": [
         ["type", "default", "description"],
         ["redbull_body", "redbull_body", "Body", {"coreSlot":true}],
-        ["skin_lbe", "", "Paint Design"],
     ],
     "scaledragCoef":1.6,
     "scalenodeWeight":1.0,
@@ -38,104 +37,5 @@
         ["biasPlus"],
         ["biasMinus"],
     ],
-},
-"redbull_main_skin_lbe_painted": {
-    "information":{
-        "authors":"LucasBE",
-        "name":"Painted Panels",
-        "value":200,
-    },
-    "slotType" : "skin_lbe",
-    "globalSkin" : "painted",
-},
-"redbull_main_skin_lbe_parma": {
-    "information":{
-        "authors":"LucasBE",
-        "name":"Parma Racing Livery",
-        "value":200,
-    },
-    "slotType" : "skin_lbe",
-    "globalSkin" : "parma",
-},
-"redbull_main_skin_lbe_lotech": {
-    "information":{
-        "authors":"LucasBE",
-        "name":"Lotech GP Livery",
-        "value":200,
-    },
-    "slotType" : "skin_lbe",
-    "globalSkin" : "lotech",
-},
-"redbull_main_skin_lbe_karlen": {
-    "information":{
-        "authors":"LucasBE",
-        "name":"Karlen Racing Livery",
-        "value":200,
-    },
-    "slotType" : "skin_lbe",
-    "globalSkin" : "karlen",
-},
-"redbull_main_skin_lbe_okudai": {
-    "information":{
-        "authors":"LucasBE",
-        "name":"Okudai Motorsport Livery",
-        "value":200,
-    },
-    "slotType" : "skin_lbe",
-    "globalSkin" : "okudai",
-},
-"redbull_main_skin_lbe_torment": {
-    "information":{
-        "authors":"LucasBE",
-        "name":"Torment GP Livery",
-        "value":200,
-    },
-    "slotType" : "skin_lbe",
-    "globalSkin" : "torment",
-},
-"redbull_main_skin_lbe_deadbull": {
-    "information":{
-        "authors":"LucasBE",
-        "name":"Dead Bull Racing Livery",
-        "value":200,
-    },
-    "slotType" : "skin_lbe",
-    "globalSkin" : "deadbull",
-},
-"redbull_main_skin_lbe_pu": {
-    "information":{
-        "authors":"LucasBE",
-        "name":"PU Motorsport Livery",
-        "value":200,
-    },
-    "slotType" : "skin_lbe",
-    "globalSkin" : "pu",
-},
-"redbull_main_skin_lbe_campus": {
-    "information":{
-        "authors":"LucasBE",
-        "name":"Campus Racing Livery",
-        "value":200,
-    },
-    "slotType" : "skin_lbe",
-    "globalSkin" : "campus",
-},
-"redbull_main_skin_lbe_css": {
-    "information":{
-        "authors":"LucasBE",
-        "name":"CSS Motorsport Livery",
-        "value":200,
-    },
-    "slotType" : "skin_lbe",
-    "globalSkin" : "css",
-},
-"redbull_main_skin_lbe_cpr": {
-    "information":{
-        "authors":"LucasBE",
-        "name":"CPR Livery",
-        "value":200,
-    },
-    "slotType" : "skin_lbe",
-    "globalSkin" : "cpr",
-},
+}
 }

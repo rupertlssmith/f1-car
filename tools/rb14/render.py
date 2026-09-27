@@ -29,6 +29,8 @@ ap.add_argument("--views", default="side,top,front,rear,three_quarter")
 ap.add_argument("--size", default="1400x800")
 ap.add_argument("--samples", type=int, default=24)
 ap.add_argument("--xray", action="store_true")
+ap.add_argument("--studio", action="store_true", help="ground plane, soft shadows: for thumbnails")
+ap.add_argument("--lens", type=float, default=35, help="focal length for the close view (mm)")
 ap.add_argument("--camera", help="extra 'close' view: camera position x,y,z (BeamNG axes)")
 ap.add_argument("--target", help="point the 'close' view looks at, x,y,z")
 ap.add_argument("--vertex-colors", action="store_true", help="shade meshes by their colour attribute")
@@ -127,7 +129,20 @@ world.use_nodes = True
 world.node_tree.nodes["Background"].inputs["Color"].default_value = (0.82, 0.84, 0.88, 1)
 world.node_tree.nodes["Background"].inputs["Strength"].default_value = 1.0
 
+if args.studio:
+    bpy.ops.mesh.primitive_plane_add(size=60, location=(0, 0, 0))
+    ground = bpy.context.object
+    gm = bpy.data.materials.new("ground")
+    gm.use_nodes = True
+    gb = gm.node_tree.nodes["Principled BSDF"]
+    gb.inputs["Base Color"].default_value = (0.42, 0.43, 0.46, 1)
+    gb.inputs["Roughness"].default_value = 0.85
+    ground.data.materials.append(gm)
+    world.node_tree.nodes["Background"].inputs["Color"].default_value = (0.62, 0.66, 0.74, 1)
+    world.node_tree.nodes["Background"].inputs["Strength"].default_value = 0.9
+
 sun = bpy.data.objects.new("sun", bpy.data.lights.new("sun", "SUN"))
+sun.data.angle = 0.25
 sun.data.energy = 3.0
 sun.rotation_euler = (math.radians(40), math.radians(10), math.radians(30))
 scene.collection.objects.link(sun)
@@ -150,7 +165,7 @@ views = args.views.split(",") + (["close"] if args.camera else [])
 for name in views:
     if name == "close":
         cam.data.type = "PERSP"
-        cam.data.lens = 35
+        cam.data.lens = args.lens
         cam.location = Vector([float(v) for v in args.camera.split(",")])
         tgt = Vector([float(v) for v in args.target.split(",")])
         cam.rotation_euler = (tgt - cam.location).to_track_quat("-Z", "Y").to_euler()

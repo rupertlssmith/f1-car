@@ -1,0 +1,30 @@
+{
+  "format": 2,
+  "mainPartName": "redbull",
+  "model": "redbull",
+  "parts": {},
+  "vars": {
+    "$arb_spring_F": 45000,
+    "$arb_spring_R": 600,
+    "$brakebias": 0.52,
+    "$brakestrength": 1,
+    "$camber_F": 0.985,
+    "$camber_R": 0.9901,
+    "$caster_F": 1.018025,
+    "$damp_bump_F": 20000,
+    "$damp_bump_R": 8000,
+    "$damp_rebound_F": 22000,
+    "$damp_rebound_R": 15000,
+    "$ffbstrength": 1,
+    "$fuel": 48,
+    "$spring_F": 500000,
+    "$spring_R": 130000,
+    "$springheight_F": 0,
+    "$springheight_R": 0,
+    "$tirepressure_F": 15,
+    "$tirepressure_R": 15,
+    "$wing_angle_B": 3,
+    "$wing_angle_F": -1,
+    "$wing_angle_R": 8
+  }
+}
