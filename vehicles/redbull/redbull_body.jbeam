@@ -199,11 +199,11 @@
          ["mt1l", 0.33, -0.3504, 0.216, {"group":["redbull_body","redbull_radduct_L"], "nodeWeight":8}],
 
          {"nodeWeight":5.0},
-         ["mt2r",-0.33, -0.3504, 0.71, {"group":["redbull_body","redbull_tierod_inner","redbull_radduct_R","redbull_halo"], "nodeWeight":3}],
-         ["mt2l", 0.33, -0.3504, 0.71, {"group":["redbull_body","redbull_tierod_inner","redbull_radduct_L","redbull_halo"], "nodeWeight":3}],
+         ["mt2r",-0.33, -0.3504, 0.71, {"group":["redbull_body","redbull_tierod_inner","redbull_radduct_R","redbull_halo"], "nodeWeight":5}],
+         ["mt2l", 0.33, -0.3504, 0.71, {"group":["redbull_body","redbull_tierod_inner","redbull_radduct_L","redbull_halo"], "nodeWeight":5}],
          
          {"nodeWeight":6.0},
-         ["mt3", 0.0, -0.9097, 0.7017, {"group":["redbull_body","redbull_halo"], "nodeWeight":6}],
+         ["mt3", 0.0, -0.9097, 0.7017, {"group":["redbull_body","redbull_halo"], "nodeWeight":8}],
 
          //front tub/suspension mounts
          {"nodeMaterial":"|NM_METAL"},
@@ -217,16 +217,16 @@
          //upper
          {"nodeWeight":5.5},
          {"group":["redbull_body","redbull_uppermounts_F"]},
-         ["fx3r",-0.2659, -1.638, 0.4597, {"nodeWeight":4}],
-         ["fx3l", 0.2659, -1.638, 0.4597, {"nodeWeight":4}],
-         ["fx4r",-0.2568, -1.0482, 0.4776, {"nodeWeight":4}],
-         ["fx4l", 0.2568, -1.0482, 0.4776, {"nodeWeight":4}],
+         ["fx3r",-0.2659, -1.638, 0.4597, {"nodeWeight":5}],
+         ["fx3l", 0.2659, -1.638, 0.4597, {"nodeWeight":5}],
+         ["fx4r",-0.2568, -1.0482, 0.4776, {"nodeWeight":5}],
+         ["fx4l", 0.2568, -1.0482, 0.4776, {"nodeWeight":5}],
 
 
          //shock
          {"nodeWeight":9.0},
          {"group":""},
-         ["fs1", 0.0, -1.3974, 0.7525, {"selfCollision":false,"collision":false, "nodeWeight":4}],
+         ["fs1", 0.0, -1.3974, 0.7525, {"selfCollision":false,"collision":false, "nodeWeight":6}],
 
          //halo
          {"nodeWeight":1.5},

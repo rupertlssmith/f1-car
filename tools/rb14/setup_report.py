@@ -322,14 +322,76 @@ def preload_forces(v, free, idx, only=None):
     return f
 
 
+def generated_wheels(v):
+    """Approximate the hub and tyre the game generates for each pressureWheel
+    (BeamNG doesn't document the exact layout): two staggered rings of
+    numRays hub nodes at hubRadius, +-hubWidth/2 about the wheel centre,
+    each tied to both axle nodes (hubSide), across (hubTread) and around
+    (hubPeriphery); two rings of tyre nodes at the radius, +-tireWidth/2,
+    tied to the hub (wheelSide, stiff value in extension), across
+    (wheelTread / wheelTreadReinf) and around (wheelPeriphery / ...Reinf).
+    Returns ({node: pos}, {node: mass}, [(a, b, k)])."""
+    pos, mass, beams = {}, {}, []
+    for r in v.wheels():
+        n1, n2 = r.get("node1:"), r.get("node2:")
+        if n1 not in v.pos or n2 not in v.pos:
+            continue
+        a, b = v.pos[n1], v.pos[n2]
+        axis = (b - a) / np.linalg.norm(b - a)
+        c = (a + b) / 2 + axis * v.val(r.get("wheelOffset"), 0) * v.val(r.get("wheelDir"), 1)
+        e1 = np.cross(axis, [0, 0, 1.0])
+        e1 /= np.linalg.norm(e1)
+        e2 = np.cross(axis, e1)
+        nr = int(v.val(r.get("numRays"), 16))
+        val = lambda k, d=0: v.val(r.get(k), d)
+        name = r["name"]
+        rings = {}
+        for kind, rad, width, w in (("hub", val("hubRadius", 0.2), val("hubWidth", 0.2), val("hubNodeWeight", 0.5)),
+                                    ("tyre", val("radius", 0.3), val("tireWidth", 0.2), val("nodeWeight", 0.2))):
+            for side, sgn in ((0, -1), (1, 1)):
+                ids = []
+                for i in range(nr):
+                    ang = 2 * math.pi * (i + 0.5 * side) / nr
+                    nid = f"{name}_{kind}{side}_{i}"
+                    pos[nid] = c + axis * sgn * width / 2 + rad * (math.cos(ang) * e1 + math.sin(ang) * e2)
+                    mass[nid] = w
+                    ids.append(nid)
+                rings[(kind, side)] = ids
+        wide = max(val("wheelSideBeamSpringExpansion", 0), val("wheelSideBeamSpring", 0))
+        for i in range(nr):
+            j, k2 = (i + 1) % nr, (i + 2) % nr
+            h0, h1, t0, t1 = rings[("hub", 0)], rings[("hub", 1)], rings[("tyre", 0)], rings[("tyre", 1)]
+            for hn in (h0[i], h1[i]):
+                beams += [(n1, hn, val("hubSideBeamSpring")), (n2, hn, val("hubSideBeamSpring"))]
+            beams += [(h0[i], h1[i], val("hubTreadBeamSpring")), (h0[j], h1[i], val("hubTreadBeamSpring")),
+                      (h0[i], h0[j], val("hubPeripheryBeamSpring")), (h1[i], h1[j], val("hubPeripheryBeamSpring"))]
+            beams += [(h0[i], t0[i], wide), (h1[i], t1[i], wide), (h0[i], t1[i], val("wheelReinfBeamSpring")),
+                      (t0[i], t1[i], val("wheelTreadBeamSpring")), (t0[j], t1[i], val("wheelTreadBeamSpring")),
+                      (t0[i], t1[j], val("wheelTreadReinfBeamSpring")),
+                      (t0[i], t0[j], val("wheelPeripheryBeamSpring")), (t1[i], t1[j], val("wheelPeripheryBeamSpring")),
+                      (t0[i], t0[k2], val("wheelPeripheryReinfBeamSpring")), (t1[i], t1[k2], val("wheelPeripheryReinfBeamSpring"))]
+    return pos, mass, beams
+
+
 def stability_report(v, dt=1 / 2000, top=5):
     """BeamNG's explicit 2 kHz integration is stable while every vibration
-    mode of the node/beam network has omega * dt < 2. Eigenmodes of M^-1 K
-    over all nodes (beams and torsionbars; the wheels the game generates
-    from pressureWheels aren't in the model)."""
-    free = sorted(v.pos)
+    mode of the node/beam network has omega * dt < 2 (in practice the F4,
+    which is fine in game, peaks at 1.69, and 1.77 visibly shook). Eigenmodes
+    of M^-1 K over all nodes: beams, torsionbars and the generated wheels
+    (approximated, see generated_wheels)."""
+    wpos, wmass, wbeams = generated_wheels(v)
+    free = sorted(v.pos) + sorted(wpos)
     K, idx = stiffness(v, free)
-    m = np.repeat([max(v.mass[n], 1e-6) for n in free], 3)
+    allpos = {**v.pos, **wpos}
+    for a, b, k in wbeams:
+        d = allpos[b] - allpos[a]
+        u = d / np.linalg.norm(d)
+        for n1, g1 in ((a, -u), (b, u)):
+            for n2, g2 in ((a, -u), (b, u)):
+                i, j = 3 * idx[n1], 3 * idx[n2]
+                K[i:i + 3, j:j + 3] += k * np.outer(g1, g2)
+    masses = {**v.mass, **wmass}
+    m = np.repeat([max(masses[n], 1e-6) for n in free], 3)
     Mi = 1 / np.sqrt(m)
     w, V = np.linalg.eigh(K * Mi[:, None] * Mi[None, :])
     wd = np.sqrt(np.clip(w, 0, None)) * dt
@@ -337,7 +399,7 @@ def stability_report(v, dt=1 / 2000, top=5):
     for j in np.argsort(-wd)[:top]:
         vec = V[:, j] ** 2
         nodes = sorted(((vec[3 * i:3 * i + 3].sum(), n) for n, i in idx.items()), reverse=True)[:3]
-        modes.append("%.2f: %s" % (wd[j], ", ".join("%s %.1f kg" % (n, v.mass[n]) for _, n in nodes)))
+        modes.append("%.2f: %s" % (wd[j], ", ".join("%s %.2f kg" % (n, masses[n]) for _, n in nodes)))
     return dict(max=float(wd.max()), over=int((wd >= 2).sum()), modes=modes)
 
 

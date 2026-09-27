@@ -39,15 +39,17 @@ def mass():
         "rt1r": 12, "rt1l": 12, "rt3r": 12, "rt3l": 12,        # tub floor, rear
         "mt1r": 8, "mt1l": 8, "mt1": 10,                        # tub floor, front
         "rt2r": 3, "rt2l": 3, "rt4r": 3, "rt4l": 3,             # cockpit rim / hoop base
-        "mt2r": 3, "mt2l": 3, "mt3": 3, "fs1": 4,
+        "mt2r": 5, "mt2l": 5, "mt3": 8, "fs1": 6,
         "fx1r": 5.5, "fx1l": 5.5, "fx2r": 5.5, "fx2l": 5.5,     # front bulkhead, low
-        "fx3r": 4, "fx3l": 4, "fx4r": 4, "fx4l": 4})
+        "fx3r": 5, "fx3l": 5, "fx4r": 5, "fx4l": 5})
     # power unit 145 kg (ICE, turbo, MGU-K/H), CoG ~0.3 m
     weights(f"{V}/redbull_engine.jbeam", {
         "e1r": 25, "e1l": 25, "e2r": 25, "e2l": 25, "e3r": 11.25, "e3l": 11.25, "e4r": 11.25, "e4l": 11.25})
     # gearbox + casing ~40 kg
     weights(f"{V}/redbull_transaxle.jbeam", {
-        "rx1r": 4.2, "rx1l": 4.2, "rx2r": 4.2, "rx2l": 4.2, "rx3r": 4.2, "rx3l": 4.2, "rx4r": 4.2, "rx4l": 4.2})
+        "rx1r": 5, "rx1l": 5, "rx2r": 5, "rx2l": 5, "rx3r": 5, "rx3l": 5, "rx4r": 5, "rx4l": 5})
+    # rear crash structure: the F4's 1 kg nodes sit right at the stability limit
+    weights(f"{V}/redbull_crashbox.jbeam", {n: 1.15 for n in ("cb1r", "cb1l", "cb3r", "cb3l")})
     # uprights, brakes, wishbone ends: roughly half the F4's corner mass
     weights(f"{V}/redbull_suspension_F.jbeam", {
         "fh1r": 4, "fh1l": 4, "fh2r": 1, "fh2l": 1, "fh3r": 3, "fh3l": 3, "fh4r": 3, "fh4l": 3, "fh5r": 3, "fh5l": 3})
@@ -104,20 +106,26 @@ def ballast():
 # ------------------------------------------------------------ stability
 # BeamNG integrates at 2 kHz; every vibration mode of the node/beam network
 # must stay below omega * dt = 2 or the solver pumps energy into it (the car
-# shakes and explodes on spawn). The F4 peaks at 1.69. setup_report computes
-# the modes; we keep ours <= MAX_OMEGA_DT. Lightening the uprights and wheel
-# carriers for F1 unsprung mass put them above the limit on the F4's very
-# stiff wishbone / hub beams (8-14 MN/m, 40-80x the wheel rate), so those
-# are capped instead of adding the mass back: the arms stay far stiffer than
-# the suspension, so handling is unchanged. Chassis nodes get mass instead
-# (taken from the ballast).
-MAX_OMEGA_DT = 1.8
-CHASSIS_MIN_MASS = {"mt3": 6, "rt4r": 4.5, "rt4l": 4.5}
-HUB_TORSION_F = 100000                       # was 200000 (F4)
+# shakes, beams break, wheels come off). setup_report.stability_report()
+# computes the modes, including an approximation of the wheels the game
+# generates. Calibration from game tests: the F4 (fine) peaks at 1.84 with
+# the wheels / 1.69 without; our 1.77 chassis mode visibly shook and 1.96 at
+# the wheel axles lost the wheels. Target: <= 1.65 everywhere.
+# Lightening the uprights and wheel carriers for F1 unsprung mass put them
+# over the limit on the F4's very stiff wishbone / hub beams (8-14 MN/m,
+# 40-80x the wheel rate); those are capped instead of adding the mass back
+# (the arms stay ~30x stiffer than the suspension, so handling barely
+# changes). Chassis and gearbox nodes get mass instead, paid for by the
+# plank ballast (solved in ballast()).
+MAX_OMEGA_DT = float(os.environ.get("RB14_MAX_OMEGA_DT", 1.65))
+HUB_SPRING_SCALE = 0.45                      # hub beams vs the F4's (hub nodes 0.35 vs 0.55 kg)
+WHEEL_AXLE_WEIGHT = 3.5                      # kg, wheel axle nodes (F4: 5)
+CHASSIS_MIN_MASS = {"rt4r": 4.5, "rt4l": 4.5}
+HUB_TORSION_F = 80000                        # was 200000 (F4)
 SPRING_CAP = {                               # part -> highest beamSpring (N/m)
-    "redbull_suspension_F": 6.0e6,
-    "redbull_steering": 6.0e6,
-    "redbull_suspension_R": 6.0e6,
+    "redbull_suspension_F": 5.0e6,
+    "redbull_steering": 5.0e6,
+    "redbull_suspension_R": 5.0e6,
 }
 SPRING_CAP_FILES = {"redbull_suspension_F": "suspension_F", "redbull_steering": "suspension_F",
                     "redbull_suspension_R": "suspension_R"}
@@ -147,7 +155,7 @@ def stiffness():
                    '{"spring":%d, "damp":0, "deform":25000, "strength":100000}' % HUB_TORSION_F)
     # generated wheel hubs: lighter hub nodes than the F4 (0.35 vs 0.55 kg),
     # so the hub beams scale with them to keep the F4's (stable) frequencies
-    k = 0.35 / 0.55
+    k = HUB_SPRING_SCALE
     for f in (f"{W}/redbull_wheels_F_13.jbeam", f"{W}/redbull_wheels_R_13.jbeam"):
         je.set_all(f, r'\{"hubTreadBeamSpring":\d+,', '{"hubTreadBeamSpring":%d,' % (990900 * k))
         je.set_all(f, r'\{"hubPeripheryBeamSpring":\d+,', '{"hubPeripheryBeamSpring":%d,' % (990900 * k))
@@ -162,13 +170,13 @@ def check_stability():
         worst = max(worst, st["max"])
         if st["max"] > MAX_OMEGA_DT:
             raise SystemExit(f"{cfg}: highest mode omega*dt {st['max']:.2f} > {MAX_OMEGA_DT}: {st['modes'][0]}")
-    print("stability: highest mode omega*dt %.2f (limit 2, target <= %.1f)" % (worst, MAX_OMEGA_DT))
+    print("stability: highest mode omega*dt %.2f (limit 2, target <= %.2f)" % (worst, MAX_OMEGA_DT))
 
 
 def wheels():
     # axle nodes of the wheel parts: 3 kg each (were 5)
     for f in (f"{W}/redbull_wheels_F_13.jbeam", f"{W}/redbull_wheels_R_13.jbeam"):
-        je.set_all(f, r'\{"nodeWeight":[\d.]+\}', '{"nodeWeight":3.0}')
+        je.set_all(f, r'\{"nodeWeight":[\d.]+\}', '{"nodeWeight":%s}' % WHEEL_AXLE_WEIGHT)
         # rims + hubs + discs: 32 hub nodes x 0.35 kg = 11 kg per wheel (were 0.55)
         je.set_all(f, r'\{"hubNodeWeight":[\d.]+\}', '{"hubNodeWeight":0.35}')
 
