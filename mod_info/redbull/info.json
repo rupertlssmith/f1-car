@@ -32,7 +32,7 @@
     "update_count": 3,
     "path": "redbull/62537/",
     "filename": "f4_lucasbe.zip",
-    "title": "Carbonworks F4",
+    "title": "Red Bull RB14",
     "user_id": 101002,
     "username": "LucasBE",
     "tagid": "redbull",
@@ -255,7 +255,7 @@
         ],
         [
             "vehicles/redbull/info.json",
-            "f9c88aa7f80cda23"
+            "c7fe4e12d698d553"
         ],
         [
             "vehicles/redbull/info_campus_aggressive.json",
@@ -615,7 +615,7 @@
         ],
         [
             "vehicles/redbull/redbull.jbeam",
-            "47b159a6bcf37c40"
+            "32fd1a3c909eaf37"
         ],
         [
             "vehicles/redbull/redbull_accessory.data.dds",
