@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # =============================================================================
-# Pinned, checksum-verified JVM build toolchain for the AGENT (production) image.
+# Pinned, checksum-verified JVM build toolchain for the RUNTIME (production) image.
 #
 #   * Eclipse Temurin JDK 21 (LTS)  -> /opt/java/temurin-<ver>,  /opt/java/current
 #   * Gradle (build tool)           -> /opt/gradle/gradle-<ver>, /opt/gradle/current

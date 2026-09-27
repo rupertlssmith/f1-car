@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Shared entrypoint helpers — sourced by agent-entrypoint.sh and dev-entrypoint.sh.
+# Shared entrypoint helpers — sourced by runtime-entrypoint.sh and dev-entrypoint.sh.
 #
 # Borrowed from eco-compiler/docker/eco-dev-entrypoint.sh: resolve a target
 # UID/GID at runtime and create a matching ordinary (non-root) user, so files the

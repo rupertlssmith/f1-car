@@ -3,7 +3,7 @@ set -euo pipefail
 
 # =============================================================================
 # Pinned, checksum-verified Kotlin DEV tools for the interactive dev image.
-# Layered on top of the agent image's JVM (JDK 21 + Gradle); these are the
+# Layered on top of the runtime image's JVM (JDK 21 + Gradle); these are the
 # hands-on tools you reach for at a prompt, not part of the production runtime.
 #
 #   * Kotlin compiler + REPL (kotlinc, kotlin) -> /opt/kotlin/kotlinc/bin

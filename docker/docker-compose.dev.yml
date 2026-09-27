@@ -1,32 +1,60 @@
-# Interactive dev container + its volume, in one place.
+# Interactive dev container + its volume, in one place — the Compose equivalent
+# of docker/dev.sh. Keep the two in step; they are meant to be interchangeable.
 #
-# tk-dev is built FROM the agent image (tk-agent), so build that base first:
-#   docker build -f docker/agent.Dockerfile -t tk-agent .
+# devbox-dev is built FROM the runtime image (devbox-runtime), so build that base first:
+#   docker build -f docker/runtime.Dockerfile -t devbox-runtime .
 #
 # Then bring up an interactive shell. Pass your host UID/GID so files written to
 # the bind-mounted /work stay owned by you:
 #   HOST_UID=$(id -u) HOST_GID=$(id -g) \
-#     docker compose -f docker/docker-compose.dev.yml run --build --rm dev
+#     docker compose -f docker/docker-compose.dev.yml run --build --rm --service-ports dev
 #
-# Volumes: the ONLY named volume is tk-home, holding /home/dev (Claude Code login,
-# shell history). The repo is bind-mounted at /work and the agent writes its
-# runtime output to /work/runtime (visible on the host) — there is no runtime volume.
+# --service-ports is not optional if you want the ports: `compose run` ignores
+# the `ports:` block without it (only `compose up` honours it), which makes a
+# dev server look unreachable for no visible reason. dev.sh always publishes.
+#
+# Volumes: the only named volume is devbox-home, holding the dev user's home
+# (Claude Code login, shell history, package caches). It is pinned with an
+# explicit `name:` — without one Compose prefixes it with the project name and
+# you would get `docker_devbox-home` here versus the bare `devbox-home` that
+# dev.sh creates: two volumes, so a login through one path would not be seen by
+# the other. The top-level `name:` pins the project for the same reason.
+#
+# The repo is bind-mounted at /work; anything written under /work stays
+# visible on the host, so there is no runtime volume.
+name: devbox
+
 services:
   dev:
-    image: tk-dev
+    image: devbox-dev
     build:
       context: ..
       dockerfile: docker/dev.Dockerfile
     working_dir: /work
     stdin_open: true
     tty: true
+    # Secrets, when a .env exists — `required: false` needs Compose v2.24+.
+    # Drop this block on an older Compose, or create an empty ../.env.
+    env_file:
+      - path: ../.env
+        required: false
     environment:
       HOST_UID: "${HOST_UID:-1000}"
       HOST_GID: "${HOST_GID:-1000}"
       TERM: xterm-256color
+      # Must match the mount path below — this is what makes $HOME land on the
+      # volume rather than on the container overlay. See docker/dev-entrypoint.sh.
+      DEV_HOME: /home/dev
+      DEV_HOME_VOLUME: devbox-home
+    # Defaults mirror dev.sh's DEV_PORTS. Override per instance:
+    #   DEV_PORT_A=5173 DEV_PORT_B=3000 docker compose ... up
+    ports:
+      - "${DEV_PORT_A:-8000}:8000"
+      - "${DEV_PORT_B:-8080}:8080"
     volumes:
       - ..:/work
-      - tk-home:/home/dev
+      - devbox-home:/home/dev
 
 volumes:
-  tk-home:
+  devbox-home:
+    name: devbox-home
