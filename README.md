@@ -7,15 +7,45 @@ kept for reference in `vehicles/fr04/`.
 
 ## Building the mod
 
+The build script needs Python 3 and the `xxhash` package. It writes
+`dist/redbull.zip`.
+
+**Linux (Debian / Ubuntu)** — system-wide `pip install` is blocked there
+(PEP 668), so use the distro package:
+
 ```bash
-pip install xxhash                 # already in the dev image
-python3 tools/build_mod.py         # -> dist/redbull.zip
+sudo apt install python3-xxhash
+python3 tools/build_mod.py
+```
+
+or, if that package isn't available, a virtualenv in the repo:
+
+```bash
+python3 -m venv .venv
+.venv/bin/pip install xxhash
+.venv/bin/python tools/build_mod.py
+```
+
+**Windows** (PowerShell or cmd, with Python 3 from python.org):
+
+```powershell
+py -m pip install xxhash
+py tools\build_mod.py
+```
+
+**Dev container** — `xxhash` is already installed:
+
+```bash
+./docker/dev.sh python tools/build_mod.py
 ```
 
 Copy `dist/redbull.zip` into your BeamNG mods folder
 (`%LocalAppData%\BeamNG.drive\<version>\mods\` on Windows) and it appears in the
-vehicle selector. The build regenerates the manifest's file hashes; pass
-`--update-manifest` to write them back to `mod_info/redbull/info.json` too.
+vehicle selector.
+
+Options: `--out <dir>` writes the zip somewhere else (e.g. straight into the
+mods folder); `--update-manifest` also writes the regenerated file hashes back
+to `mod_info/redbull/info.json` — use it before committing changed mod files.
 
 ## Dev environment
 
