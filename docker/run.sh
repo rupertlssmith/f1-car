@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Run the project — the RUNTIME image (devbox-runtime), as production would.
+# Run the project — the RUNTIME image (f1-car-runtime), as production would.
 #
 # The counterpart to docker/dev.sh: same conventions, opposite purpose. dev.sh
 # gives you a shell in the dev image over a bind-mounted working tree; this runs
@@ -11,10 +11,10 @@
 #   RUN_DETACH=1 ./docker/run.sh          # background, restarts unless stopped
 #
 # Build first:
-#   docker build -f docker/runtime.Dockerfile -t devbox-runtime .
+#   docker build -f docker/runtime.Dockerfile -t f1-car-runtime .
 #
 # ---------------------------------------------------------------------------
-# STATE. RUN_VOLUME (default devbox-data) is mounted at /runtime, which is what
+# STATE. RUN_VOLUME (default f1-car-data) is mounted at /runtime, which is what
 # the image's APP_RUNTIME_DIR points at, so state survives --rm. Set
 # RUN_VOLUME= to run with no volume at all, or give it a host path to write onto
 # the host filesystem instead:
@@ -36,8 +36,8 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
-IMAGE="${RUN_IMAGE:-devbox-runtime}"
-VOLUME="${RUN_VOLUME-devbox-data}"
+IMAGE="${RUN_IMAGE:-f1-car-runtime}"
+VOLUME="${RUN_VOLUME-f1-car-data}"
 ENV_FILE="${ENV_FILE-.env}"
 
 args=(--rm)

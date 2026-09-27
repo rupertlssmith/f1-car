@@ -1,14 +1,8 @@
-# Dev environment starter
+# f1-car
 
-A quick-start template for spinning up a containerised development environment
-with a broad, version-pinned toolchain already wired together. Clone it, build
-two images, and drop into an interactive shell that has Python, a JVM/Kotlin
-build stack, and Claude Code ready to go — all against your repo bind-mounted at
-`/work`.
-
-This repo is deliberately domain-agnostic. It previously hosted a Python +
-LangGraph project; that has been cleared out, leaving the reusable `docker/`
-setup as the starting point for your own work.
+Containerised development environment for f1-car, from the devbox starter.
+`f1-car-runtime` is what runs the project in production; `f1-car-dev` is that
+same stack plus Claude Code and the tools for working on it.
 
 ## What's in the box
 
@@ -16,8 +10,8 @@ Everything lives under [`docker/`](docker/) as two layered images:
 
 | Image | Built from | Adds |
 |-------|-----------|------|
-| **runtime** (`devbox-runtime`) | `debian:bookworm` | The runtime base: Python 3.14 (via `uv`, in `/opt/venv`), the JVM build toolchain (Temurin JDK 21 + Gradle), a pandoc/xelatex render stack, and a headless Chromium. |
-| **dev** (`devbox-dev`) | `devbox-runtime` | The interactive layer, `FROM` the runtime image: Claude Code, Kotlin dev tools (`kotlinc`/REPL, `ktlint`), and shell conveniences (git, sudo, ripgrep, fd, vim, bash-completion). |
+| **runtime** (`f1-car-runtime`) | `debian:bookworm` | The runtime base: Python 3.14 (via `uv`, in `/opt/venv`), the JVM build toolchain (Temurin JDK 21 + Gradle), a pandoc/xelatex render stack, and a headless Chromium. |
+| **dev** (`f1-car-dev`) | `f1-car-runtime` | The interactive layer, `FROM` the runtime image: Claude Code, Kotlin dev tools (`kotlinc`/REPL, `ktlint`), and shell conveniences (git, sudo, ripgrep, fd, vim, bash-completion). |
 
 The dev image is what you use day to day; it inherits the whole runtime toolchain
 and adds the hands-on tools on top.
@@ -47,11 +41,11 @@ scripts):
 Run from the repo root. The runtime image is the base, so build it **first**:
 
 ```bash
-docker build -f docker/runtime.Dockerfile -t devbox-runtime .
-docker build -f docker/dev.Dockerfile   -t devbox-dev   .
+docker build -f docker/runtime.Dockerfile -t f1-car-runtime .
+docker build -f docker/dev.Dockerfile   -t f1-car-dev   .
 ```
 
-(`devbox-runtime` / `devbox-dev` are placeholder names — rename them to suit your project,
+(`f1-car-runtime` / `f1-car-dev` are placeholder names — rename them to suit your project,
 keeping them consistent across the two build commands and `docker/dev.sh` /
 `docker/docker-compose.dev.yml`.)
 
@@ -61,7 +55,7 @@ The `docker/dev.sh` helper launches an interactive container. It bind-mounts the
 repo to `/work`, matches your host UID/GID so files you create stay yours,
 enables 256-colour output, publishes a couple of dev ports, injects `/work/.env`
 when it exists, and gives the container user a **persistent home** on the named
-`devbox-home` volume:
+`f1-car-home` volume:
 
 ```bash
 ./docker/dev.sh                                    # interactive bash in /work
@@ -69,7 +63,7 @@ when it exists, and gives the container user a **persistent home** on the named
 ./docker/dev.sh pytest -q | tee out.log            # no tty allocated when piped
 ```
 
-Or via Compose (still needs `devbox-runtime` built first):
+Or via Compose (still needs `f1-car-runtime` built first):
 
 ```bash
 HOST_UID=$(id -u) HOST_GID=$(id -g) \
@@ -88,12 +82,12 @@ java -version           # Temurin JDK 21
 gradle --version
 kotlinc -version        # Kotlin REPL: kotlinc
 ktlint --version
-claude                  # Claude Code — sign in once; it persists in devbox-home
+claude                  # Claude Code — sign in once; it persists in f1-car-home
 ```
 
 ### What persists
 
-`devbox-home` is the container user's real home, so `--rm` costs you nothing:
+`f1-car-home` is the container user's real home, so `--rm` costs you nothing:
 Claude Code's login and history, your shell history, and every package-manager
 cache (`~/.gradle`, `~/.cache/uv`, `~/.m2`, `~/.npm`) all live there. A fresh
 `gradle build` in a new container reuses yesterday's downloads.

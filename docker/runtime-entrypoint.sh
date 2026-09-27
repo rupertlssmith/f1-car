@@ -40,7 +40,7 @@ chown "${uid}:${gid}" "${VOL}" 2>/dev/null || true
 # needs to be baked into the image.
 
 # Default: serve the placeholder page on 0.0.0.0:8080. Publish the port to reach
-# it from the host, e.g. `docker run -p 8080:8080 devbox-runtime`.
+# it from the host, e.g. `docker run -p 8080:8080 f1-car-runtime`.
 exec gosu "${uid}:${gid}" python -m http.server 8080 --directory /app/docker/webroot
 
 # YOUR APP GOES HERE — delete the web-server line above and uncomment this one,

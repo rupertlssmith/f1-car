@@ -1,8 +1,8 @@
 # Interactive dev container + its volume, in one place — the Compose equivalent
 # of docker/dev.sh. Keep the two in step; they are meant to be interchangeable.
 #
-# devbox-dev is built FROM the runtime image (devbox-runtime), so build that base first:
-#   docker build -f docker/runtime.Dockerfile -t devbox-runtime .
+# f1-car-dev is built FROM the runtime image (f1-car-runtime), so build that base first:
+#   docker build -f docker/runtime.Dockerfile -t f1-car-runtime .
 #
 # Then bring up an interactive shell. Pass your host UID/GID so files written to
 # the bind-mounted /work stay owned by you:
@@ -13,20 +13,20 @@
 # the `ports:` block without it (only `compose up` honours it), which makes a
 # dev server look unreachable for no visible reason. dev.sh always publishes.
 #
-# Volumes: the only named volume is devbox-home, holding the dev user's home
+# Volumes: the only named volume is f1-car-home, holding the dev user's home
 # (Claude Code login, shell history, package caches). It is pinned with an
 # explicit `name:` — without one Compose prefixes it with the project name and
-# you would get `docker_devbox-home` here versus the bare `devbox-home` that
+# you would get `docker_f1-car-home` here versus the bare `f1-car-home` that
 # dev.sh creates: two volumes, so a login through one path would not be seen by
 # the other. The top-level `name:` pins the project for the same reason.
 #
 # The repo is bind-mounted at /work; anything written under /work stays
 # visible on the host, so there is no runtime volume.
-name: devbox
+name: f1-car
 
 services:
   dev:
-    image: devbox-dev
+    image: f1-car-dev
     build:
       context: ..
       dockerfile: docker/dev.Dockerfile
@@ -45,7 +45,7 @@ services:
       # Must match the mount path below — this is what makes $HOME land on the
       # volume rather than on the container overlay. See docker/dev-entrypoint.sh.
       DEV_HOME: /home/dev
-      DEV_HOME_VOLUME: devbox-home
+      DEV_HOME_VOLUME: f1-car-home
     # Defaults mirror dev.sh's DEV_PORTS. Override per instance:
     #   DEV_PORT_A=5173 DEV_PORT_B=3000 docker compose ... up
     ports:
@@ -53,8 +53,8 @@ services:
       - "${DEV_PORT_B:-8080}:8080"
     volumes:
       - ..:/work
-      - devbox-home:/home/dev
+      - f1-car-home:/home/dev
 
 volumes:
-  devbox-home:
-    name: devbox-home
+  f1-car-home:
+    name: f1-car-home

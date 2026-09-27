@@ -3,7 +3,7 @@
 Container setup for this dev-environment starter (see the [top-level
 README](../README.md) for the overview). The interactive **dev** image is what
 you run day to day; it is built `FROM` the runtime image, which packages the full
-runtime toolchain. `devbox-runtime` / `devbox-dev` are placeholder image names —
+runtime toolchain. `f1-car-runtime` / `f1-car-dev` are placeholder image names —
 rename to suit your project.
 
 | File | Purpose |
@@ -14,14 +14,14 @@ rename to suit your project.
 | `webroot/index.html` | The placeholder page served on port 8080 by the default runtime entrypoint. |
 | `dev.Dockerfile` | Interactive **dev** environment — the runtime + Claude Code + dev conveniences + Kotlin dev tools, `FROM` the runtime image. Not for deployment. |
 | `dev-entrypoint.sh` | Resolve a host-matching user, put its `HOME` on the mounted volume, grant sudo, wire `HOME`/`PATH`, symlink `/work/.venv`→`/opt/venv`, `exec bash`. |
-| `dev.sh` | Launch the dev container: bind repo→`/work`, `devbox-home` volume, publish `DEV_PORTS`, inject `.env`, 256-colour. |
-| `docker-compose.dev.yml` | Dev service + the `devbox-home` volume (Compose alternative to `dev.sh`). |
+| `dev.sh` | Launch the dev container: bind repo→`/work`, `f1-car-home` volume, publish `DEV_PORTS`, inject `.env`, 256-colour. |
+| `docker-compose.dev.yml` | Dev service + the `f1-car-home` volume (Compose alternative to `dev.sh`). |
 | `install_claude.sh` | Vendored Claude Code installer (checksum-verified standalone binary). |
 | `install_jvm.sh` | Pinned, checksum-verified JVM build toolchain — Temurin JDK 21 (LTS) → `/opt/java/current` and Gradle → `/opt/gradle/current`. Used by the **runtime** image. |
 | `install_kotlin.sh` | Pinned, checksum-verified Kotlin dev tools — `kotlinc`/REPL and `ktlint` → `/opt/kotlin`. Used by the **dev** image. |
 | `_user-setup.sh` | Shared UID/GID + user-creation helpers. |
 
-**Volumes:** the only named volume is `devbox-home`, mounted at `/home/dev`. The
+**Volumes:** the only named volume is `f1-car-home`, mounted at `/home/dev`. The
 repo is bind-mounted at `/work` and anything written under it is visible on the
 host, so there is no runtime volume.
 
@@ -32,8 +32,8 @@ runtime image, so build that base **first**:
 
 ```bash
 # 1. Build the runtime base image, then the dev image on top of it.
-docker build -f docker/runtime.Dockerfile -t devbox-runtime .
-docker build -f docker/dev.Dockerfile   -t devbox-dev   .
+docker build -f docker/runtime.Dockerfile -t f1-car-runtime .
+docker build -f docker/dev.Dockerfile   -t f1-car-dev   .
 
 # 2. Launch an interactive shell (binds the repo to /work).
 ./docker/dev.sh
@@ -54,7 +54,7 @@ is included; edit or replace it with your project's deps.
 
 ### The home volume — what persists, and why it must
 
-`devbox-home` is mounted at `/home/dev`, and `dev.sh` passes that same path as
+`f1-car-home` is mounted at `/home/dev`, and `dev.sh` passes that same path as
 `DEV_HOME` so the entrypoint makes it the resolved user's actual home. That one
 wiring decides whether **anything** survives `--rm`:
 
@@ -107,20 +107,20 @@ DEV_NO_PORTS=1 ./docker/dev.sh                  # extra shell, publishes nothing
 DEV_PORTS="8001 8081" ./docker/dev.sh           # or its own
 ```
 
-Nothing else stops them coexisting. They share `devbox-home` by default, so one
+Nothing else stops them coexisting. They share `f1-car-home` by default, so one
 Claude Code login and one shell history serve all of them.
 
 ### The Compose path
 
 ```bash
-docker build -f docker/runtime.Dockerfile -t devbox-runtime .
+docker build -f docker/runtime.Dockerfile -t f1-car-runtime .
 HOST_UID=$(id -u) HOST_GID=$(id -g) \
   docker compose -f docker/docker-compose.dev.yml run --build --rm --service-ports dev
 ```
 
 `--service-ports` is not optional if you want the ports: `compose run` ignores
 the `ports:` block without it. The two paths are kept interchangeable on purpose
-— same image, same `devbox-home` volume, same `DEV_HOME` — so edit both when you
+— same image, same `f1-car-home` volume, same `DEV_HOME` — so edit both when you
 change one.
 
 ### When it does not come up
@@ -128,7 +128,7 @@ change one.
 | Symptom | Cause |
 |---|---|
 | `claude` asks you to log in again every session | `$HOME` is not on the volume. Check `echo $HOME` inside — it must match the mount (`/home/dev`). An older `dev.sh` that does not pass `DEV_HOME` is the usual reason. |
-| Compose asks you to log in although `dev.sh` did not | Two different volumes. Compose prefixes a volume with the project name unless it is pinned with an explicit `name:` — `docker volume ls` will show both `devbox-home` and something like `docker_devbox-home`. |
+| Compose asks you to log in although `dev.sh` did not | Two different volumes. Compose prefixes a volume with the project name unless it is pinned with an explicit `name:` — `docker volume ls` will show both `f1-car-home` and something like `docker_f1-car-home`. |
 | Browser says connection refused, container looks healthy | The server bound `127.0.0.1` inside. Pass `--host 0.0.0.0` (or the equivalent). |
 | Nothing published at all under Compose | `compose run` without `--service-ports`. |
 | `docker: Error ... port is already allocated` | Another instance holds it. `DEV_NO_PORTS=1` or give this one its own `DEV_PORTS`. |
@@ -146,7 +146,7 @@ baked in, with nothing from your tree shadowing it. If it works under `run.sh`
 it works deployed.
 
 ```bash
-docker build -f docker/runtime.Dockerfile -t devbox-runtime .
+docker build -f docker/runtime.Dockerfile -t f1-car-runtime .
 
 ./docker/run.sh                     # then open http://localhost:8080
 RUN_DETACH=1 ./docker/run.sh        # background, restarts unless stopped
@@ -155,8 +155,8 @@ RUN_DETACH=1 ./docker/run.sh        # background, restarts unless stopped
 
 | Variable | Default | Purpose |
 |---|---|---|
-| `RUN_IMAGE` | `devbox-runtime` | Image to run. |
-| `RUN_VOLUME` | `devbox-data` | Mounted at `/runtime` (where `APP_RUNTIME_DIR` points), so state survives `--rm`. A path (`./state`) bind-mounts onto the host instead; empty mounts nothing. |
+| `RUN_IMAGE` | `f1-car-runtime` | Image to run. |
+| `RUN_VOLUME` | `f1-car-data` | Mounted at `/runtime` (where `APP_RUNTIME_DIR` points), so state survives `--rm`. A path (`./state`) bind-mounts onto the host instead; empty mounts nothing. |
 | `RUN_PORTS` | `8080` | Same syntax as `DEV_PORTS`. `RUN_NO_PORTS=1` publishes nothing. |
 | `ENV_FILE` | `.env` | Passed with `--env-file` when the file exists. |
 | `RUN_DETACH` | — | `-d --restart unless-stopped` instead of an attached run. |

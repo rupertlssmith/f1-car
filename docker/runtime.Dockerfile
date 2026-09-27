@@ -1,5 +1,5 @@
 # ============================================================
-# devbox — the RUNTIME image: what runs the project in production.
+# f1-car — the RUNTIME image: what runs the project in production.
 #
 # A complete, version-pinned environment for executing the project and nothing
 # else: Python 3.14 in /opt/venv, the JVM build toolchain, the pandoc/xelatex
@@ -14,7 +14,7 @@
 FROM debian:bookworm
 ARG DEBIAN_FRONTEND=noninteractive
 
-LABEL org.opencontainers.image.description="devbox runtime — the production image for this project"
+LABEL org.opencontainers.image.description="f1-car runtime — the production image for this project"
 
 # 1) OS base + render stack + headless browser, in one apt layer.
 #    TeX set is curated (NOT texlive-full): xetex engine + recommended + extra

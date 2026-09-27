@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# Launch the interactive dev container (devbox-dev).
+# Launch the interactive dev container (f1-car-dev).
 #
 # Binds the repo working tree to /work, persists the dev home (Claude Code login,
-# shell history, package caches) in the devbox-home volume, enables 256-colour
+# shell history, package caches) in the f1-car-home volume, enables 256-colour
 # output, matches the host UID/GID, injects /work/.env if present, and publishes
 # a couple of common dev ports.
 #
@@ -15,8 +15,8 @@
 # Equivalent to `docker compose -f docker/docker-compose.dev.yml run --rm dev`.
 #
 # Build first (the runtime image is the base):
-#   docker build -f docker/runtime.Dockerfile -t devbox-runtime .
-#   docker build -f docker/dev.Dockerfile   -t devbox-dev   .
+#   docker build -f docker/runtime.Dockerfile -t f1-car-runtime .
+#   docker build -f docker/dev.Dockerfile   -t f1-car-dev   .
 #
 # ---------------------------------------------------------------------------
 # PORTS. DEV_PORTS is a space-separated list, each entry either `PORT` (published
@@ -34,7 +34,7 @@
 #
 # PARALLEL INSTANCES. Only one container can hold a given host port, so a second
 # shell alongside a running one wants `DEV_NO_PORTS=1` (or its own DEV_PORTS).
-# Nothing else stops them coexisting: they share the devbox-home volume by
+# Nothing else stops them coexisting: they share the f1-car-home volume by
 # default, so one Claude Code login and one shell history serve all of them.
 # Give an instance its own home with DEV_HOME_VOLUME=other-home.
 #
@@ -46,8 +46,8 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
-IMAGE="${DEV_IMAGE:-devbox-dev}"
-HOME_VOLUME="${DEV_HOME_VOLUME:-devbox-home}"
+IMAGE="${DEV_IMAGE:-f1-car-dev}"
+HOME_VOLUME="${DEV_HOME_VOLUME:-f1-car-home}"
 # Where that volume mounts AND the home the entrypoint gives the resolved user —
 # passed through as DEV_HOME so the two cannot drift apart. They previously did:
 # the volume mounted here while the user's home was /home/app on the container

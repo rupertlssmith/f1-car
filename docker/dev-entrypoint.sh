@@ -67,7 +67,7 @@ if ! gosu "${uid}:${gid}" test -w "${HOME}"; then
     echo "dev-entrypoint: uid ${uid}:${gid} cannot write HOME (${HOME}, owned by $(stat -c '%u:%g' "${HOME}"))."
     echo "  Nothing will persist — logins, history and caches all live there."
     echo "  Usually a home volume populated under a different UID. Fix it once:"
-    echo "    docker run --rm -v ${DEV_HOME_VOLUME:-devbox-home}:/h busybox chown -R ${uid}:${gid} /h"
+    echo "    docker run --rm -v ${DEV_HOME_VOLUME:-f1-car-home}:/h busybox chown -R ${uid}:${gid} /h"
   } >&2
 fi
 

@@ -1,5 +1,5 @@
 # ============================================================
-# devbox — interactive DEV environment.
+# f1-car — interactive DEV environment.
 #
 # The runtime toolchain PLUS Claude Code, for hands-on development. Built FROM the
 # runtime image so the heavy render/Python stack (pandoc/xelatex, /opt/venv,
@@ -8,17 +8,17 @@
 # for that.
 #
 # Build (runtime image first, it is the base):
-#   docker build -f docker/runtime.Dockerfile -t devbox-runtime .
-#   docker build -f docker/dev.Dockerfile   -t devbox-dev   .
+#   docker build -f docker/runtime.Dockerfile -t f1-car-runtime .
+#   docker build -f docker/dev.Dockerfile   -t f1-car-dev   .
 # Enter:  ./docker/dev.sh   (interactive bash; then run `claude`, `python`, `gradle`, …)
 #
 # Ports: dev.sh publishes DEV_PORTS (8000 and 8080 by default) — see the EXPOSE
 # note near the bottom of this file.
 # ============================================================
-FROM devbox-runtime:latest
+FROM f1-car-runtime:latest
 ARG DEBIAN_FRONTEND=noninteractive
 
-LABEL org.opencontainers.image.description="devbox interactive dev environment (runtime + Claude Code)"
+LABEL org.opencontainers.image.description="f1-car interactive dev environment (runtime + Claude Code)"
 
 # 1) Dev conveniences + git/sudo, in one apt layer.
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -57,7 +57,7 @@ RUN printf '%s\n' \
  && printf '%s\n' \
       'export JAVA_HOME=/opt/java/current' \
       'export PATH="$HOME/.local/bin:/opt/venv/bin:/opt/java/current/bin:/opt/gradle/current/bin:/opt/kotlin/kotlinc/bin:/opt/kotlin/bin:$PATH"' \
-      > /etc/profile.d/10-devbox-path.sh
+      > /etc/profile.d/10-f1-car-path.sh
 
 # 5) Dev works on the bind-mounted repo at /work, not the runtime image's baked
 #    /app.
