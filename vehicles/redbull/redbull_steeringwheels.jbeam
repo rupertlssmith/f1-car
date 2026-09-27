@@ -1,0 +1,74 @@
+{
+"redbull_steer": {
+    "information":{
+        "authors":"LucasBE",
+        "name":"Steering Wheel",
+        "value":550,
+    },
+    "slotType" : "redbull_steer",
+    "props": [
+        ["func",     "mesh",           "idRef:","idX:","idY:", "baseRotation",            "rotation",            "translation",         "min", "max", "offset", "multiplier"],
+        //steering wheel
+        ["steering", "redbull_steer", "mt1r","mt1l","mt2r",      {"x": 5, "y":0, "z":0}, {"x":0, "y":1, "z":0}, {"x":0, "y":0, "z":0}, -1000, 1000, 0, 1],
+    ],
+    "gauge": {
+        "configuration": {
+            "materialName": "@redbull_screen",
+            "htmlPath": "local://local/vehicles/redbull/screen/redbull_screen.html",
+            "displayWidth":320,
+            "displayHeight":220,
+        },
+        "displayData": {
+            "electrics": [
+                "gear",
+                "fuel",
+                "watertemp",
+                "wheelspeed",
+                "rpmTacho",
+                "watertemp",
+                "oiltemp",
+                "fuelVolume",
+                "engineRunning",
+                "lowfuel",
+                "checkengine",
+                "pitLimiter",
+                "biasInfo",
+                "biasDifferent",
+            ],
+        },
+    },
+    "controller": [
+        ["fileName"],
+        ["shiftLights"],
+        ["gauges/genericGauges", {"name":"gauge"}],
+    ],
+    "shiftLights": {
+        "engineName":"mainEngine",
+        "maxEngineRPMOffset": 300,
+        "rpmRange": 1000,
+        "keepLEDsActive": false,
+        "hasStallWarning": true,
+        "outputElectrics": ["led0", "led1", "led2", "led3", "led4", "led5", "led6", "led7", "led8"],
+        "flashingOutputElectrics": ["led8"],
+        "flashingAlternateOutputElectrics": [],
+    },
+    "glowMap":{
+        //screen
+        "redbull_screen":{"simpleFunction":{"ignitionLevel":0.5}, "off":"screen_off","on":"redbull_screen_accessory", "on_intense":"redbull_screen"},
+
+        //shiftlights and pit limiter lights
+        "redbull_shiftlights_l0":     {"simpleFunction":{"led0":1},    "off":"redbull_lights_on", "on":"redbull_lights_on"},
+        "redbull_shiftlights_l1":     {"simpleFunction":{"led1":1},    "off":"invis", "on":"redbull_lights_on"},
+        "redbull_shiftlights_l2":     {"simpleFunction":{"led2":1},    "off":"invis", "on":"redbull_lights_on"},
+        "redbull_shiftlights_l3":     {"simpleFunction":{"led3":1},    "off":"invis", "on":"redbull_lights_on"},
+        "redbull_shiftlights_l4":     {"simpleFunction":{"led4":1},    "off":"invis", "on":"redbull_lights_on"},
+        "redbull_shiftlights_l5":     {"simpleFunction":{"led5":1},    "off":"invis", "on":"redbull_lights_on"},
+        "redbull_shiftlights_l6":     {"simpleFunction":{"led6":1},    "off":"invis", "on":"redbull_lights_on"},
+        "redbull_shiftlights_l7":     {"simpleFunction":{"led7":1},    "off":"invis", "on":"redbull_lights_on"},
+        "redbull_shiftlights_l8":     {"simpleFunction":{"led8":1},    "off":"invis", "on":"redbull_lights_on"},
+        
+        "redbull_shiftlights_p1":     {"simpleFunction":{"ledAlarm":1}, "off":"invis", "on":"redbull_lights_on"},
+        "redbull_shiftlights_p0":     {"simpleFunction":{"ledAlarm":1}, "off":"redbull_lights_on", "on":"invis"},
+    },
+},
+}

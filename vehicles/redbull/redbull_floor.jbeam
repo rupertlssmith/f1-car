@@ -1,0 +1,343 @@
+{
+"redbull_floor": {
+    "information":{
+        "authors":"LucasBE",
+        "name":"Flat Floor",
+        "value":2280,
+    },
+    "slotType" : "redbull_floor",
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         ["redbull_floor", ["redbull_floor"]],
+    ],
+    "nodes": [
+         ["id", "posX", "posY", "posZ"],
+         {"frictionCoef":0.5},
+         {"nodeMaterial":"|NM_PLASTIC"},
+
+         //--FLOOR--
+         {"collision":true},
+         {"selfCollision":true},
+         {"nodeWeight":1.0},
+         {"group":"redbull_floor"},
+         ["fl1rr",-0.70, -0.31, 0.07],
+         ["fl1r", -0.20, -0.63, 0.03, {"nodeWeight":1.8}],
+         ["fl1l",  0.20, -0.63, 0.03, {"nodeWeight":1.8}],
+         ["fl1ll", 0.70, -0.31, 0.07],
+         
+         ["fl2rr",-0.70, 0.06, 0.07],
+         ["fl2r", -0.36, 0.06, 0.02],
+         ["fl2",   0.00, 0.06, 0.02, {"nodeWeight":1.8}],
+         ["fl2l",  0.36, 0.06, 0.02],
+         ["fl2ll", 0.70, 0.06, 0.07],
+         
+         ["fl3rr",-0.70, 0.59, 0.07],
+         ["fl3r", -0.36, 0.59, 0.02],
+         ["fl3",   0.00, 0.59, 0.02, {"nodeWeight":1.8}],
+         ["fl3l",  0.36, 0.59, 0.02],
+         ["fl3ll", 0.70, 0.59, 0.07],
+         
+         ["fl4r", -0.53, 1.12, 0.07],
+         ["fl4",   0.00, 1.12, 0.02, {"nodeWeight":1.8}],
+         ["fl4l",  0.53, 1.12, 0.07],
+         
+         ["fl5r",-0.53, 1.58, 0.10],
+         ["fl5",  0.00, 1.58, 0.10],
+         ["fl5l", 0.53, 1.58, 0.10],
+
+
+         {"group":""},
+
+         //rigidifers
+         {"selfCollision":false},
+         {"collision":false},
+         {"nodeWeight":1.5},
+         ["fl6", 0.0, 0.03, 0.43],
+         ["fl7", 0.0, 0.87, 0.43],
+    ],
+    "beams": [
+          ["id1:", "id2:"],
+          //--FLOOR--
+
+          //floor main shape
+          {"beamSpring":701000,"beamDamp":80},
+          {"beamDeform":15000,"beamStrength":"FLT_MAX"},
+          //lengthwise
+          {"deformLimitExpansion":1.2},
+          ["fl1r","fl2r"],
+          ["fl1l","fl2l"],
+          ["fl1r","fl2"],
+          ["fl1l","fl2"],
+          ["fl1rr","fl2rr",{"beamStrength":16510}],
+          ["fl1ll","fl2ll",{"beamStrength":16510}],
+          
+          ["fl2","fl3"],
+          ["fl2r","fl3r"],
+          ["fl2l","fl3l"],
+          ["fl2rr","fl3rr",{"beamStrength":16510}],
+          ["fl2ll","fl3ll",{"beamStrength":16510}],
+          
+          ["fl3","fl4"],
+          ["fl3r","fl4r"],
+          ["fl3l","fl4l"],
+          ["fl3rr","fl4r",{"beamStrength":16510}],
+          ["fl3ll","fl4l",{"beamStrength":16510}],
+          
+          ["fl4","fl5"],
+          ["fl4r","fl5r"],
+          ["fl4l","fl5l"],
+          
+          //widthwise
+          ["fl1rr","fl1r",{"beamStrength":16510}],
+          ["fl1r", "fl1l"],
+          ["fl1ll","fl1l",{"beamStrength":16510}],
+          
+          ["fl2rr","fl2r",{"beamStrength":16510}],
+          ["fl2r", "fl2"],
+          ["fl2l", "fl2"],
+          ["fl2ll","fl2l",{"beamStrength":16510}],
+          
+          ["fl3rr","fl3r",{"beamStrength":16510}],
+          ["fl3r", "fl3"],
+          ["fl3l", "fl3"],
+          ["fl3ll","fl3l",{"beamStrength":16510}],
+          
+          ["fl4r","fl4"],
+          ["fl4l","fl4"],
+
+          ["fl5r","fl5"],
+          ["fl5l","fl5"],
+
+          //surficial crossing
+          {"deformLimitExpansion":""},
+          ["fl1rr","fl2r",{"beamStrength":16510}],
+          ["fl2rr","fl1r",{"beamStrength":16510}],
+          ["fl1ll","fl2l",{"beamStrength":16510}],
+          ["fl2ll","fl1l",{"beamStrength":16510}],
+          
+          ["fl2rr","fl3r",{"beamStrength":16510}],
+          ["fl3rr","fl2r",{"beamStrength":16510}],
+          ["fl2ll","fl3l",{"beamStrength":16510}],
+          ["fl3ll","fl2l",{"beamStrength":16510}],
+          ["fl2","fl3r"],
+          ["fl3","fl2r"],
+          ["fl2","fl3l"],
+          ["fl3","fl2l"],
+          
+          ["fl3","fl4r"],
+          ["fl4","fl3r"],
+          ["fl3","fl4l"],
+          ["fl4","fl3l"],
+          
+          ["fl4","fl5r"],
+          ["fl5","fl4r"],
+          ["fl4","fl5l"],
+          ["fl5","fl4l"],
+          
+          //rigids
+          {"beamDeform":3000,"beamStrength":"FLT_MAX"},
+          ["fl1rr","fl3rr",{"beamStrength":16510}],
+          ["fl1ll","fl3ll",{"beamStrength":16510}],
+          ["fl1r","fl3r"],
+          ["fl1l","fl3l"],
+          
+          ["fl2rr","fl4r",{"beamStrength":16510}],
+          ["fl2ll","fl4l",{"beamStrength":16510}],
+          ["fl2","fl4"],
+          ["fl2r","fl4r"],
+          ["fl2l","fl4l"],
+          
+          ["fl3rr","fl5r",{"beamStrength":16510}],
+          ["fl3ll","fl5l",{"beamStrength":16510}],
+          ["fl3","fl5"],
+          ["fl3r","fl5r"],
+          ["fl3l","fl5l"],
+
+          ["fl1rr","fl1l",{"beamStrength":16510}],
+          ["fl1ll","fl1r",{"beamStrength":16510}],
+          
+          ["fl2rr","fl2",{"beamStrength":16510}],
+          ["fl2ll","fl2",{"beamStrength":16510}],
+          ["fl2r","fl2l"],
+          
+          ["fl3rr","fl3",{"beamStrength":16510}],
+          ["fl3ll","fl3",{"beamStrength":16510}],
+          ["fl3r","fl3l"],
+          
+          ["fl4r","fl4l"],
+          ["fl5r","fl5l"],
+          
+          
+          //rigidifiers
+          {"beamSpring":701000,"beamDamp":80},
+          {"beamDeform":8000,"beamStrength":"FLT_MAX"},
+          ["fl6","fl7"],
+
+          ["fl6","fl1r"],
+          ["fl6","fl1l"],
+          ["fl6","fl2r"],
+          ["fl6","fl2"],
+          ["fl6","fl2l"],
+          ["fl6","fl3r"],
+          ["fl6","fl3"],
+          ["fl6","fl3l"],
+
+          ["fl7","fl3r"],
+          ["fl7","fl3"],
+          ["fl7","fl3l"],
+          ["fl7","fl4r"],
+          ["fl7","fl4"],
+          ["fl7","fl4l"],
+          ["fl7","fl5r"],
+          ["fl7","fl5"],
+          ["fl7","fl5l"],
+          //break
+          {"beamDeform":8000,"beamStrength":30100},
+          ["fl7","fl3rr"],
+          ["fl7","fl3ll"],
+          ["fl6","fl3rr"],
+          ["fl6","fl3ll"],
+          ["fl6","fl1rr"],
+          ["fl6","fl1ll"],
+          ["fl6","fl2rr"],
+          ["fl6","fl2ll"],
+
+          
+          //attach
+          {"beamSpring":1001000,"beamDamp":500},
+          {"beamDeform":15500,"beamStrength":40000},
+          {"breakGroup":"floor_monocoque_F"},
+          ["fl1r","mt1r"],
+          ["fl1l","mt1r"],
+          ["fl1r","mt1l"],
+          ["fl1l","mt1l"],
+          ["fl1r","mt2r"],
+          ["fl1l","mt2r"],
+          ["fl1r","mt2l"],
+          ["fl1l","mt2l"],
+          
+          {"breakGroup":"floor_monocoque_MR"},
+          ["fl3r", "rt2r"],
+          ["fl3r", "rt1r"],
+          ["fl3r", "rt4r"],
+          ["fl3rr","rt2r",{"breakGroupType":1,"beamSpring":60100,"beamDeform":5200}],
+          
+          {"breakGroup":"floor_monocoque_ML"},
+          ["fl3l", "rt2l"],
+          ["fl3l", "rt1l"],
+          ["fl3l", "rt4l"],
+          ["fl3ll","rt2l",{"breakGroupType":1,"beamSpring":60100,"beamDeform":5200}],
+
+          {"beamStrength":10000},
+          {"breakGroup":"floor_transaxle_M"},
+          ["fl4","rx3r"],
+          ["fl4","rx3l"],
+          ["fl4","rx1r"],
+          ["fl4","rx1l"],
+          
+          {"breakGroup":"floor_transaxle_R"},
+          ["fl5","rx4r"],
+          ["fl5","rx4l"],
+          ["fl5r","rx4r",{"beamSpring":60100,"beamDeform":5200}],
+          ["fl5l","rx4l",{"beamSpring":60100,"beamDeform":5200}],
+
+          {"breakGroup":"floor_transaxle_RR"},
+          ["fl4r","rx3r",{"beamSpring":60100,"beamDeform":5200}],
+
+          {"breakGroup":"floor_transaxle_RL"},
+          ["fl4l","rx3l",{"beamSpring":60100,"beamDeform":5200}],
+
+
+          {"breakGroup":""},
+          //support beams
+          {"beamType":"|SUPPORT","beamLongBound":8},
+          {"beamSpring":801000,"beamDamp":500},
+          {"beamDeform":12000,"beamStrength":20000},
+          ["fl1r","mt2r"],
+          ["fl1l","mt2l"],
+          ["fl1r","mt2l"],
+          ["fl1l","mt2r"],
+
+          {"beamSpring":801000,"beamDamp":50},
+          ["fl2","rt4r"],
+          ["fl2","rt4l"],
+          ["fl2r","rt4r"],
+          ["fl2l","rt4l"],
+          
+          ["fl3","rt2r"],
+          ["fl3","rt2l"],
+          ["fl3r","rt2r"],
+          ["fl3l","rt2l"],
+          
+          ["fl4","rx3r"],
+          ["fl5","rx3r"],
+          ["fl4","rx3l"],
+          ["fl5","rx3l"],
+
+          {"optional":false}
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+          {"deformLimitExpansion":1.2},
+    ],
+    "triangles": [
+            ["id1:","id2:","id3:"],
+            {"triangleType":"NORMALTYPE"},
+            //floor
+            {"dragCoef":90},
+            {"liftCoef":20, "stallAngle":0.10}
+            {"group":"redbull_floor"},
+            {"groundModel":"plastic"},
+            ["fl4l", "fl3l", "fl4"],
+            ["fl4", "fl3r", "fl4r"],
+            ["fl4r", "fl3r", "fl3rr"],
+            ["fl4l", "fl3ll", "fl3l"],
+            ["fl3ll", "fl2ll", "fl2l"],
+            ["fl3rr", "fl2r", "fl2rr"],
+            ["fl2r", "fl1r", "fl2rr"],
+            ["fl2ll", "fl1l", "fl2l"],
+            ["fl3ll", "fl2l", "fl3l"],
+            ["fl3r", "fl2r", "fl3rr"],
+            ["fl2rr", "fl1r", "fl1rr"],
+            ["fl2ll", "fl1ll", "fl1l"],
+            
+            //diffuser
+            {"dragCoef":40},
+            {"liftCoef":80, "stallAngle":0.20}
+            {"group":"redbull_floor"},
+            {"groundModel":"plastic"},
+            ["fl5r", "fl5", "fl4"],
+            ["fl5", "fl5l", "fl4"],
+            ["fl5r", "fl4", "fl4r"],
+            ["fl5l", "fl4l", "fl4"],
+
+            //plank
+            {"groundModel":"wood"},
+            ["fl4", "fl3", "fl3r"],
+            ["fl4", "fl3l", "fl3"],
+            ["fl3", "fl3l", "fl2l"],
+            ["fl3r", "fl3", "fl2r"],
+            ["fl3", "fl2", "fl2r"],
+            ["fl3", "fl2l", "fl2"],
+            ["fl2l", "fl1l", "fl2"],
+            ["fl2", "fl1r", "fl2r"],
+            ["fl2", "fl1l", "fl1r"],
+
+            //front collision helper
+            {"dragCoef":0},
+            {"liftCoef":0, "stallAngle":0.58}
+            {"breakGroup":"floor_monocoque_F"}
+            {"groundModel":"plastic"},
+            {"optional":true}
+            ["fx2l","fx2r","fl1r"],
+            ["fx2l","fl1r","fl1l"],
+            
+            ["fx2r","mt1r","fl1r"],
+            ["fx2l","fl1l","mt1l"],
+
+            {"group":""},
+            {"liftCoef":"", "stallAngle":0.58}
+            {"breakGroup":""}
+            {"optional":false}
+            {"triangleType":"NORMALTYPE"},
+    ],
+},
+}

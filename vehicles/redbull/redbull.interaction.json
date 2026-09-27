@@ -1,0 +1,23 @@
+{
+"fileversion": 2,
+"actions": {
+"pitLimiter":{
+    "order":  100.1,
+    "onUp":"electrics.values.pitLimiter = 1-(electrics.values.pitLimiter or 0)",
+    "title": "Toggle Pit Limiter",
+    "desc": "Toggles the pit limiter"
+},
+"biasPlus":{
+    "order":  100.2,
+    "onDown":"electrics.values.biasChange = electrics.values.biasChange + 0.01",
+    "title": "Increase Brake Bias",
+    "desc": "Increases the brake bias"
+},
+"biasMinus":{
+    "order":  100.3,
+    "onDown":"electrics.values.biasChange = electrics.values.biasChange - 0.01",
+    "title": "Decrease Brake Bias",
+        "desc": "Decreases the brake bias"
+}
+}
+}

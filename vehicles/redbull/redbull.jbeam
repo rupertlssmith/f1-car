@@ -1,0 +1,141 @@
+{
+"redbull": {
+    "information":{
+        "authors":"LucasBE",
+        "name":"Carbonworks F4",
+    },
+    "slotType" : "main",
+    "slots": [
+        ["type", "default", "description"],
+        ["redbull_body", "redbull_body", "Body", {"coreSlot":true}],
+        ["skin_lbe", "", "Paint Design"],
+    ],
+    "scaledragCoef":1.6,
+    "scalenodeWeight":1.0,
+    "scalebeamSpring":1.0,
+    "scalebeamDamp":1.0,
+    "scalebeamDeform":1.0,
+    "scalebeamStrength":1.0,
+
+    "controller": [
+        ["fileName"],
+        ["vehicleController", {}],
+        ["flyBrakeBias", {"startBias": "$brakebias"}]
+    ],
+    "variables": [
+        ["name", "type", "unit", "category", "default", "min", "max", "title", "description"],
+        ["$brakebias", "range", "", "Brakes", 0.55, 0.49, 0.61, "Brake Bias", "Percentage of brake torque going to the front wheels", {"minDis":49, "maxDis":61}],
+        ["$brakestrength", "range", "", "Brakes", 1, 0.6, 1.0, "Brake Force Multiplier", "Scales the overall brake torque for this setup", {"minDis":60, "maxDis":100}],
+        ["$ffbstrength", "range", "", "Chassis", 1, 0.5, 1.5, "Setup-Specific Force Feedback Multiplier", "Scales the force feedback strength for this setup", {"minDis":50, "maxDis":150}],
+    ],
+    "interiorSounds": {
+        "rattleModifier": 1.0,
+        "dampingModifier": 0.0
+    },
+    "actionsEnabled": [
+        ["id"],
+        ["pitLimiter"],
+        ["biasPlus"],
+        ["biasMinus"],
+    ],
+},
+"redbull_main_skin_lbe_painted": {
+    "information":{
+        "authors":"LucasBE",
+        "name":"Painted Panels",
+        "value":200,
+    },
+    "slotType" : "skin_lbe",
+    "globalSkin" : "painted",
+},
+"redbull_main_skin_lbe_parma": {
+    "information":{
+        "authors":"LucasBE",
+        "name":"Parma Racing Livery",
+        "value":200,
+    },
+    "slotType" : "skin_lbe",
+    "globalSkin" : "parma",
+},
+"redbull_main_skin_lbe_lotech": {
+    "information":{
+        "authors":"LucasBE",
+        "name":"Lotech GP Livery",
+        "value":200,
+    },
+    "slotType" : "skin_lbe",
+    "globalSkin" : "lotech",
+},
+"redbull_main_skin_lbe_karlen": {
+    "information":{
+        "authors":"LucasBE",
+        "name":"Karlen Racing Livery",
+        "value":200,
+    },
+    "slotType" : "skin_lbe",
+    "globalSkin" : "karlen",
+},
+"redbull_main_skin_lbe_okudai": {
+    "information":{
+        "authors":"LucasBE",
+        "name":"Okudai Motorsport Livery",
+        "value":200,
+    },
+    "slotType" : "skin_lbe",
+    "globalSkin" : "okudai",
+},
+"redbull_main_skin_lbe_torment": {
+    "information":{
+        "authors":"LucasBE",
+        "name":"Torment GP Livery",
+        "value":200,
+    },
+    "slotType" : "skin_lbe",
+    "globalSkin" : "torment",
+},
+"redbull_main_skin_lbe_deadbull": {
+    "information":{
+        "authors":"LucasBE",
+        "name":"Dead Bull Racing Livery",
+        "value":200,
+    },
+    "slotType" : "skin_lbe",
+    "globalSkin" : "deadbull",
+},
+"redbull_main_skin_lbe_pu": {
+    "information":{
+        "authors":"LucasBE",
+        "name":"PU Motorsport Livery",
+        "value":200,
+    },
+    "slotType" : "skin_lbe",
+    "globalSkin" : "pu",
+},
+"redbull_main_skin_lbe_campus": {
+    "information":{
+        "authors":"LucasBE",
+        "name":"Campus Racing Livery",
+        "value":200,
+    },
+    "slotType" : "skin_lbe",
+    "globalSkin" : "campus",
+},
+"redbull_main_skin_lbe_css": {
+    "information":{
+        "authors":"LucasBE",
+        "name":"CSS Motorsport Livery",
+        "value":200,
+    },
+    "slotType" : "skin_lbe",
+    "globalSkin" : "css",
+},
+"redbull_main_skin_lbe_cpr": {
+    "information":{
+        "authors":"LucasBE",
+        "name":"CPR Livery",
+        "value":200,
+    },
+    "slotType" : "skin_lbe",
+    "globalSkin" : "cpr",
+},
+}

@@ -1,0 +1,38 @@
+{
+  "Config Type":"Factory",
+  "Configuration":"High Downforce - Unpainted",
+  "Description":"High downforce setup ideal for street circuits and slower tracks where top speed is not as important.",
+  "Drivetrain":"RWD",
+  "Fuel Type":"Gasoline",
+  "Off-Road Score":0,
+  "Population":0,
+  "Propulsion":"ICE",
+  "Transmission":"Sequential",
+  "Value":70030,
+  "0-100 km/h":3.6,
+  "0-100 mph":8.7,
+  "0-200 km/h":15.4,
+  "0-60 mph":3.4,
+  "100-200 km/h":11.7,
+  "60-100 mph":5.2,
+  "BoundingBox":[
+    [
+      -0.49,
+      -2.18,
+      -0.0557
+    ],
+    [
+      1.21,
+      2.25,
+      0.94
+    ]
+  ],
+  "Induction Type":"NA",
+  "Power":180,
+  "PowerPeakRPM":"6350 - 7200",
+  "Top Speed":61.1,
+  "Torque":225,
+  "TorquePeakRPM":"4150 - 6200",
+  "Weight":650,
+  "Weight/Power":3.3
+}

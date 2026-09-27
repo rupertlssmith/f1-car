@@ -1,0 +1,294 @@
+{
+  "redbull_main": {
+    "name": "redbull_main",
+    "mapTo": "redbull_main",
+    "class": "Material",
+    "Stages": [
+      {
+        "ambientOcclusionMap": "/vehicles/redbull/redbull_main_ao.data.png",
+        "baseColorMap": "/vehicles/redbull/redbull_main_b.color.png",
+        "metallicFactor": 1,
+        "metallicMap": "/vehicles/redbull/redbull_main_m.data.png",
+        "normalMap": "vehicles/redbull/redbull_main_n.normal.png",
+        "pixelSpecular": true,
+        "roughnessMap": "/vehicles/redbull/redbull_main_r.data.png",
+        "useAnisotropic": true
+      },
+      {},
+      {},
+      {}
+    ],
+    "activeLayers": 1,
+    "dynamicCubemap": true,
+    "materialTag0": "LucasBE",
+    "materialTag1": "vehicle",
+    "order_simset": 0,
+    "version": 1.5
+  },
+  "redbull_mechanical": {
+    "name": "redbull_mechanical",
+    "mapTo": "redbull_mechanical",
+    "class": "Material",
+    "Stages": [
+      {
+        "ambientOcclusionMap": "vehicles/redbull/redbull_mechanical_ao.data.png",
+        "baseColorMap": "vehicles/redbull/redbull_mechanical_b.color.png",
+        "metallicFactor": 1,
+        "metallicMap": "/vehicles/redbull/redbull_mechanical_m.data.png",
+        "normalMap": "vehicles/redbull/redbull_mechanical_n.normal.png",
+        "pixelSpecular": true,
+        "roughnessMap": "vehicles/redbull/redbull_mechanical_r.data.png",
+        "useAnisotropic": true
+      },
+      {},
+      {},
+      {}
+    ],
+    "dynamicCubemap": true,
+    "materialTag0": "LucasBE",
+    "materialTag1": "vehicle",
+    "order_simset": 1852795252,
+    "version": 1.5
+  },
+  "redbull_engine": {
+    "name": "redbull_engine",
+    "mapTo": "redbull_engine",
+    "class": "Material",
+    "Stages": [
+      {
+        "ambientOcclusionMap": "vehicles/redbull/redbull_engine_ao.data.png",
+        "baseColorMap": "vehicles/redbull/redbull_engine_b.color.png",
+        "metallicFactor": 1,
+        "metallicMap": "/vehicles/redbull/redbull_engine_m.data.png",
+        "normalMap": "vehicles/redbull/redbull_engine_n.normal.png",
+        "pixelSpecular": true,
+        "roughnessMap": "vehicles/redbull/redbull_engine_r.data.png",
+        "useAnisotropic": true
+      },
+      {},
+      {},
+      {}
+    ],
+    "dynamicCubemap": true,
+    "materialTag0": "LucasBE",
+    "materialTag1": "vehicle",
+    "order_simset": 1852795252,
+    "version": 1.5
+  },
+  "redbull_cockpit": {
+    "name": "redbull_cockpit",
+    "mapTo": "redbull_cockpit",
+    "class": "Material",
+    "Stages": [
+      {
+        "ambientOcclusionMap": "vehicles/redbull/redbull_cockpit_ao.data.png",
+        "baseColorMap": "vehicles/redbull/redbull_cockpit_b.color.png",
+        "metallicFactor": 1,
+        "metallicMap": "/vehicles/redbull/redbull_cockpit_m.data.png",
+        "normalMap": "vehicles/redbull/redbull_cockpit_n.normal.png",
+        "pixelSpecular": true,
+        "roughnessMap": "vehicles/redbull/redbull_cockpit_r.data.png",
+        "useAnisotropic": true
+      },
+      {},
+      {},
+      {}
+    ],
+    "dynamicCubemap": true,
+    "materialTag0": "LucasBE",
+    "materialTag1": "vehicle",
+    "order_simset": 1852795252,
+    "version": 1.5
+  },
+  "redbull_glass": {
+    "name": "redbull_glass",
+    "mapTo": "redbull_glass",
+    "class": "Material",
+    "Stages": [
+      {
+        "baseColorMap": "vehicles/redbull/redbull_lights_b.color.png",
+        "metallicFactor": 0.5,
+        "normalMap": "/vehicles/redbull/redbull_lights_n.normal.png",
+        "opacityMap": "/vehicles/redbull/redbull_lights_o.data.png",
+        "pixelSpecular": true,
+        "roughnessFactor": 0.0
+      },
+      {},
+      {},
+      {}
+    ],
+    "alphaRef": 0,
+    "castShadows": false,
+    "dynamicCubemap": true,
+    "materialTag0": "lucasbe",
+    "materialTag1": "vehicle",
+    "translucent": true,
+    "translucentBlendOp": "PreMulAlpha",
+    "translucentRecvShadows": true,
+    "version": 1.5
+  },
+  "redbull_lights": {
+    "name": "redbull_lights",
+    "mapTo": "redbull_lights",
+    "class": "Material",
+    "Stages": [
+      {
+        "baseColorMap": "vehicles/redbull/redbull_lights_b.color.png",
+        "metallicFactor": 0.5,
+        "normalMap": "/vehicles/redbull/redbull_lights_n.normal.png",
+        "pixelSpecular": true,
+        "roughnessFactor": 0.5
+      },
+      {},
+      {},
+      {}
+    ],
+    "alphaRef": 0,
+    "dynamicCubemap": true,
+    "materialTag0": "lucasbe",
+    "materialTag1": "vehicle",
+    "version": 1.5
+  },
+  "redbull_lights_on": {
+    "name": "redbull_lights_on",
+    "mapTo": "redbull_lights_on",
+    "class": "Material",
+    "Stages": [
+      {
+        "baseColorMap": "vehicles/redbull/redbull_lights_b.color.png",
+        "metallicFactor": 0.5,
+        "emissiveIntensityNits": 10000,
+        "emissiveFactor": [
+          1,
+          1,
+          1
+        ],
+        "emissiveMap": "/vehicles/redbull/redbull_lights_g.color.png",
+        "normalMap": "/vehicles/redbull/redbull_lights_n.normal.png",
+        "pixelSpecular": true,
+        "roughnessFactor": 0.5
+      },
+      {},
+      {},
+      {}
+    ],
+    "alphaRef": 0,
+    "dynamicCubemap": true,
+    "materialTag0": "lucasbe",
+    "materialTag1": "vehicle",
+    "version": 1.5
+  },
+  "redbull_lights_on_intense": {
+    "name": "redbull_lights_on_intense",
+    "mapTo": "redbull_lights_on_intense",
+    "class": "Material",
+    "Stages": [
+      {
+        "baseColorMap": "vehicles/redbull/redbull_lights_b.color.png",
+        "metallicFactor": 0.5,
+        "emissiveIntensityNits": 500000,
+        "emissiveFactor": [
+          1,
+          1,
+          1
+        ],
+        "emissiveMap": "/vehicles/redbull/redbull_lights_g.color.png",
+        "normalMap": "/vehicles/redbull/redbull_lights_n.normal.png",
+        "pixelSpecular": true,
+        "roughnessFactor": 0.5
+      },
+      {},
+      {},
+      {}
+    ],
+    "alphaRef": 0,
+    "dynamicCubemap": true,
+    "materialTag0": "lucasbe",
+    "materialTag1": "vehicle",
+    "version": 1.5
+  },
+  "redbull_shiftlights_p0": {
+    "name": "redbull_shiftlights_p0",
+    "mapTo": "redbull_shiftlights_p0",
+    "class": "Material",
+    "materialTag0": "lucasbe",
+    "materialTag1": "vehicle"
+  },
+  "redbull_shiftlights_p1": {
+    "name": "redbull_shiftlights_p1",
+    "mapTo": "redbull_shiftlights_p1",
+    "class": "Material",
+    "materialTag0": "lucasbe",
+    "materialTag1": "vehicle"
+  },
+  "redbull_shiftlights_l0": {
+    "name": "redbull_shiftlights_l0",
+    "mapTo": "redbull_shiftlights_l0",
+    "class": "Material",
+    "materialTag0": "lucasbe",
+    "materialTag1": "vehicle"
+  },
+  "redbull_shiftlights_l1": {
+    "name": "redbull_shiftlights_l1",
+    "mapTo": "redbull_shiftlights_l1",
+    "class": "Material",
+    "materialTag0": "lucasbe",
+    "materialTag1": "vehicle"
+  },
+  "redbull_shiftlights_l2": {
+    "name": "redbull_shiftlights_l2",
+    "mapTo": "redbull_shiftlights_l2",
+    "class": "Material",
+    "materialTag0": "lucasbe",
+    "materialTag1": "vehicle"
+  },
+  "redbull_shiftlights_l3": {
+    "name": "redbull_shiftlights_l3",
+    "mapTo": "redbull_shiftlights_l3",
+    "class": "Material",
+    "materialTag0": "lucasbe",
+    "materialTag1": "vehicle"
+  },
+  "redbull_shiftlights_l4": {
+    "name": "redbull_shiftlights_l4",
+    "mapTo": "redbull_shiftlights_l4",
+    "class": "Material",
+    "materialTag0": "lucasbe",
+    "materialTag1": "vehicle"
+  },
+  "redbull_shiftlights_l5": {
+    "name": "redbull_shiftlights_l5",
+    "mapTo": "redbull_shiftlights_l5",
+    "class": "Material",
+    "materialTag0": "lucasbe",
+    "materialTag1": "vehicle"
+  },
+  "redbull_shiftlights_l6": {
+    "name": "redbull_shiftlights_l6",
+    "mapTo": "redbull_shiftlights_l6",
+    "class": "Material",
+    "materialTag0": "lucasbe",
+    "materialTag1": "vehicle"
+  },
+  "redbull_shiftlights_l7": {
+    "name": "redbull_shiftlights_l7",
+    "mapTo": "redbull_shiftlights_l7",
+    "class": "Material",
+    "materialTag0": "lucasbe",
+    "materialTag1": "vehicle"
+  },
+  "redbull_shiftlights_l8": {
+    "name": "redbull_shiftlights_l8",
+    "mapTo": "redbull_shiftlights_l8",
+    "class": "Material",
+    "materialTag0": "lucasbe",
+    "materialTag1": "vehicle"
+  },
+  "redbull_rainlight": {
+    "name": "redbull_rainlight",
+    "mapTo": "redbull_rainlight",
+    "class": "Material",
+    "materialTag0": "lucasbe",
+    "materialTag1": "vehicle"
+  }
+}

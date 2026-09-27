@@ -1,0 +1,259 @@
+{
+"redbull_transaxle": {
+    "information":{
+        "authors":"LucasBE",
+        "name":"6-Speed Sequential Transaxle",
+        "value":6000,
+    },
+    "slotType" : "redbull_transaxle",
+    "slots": [
+        ["type", "default", "description"],
+        ["redbull_flywheel","redbull_flywheel_race","Flywheel", {"coreSlot":true}],
+        ["redbull_gearset","redbull_gearset_standard","Gear Set", {"coreSlot":true}],
+        ["redbull_differential_R","redbull_differential_R", "Rear Differential"],
+        ["redbull_suspension_R","redbull_suspension_R", "Rear Suspension"],
+        ["redbull_wing_R","redbull_wing_R", "Rear Wing"],
+        ["redbull_crashbox","redbull_crashbox", "Crashbox"],
+    ],
+     "powertrain": [
+        ["type", "name", "inputName", "inputIndex"],
+        ["frictionClutch", "clutch", "mainEngine", 1],
+        ["sequentialGearbox", "gearbox", "clutch", 1],
+    ],
+    "gearbox": {
+        "uiName":"Gearbox",
+        "gearRatios":[-3.0, 0, 2.642, 1.944, 1.555, 1.285, 1.100, 0.962],
+        "friction": 0.76,
+        "dynamicFriction": 0.00076,
+        "torqueLossCoef": 0.012,
+        "gearboxNode:":["rx2r"],
+
+        "gearWhineCoefsInput":  [0.66, 0.00, 0.33, 0.33, 0.33, 0.33, 0.33, 0.33, 0.33, 0.33],
+        "gearWhineCoefsOutput": [0.60, 0.00, 0.80, 0.80, 0.80, 0.80, 0.80, 0.80, 0.80, 0.80],
+        "gearWhineInputEvent": "event:>Vehicle>Transmission>straight_01>twine_in_race_sq",
+        "gearWhineOutputEvent": "event:>Vehicle>Transmission>straight_01>twine_out_race_sq",
+
+        //"forwardInputPitchCoef":1
+        //"forwardOutputPitchCoef":1
+        //"reverseInputPitchCoef":0.7
+        //"reverseOutputPitchCoef":0.7
+
+        //"gearWhineInputPitchCoefSmoothing":50
+        //"gearWhineOutputPitchCoefSmoothing":50
+        //"gearWhineInputVolumeCoefSmoothing":10
+        //"gearWhineOutputVolumeCoefSmoothing":10
+
+        //"gearWhineFixedCoefInput": 0.5
+        //"gearWhineFixedCoefOutput": 0.8
+
+    },
+    "clutch": {
+        "clutchFreePlay":0.75,
+        "lockSpringCoef":0.3,
+        "additionalEngineInertia":0.05,
+        "clutchMass":3.50,
+    },
+    "vehicleController": {
+        "calculateOptimalLoadShiftPoints": true,
+        "shiftDownRPMOffsetCoef":1.17,
+        //"aggressionSmoothingDown":0.05
+        "aggressionHoldOffThrottleDelay":3,
+        //"lowShiftDownRPM":[0,0,0,1600,1900,1800,1600,1500],
+        //"lowShiftUpRPM":[0,0,3500,3300,3150,3000,2900],
+        "lowShiftDownRPM":[0,0,0,2000,2600,2600,2600,2600],
+        "lowShiftUpRPM":[0,0,4200,4200,4050,3850,3700],
+        //"wheelSlipUpThreshold":100,
+        "clutchLaunchStartRPM":3000,
+        "clutchLaunchTargetRPM":3000,
+        "ignitionCutTime": 0.09
+        "revMatchThrottle":1
+    },
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         ["redbull_transaxle", ["redbull_transaxle"]],
+    ],
+    "nodes": [
+         ["id", "posX", "posY", "posZ"],
+         {"selfCollision":true},
+         {"collision":true},
+         //transaxle
+         {"frictionCoef":0.5},
+         {"nodeMaterial":"|NM_METAL"},
+         {"group":["redbull_transaxle"]},
+         //IRL total weight ~40kg
+         {"group":["redbull_transaxle","redbull_lowermounts_R"]},
+         {"nodeWeight":5.5},
+         ["rx1r",-0.169, 1.255, 0.191],
+         ["rx1l", 0.169, 1.255, 0.191],
+         ["rx2r",-0.104, 1.829, 0.165, {"group":["redbull_transaxle","redbull_wingmounts_R","redbull_lowermounts_R"]}],
+         ["rx2l", 0.104, 1.829, 0.165, {"group":["redbull_transaxle","redbull_wingmounts_R","redbull_lowermounts_R"]}],
+
+         {"group":["redbull_transaxle","redbull_uppermounts_R"]},
+         ["rx3r",-0.162, 1.321, 0.348],
+         ["rx3l", 0.162, 1.321, 0.348],
+         ["rx4r",-0.109, 1.831, 0.315, {"group":["redbull_transaxle","redbull_wingmounts_R","redbull_uppermounts_R"]}],
+         ["rx4l", 0.109, 1.831, 0.315, {"group":["redbull_transaxle","redbull_wingmounts_R","redbull_uppermounts_R"]}],
+         
+         {"nodeWeight":6.0},
+         {"group":""},
+         ["rs1", 0.00, 1.53, 0.58, {"selfCollision":false,"collision":false}],
+         {"group":""},
+    ],
+    "beams": [
+          ["id1:", "id2:"],
+          //transaxle
+          {"deformLimitExpansion":1.2},
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+          {"beamSpring":4001000,"beamDamp":250},
+          {"beamDeform":1120000,"beamStrength":"FLT_MAX"},
+          ["rx1r","rx2r"],
+          ["rx1l","rx2l"],
+          ["rx3r","rx4r"],
+          ["rx3l","rx4l"],
+
+          ["rx1r","rx1l"],
+          ["rx2r","rx2l"],
+          ["rx3r","rx3l"],
+          ["rx4r","rx4l"],
+          
+          ["rx1r","rx3r"],
+          ["rx1l","rx3l"],
+          ["rx2r","rx4r"],
+          ["rx2l","rx4l"],
+          
+          {"beamSpring":7001000,"beamDamp":200},
+          ["rs1","rx4r"],
+          ["rs1","rx3r"],
+          ["rs1","rx4l"],
+          ["rs1","rx3l"],
+          
+          {"beamSpring":4001000,"beamDamp":250},
+          ["rx1r","rx4r"],
+          ["rx1l","rx4l"],
+          ["rx3r","rx2r"],
+          ["rx3l","rx2l"],
+          
+          ["rx1r","rx4l"],
+          ["rx1l","rx4r"],
+          ["rx3r","rx2l"],
+          ["rx3l","rx2r"],
+          
+          ["rx1r","rx2l"],
+          ["rx3r","rx4l"],
+          ["rx4r","rx3l"],
+          
+          ["rx1r","rx3l"],
+          ["rx1l","rx3r"],
+          ["rx2r","rx4l"],
+          ["rx2l","rx4r"],
+          
+          {"beamSpring":7001000,"beamDamp":200},
+          ["rs1","rx2r"],
+          ["rs1","rx1r"],
+          ["rs1","rx2l"],
+          ["rs1","rx1l"],
+
+          //attach to engine
+          {"deformLimitExpansion":""},
+          {"beamSpring":4001000,"beamDamp":200},
+          {"beamDeform":1120000,"beamStrength":"FLT_MAX"},
+          ["rx1r","e4r"],
+          ["rx1r","e4l"],
+          ["rx1l","e4r"],
+          ["rx1l","e4l"],
+          ["rx1r","e2r"],
+          ["rx1r","e2l"],
+          ["rx1l","e2r"],
+          ["rx1l","e2l"],
+          
+          ["rx3r","e4r"],
+          ["rx3r","e4l"],
+          ["rx3l","e4r"],
+          ["rx3l","e4l"],
+          ["rx3r","e2r"],
+          ["rx3r","e2l"],
+          ["rx3l","e2r"],
+          ["rx3l","e2l"],
+          
+          {"beamSpring":2201000,"beamDamp":150},
+          ["rx4r","e4r"],
+          ["rx4r","e4l"],
+          ["rx4l","e4r"],
+          ["rx4l","e4l"],
+          ["rx4r","e2r"],
+          ["rx4r","e2l"],
+          ["rx4l","e2r"],
+          ["rx4l","e2l"],
+          
+          ["rx2r","e4r"],
+          ["rx2r","e4l"],
+          ["rx2l","e4r"],
+          ["rx2l","e4l"],
+          ["rx2r","e2r"],
+          ["rx2r","e2l"],
+          ["rx2l","e2r"],
+          ["rx2l","e2l"],
+
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+    ],
+    "triangles": [
+            ["id1:","id2:","id3:"],
+            {"triangleType":"NORMALTYPE"},
+            //transaxle shape
+            {"dragCoef":10},
+            {"group":"redbull_transaxle"},
+            {"groundModel":"metal"},
+            ["rx4r", "rx4l", "rx2r"],
+            ["rx2r", "rx4l", "rx2l"],
+            ["rx3r", "rx3l", "rx4r"],
+            ["rx4r", "rx3l", "rx4l"],
+            ["rx3l", "rx3r", "rx1r"],
+            ["rx3l", "rx1r", "rx1l"],
+            ["rx2r", "rx2l", "rx1l"],
+            ["rx2r", "rx1l", "rx1r"],
+            ["rx4l", "rx3l", "rx1l"],
+            ["rx4l", "rx1l", "rx2l"],
+            ["rx3r", "rx4r", "rx1r"],
+            ["rx1r", "rx4r", "rx2r"],
+
+            //to engine
+            {"optional":true}
+            {"dragCoef":5},
+            {"groundModel":"metal"},
+            ["e4r","e4l","rx3l"],
+            ["e4r","rx3l","rx3r"],
+            ["e2l","e2r","rx1l"],
+            ["e2r","rx1r","rx1l"],
+            ["e4r","rx3r","rx1r"],
+            ["e4r","rx1r","e2r"],
+            ["e4l","rx1l","rx3l"],
+            ["e4l","e2l","rx1l"],
+
+            {"group":""},
+            {"optional":false}
+            {"triangleType":"NORMALTYPE"},
+    ],
+},
+"redbull_gearset_standard": {
+    "information":{
+        "authors":"LucasBE",
+        "name":"Standard Gear Ratios",
+        "value":100,
+    },
+    "slotType" : "redbull_gearset",
+    "gearbox": {
+        "gearRatios":[-3.0, 0, 2.642, 1.944, 1.555, 1.285, 1.100, 0.962],
+    }
+  },
+"redbull_gearset_short": {
+    "information":{
+        "authors":"LucasBE",
+        "name":"Short Gear Ratios",
+        "value":100,
+    },
+    "slotType" : "redbull_gearset",
+    "gearbox": {
+        "gearRatios":[-3.0, 0, 2.642, 1.944, 1.555, 1.318, 1.166, 1.045],
+    }
+  }
+}

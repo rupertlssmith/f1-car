@@ -1,5 +1,24 @@
 # f1-car
 
+A Red Bull F1 car mod for BeamNG.drive. The mod lives in `vehicles/redbull/`
+(plus its wheels in `vehicles/common/redbull_wheels/` and its manifest in
+`mod_info/redbull/`); it started as a renamed copy of the Carbonworks F4 mod
+kept for reference in `vehicles/fr04/`.
+
+## Building the mod
+
+```bash
+pip install xxhash                 # already in the dev image
+python3 tools/build_mod.py         # -> dist/redbull.zip
+```
+
+Copy `dist/redbull.zip` into your BeamNG mods folder
+(`%LocalAppData%\BeamNG.drive\<version>\mods\` on Windows) and it appears in the
+vehicle selector. The build regenerates the manifest's file hashes; pass
+`--update-manifest` to write them back to `mod_info/redbull/info.json` too.
+
+## Dev environment
+
 Containerised development environment for f1-car, from the devbox starter.
 `f1-car-runtime` is what runs the project in production; `f1-car-dev` is that
 same stack plus Claude Code and the tools for working on it.

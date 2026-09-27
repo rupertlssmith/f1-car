@@ -1,0 +1,237 @@
+{
+"redbull_crashbox": {
+    "information":{
+        "authors":"LucasBE",
+        "name":"Crashbox",
+        "value":110,
+    },
+    "slotType" : "redbull_crashbox",
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         ["redbull_crashbox", ["redbull_crashbox"]],
+         ["redbull_rainlight", ["redbull_crashbox"]],
+    ],
+    "slots2": [
+        ["name", "allowTypes", "denyTypes", "default", "description"],
+        ["redbull_rainlight_bulb", ["led_modern_red_5W"], [], "led_modern_red_5W", "Rainlight LED Unit",
+        {
+            "coreSlot":true,
+            "variables":{
+                "$electric":"hazard",
+                "$nodeRef":"cb2r", "$nodeX":"cb4r", "$nodeY":"cb2l",
+                "$deformGroup":"",
+                "$posX":0.0, "$posY":2.32, "$posZ":0.30,
+                "$rotX":0, "$rotY":0, "$rotZ":0,
+                "$shadowEnable":1,
+            }
+        }]
+    ],
+    "glowMap":{
+        "redbull_rainlight":{"simpleFunction":{"hazard":1}, "off":"redbull_lights", "on":"redbull_lights_on_intense"},
+    },
+    "nodes": [
+         ["id", "posX", "posY", "posZ"],
+         {"frictionCoef":0.5},
+         {"nodeMaterial":"|NM_PLASTIC"},
+         //--REAR CRASHBOX--
+         {"collision":true},
+         {"selfCollision":true},
+         {"nodeWeight":1.0},
+         {"group":"redbull_crashbox"},
+         ["cb1r",-0.10, 1.87, 0.13],
+         ["cb1l", 0.10, 1.87, 0.13],
+         ["cb2r",-0.06, 2.31, 0.23,{"frictionCoef":0.1}],
+         ["cb2l", 0.06, 2.31, 0.23,{"frictionCoef":0.1}],
+         ["cb3r",-0.10, 1.87, 0.39],
+         ["cb3l", 0.10, 1.87, 0.39],
+         ["cb4r",-0.06, 2.31, 0.39,{"frictionCoef":0.1}],
+         ["cb4l", 0.06, 2.31, 0.39,{"frictionCoef":0.1}],
+
+         {"group":""},
+    ],
+    "beams": [
+          ["id1:", "id2:"],
+          //--REAR CRASHBOX--
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+          {"beamSpring":550000,"beamDamp":90},
+          {"beamStrength":"FLT_MAX"},
+          //rear crashbox main shape
+
+          //lengthwise
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+          {"beamSpring":1580600,"beamDamp":150000},
+          {"deformLimitExpansion":2},
+          {"beamDeform":10100},
+          ["cb1r","cb2r",{"dampCutoffHz":20}],
+          ["cb1l","cb2l",{"dampCutoffHz":20}],
+          ["cb3r","cb4r",{"dampCutoffHz":20}],
+          ["cb3l","cb4l",{"dampCutoffHz":20}],
+
+          //widthwise
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+          {"beamStrength":"FLT_MAX"},
+          {"deformLimitExpansion":1.2},
+          {"beamSpring":550000,"beamDamp":90},
+          {"beamDeform":150250},
+          ["cb1r","cb1l"],
+          ["cb2r","cb2l"],
+          ["cb3r","cb3l"],
+          ["cb4r","cb4l"],
+
+          //vertical
+          ["cb1r","cb3r"],
+          ["cb2r","cb4r"],
+          ["cb1l","cb3l"],
+          ["cb2l","cb4l"],
+
+          //surficial crossing
+          {"beamDeform":9010},
+          {"deformLimitExpansion":""},
+          ["cb1r","cb4r"],
+          ["cb2r","cb3r"],
+          ["cb1l","cb4l"],
+          ["cb2l","cb3l"],
+          
+          ["cb1r","cb2l"],
+          ["cb1l","cb2r"],
+          ["cb3r","cb4l"],
+          ["cb3l","cb4r"],
+          //ends
+          {"beamDeform":25010},
+          ["cb1r","cb3l"],
+          ["cb1l","cb3r"],
+          ["cb2r","cb4l"],
+          ["cb2l","cb4r"],
+
+          //inside rigids
+          {"beamDeform":540100},
+          {"beamSpring":500100},
+          ["cb1r","cb4l"],
+          ["cb2r","cb3l"],
+          ["cb1l","cb4r"],
+          ["cb2l","cb3r"],
+
+          //lbeams to prevent the crashbox from bending
+          {"highlight":{"radius":0.008, "col":"#ffff00ff"}},
+          {"beamType":"|LBEAM"},
+          {"beamSpring":50100,"beamDamp":90},
+          {"beamDeform":35150,"beamStrength":"FLT_MAX"},
+          //up/down
+          {"beamSpring":1200100,"beamDeform":350200},
+          ["cb1r","cb4r", {"id3:":"cb3r"}],
+          ["cb1l","cb4l", {"id3:":"cb3l"}],
+          ["cb3r","cb2r", {"id3:":"cb4r"}],
+          ["cb3l","cb2l", {"id3:":"cb4l"}],
+          //left/right
+          {"beamSpring":1200100,"beamDeform":350200},
+          ["cb3r","cb4l", {"id3:":"cb4r"}],
+          ["cb3l","cb4r", {"id3:":"cb4l"}],
+          ["cb1r","cb2l", {"id3:":"cb2r"}],
+          ["cb1l","cb2r", {"id3:":"cb2l"}],
+
+
+          {"highlight":""},
+          {"beamPrecompression":1},
+
+          //attach
+          {"optional":true},
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+          {"beamSpring":550100,"beamDamp":100},
+          {"beamDeform":"FLT_MAX","beamStrength":35100},
+          {"breakGroup":"crashbox_R"},
+          ["cb1r","rx1r"],
+          ["cb1r","rx2r"],
+          ["cb1r","rx1l"],
+          ["cb1r","rx2l"],
+          ["cb1r","rx3r"],
+          ["cb1r","rx4r"],
+          ["cb1r","rx3l"],
+          ["cb1r","rx4l"],
+
+          ["cb3r","rx1r"],
+          ["cb3r","rx2r"],
+          ["cb3r","rx1l"],
+          ["cb3r","rx2l"],
+          ["cb3r","rx3r"],
+          ["cb3r","rx4r"],
+          ["cb3r","rx3l"],
+          ["cb3r","rx4l"],
+          {"beamSpring":55100,"beamDamp":100},
+          ["cb1r","rx2r"],
+          ["cb3r","rx2r"],
+          ["cb1r","rx4r"],
+          ["cb3r","rx4r"],
+          
+          {"beamSpring":550100,"beamDamp":100},
+          {"breakGroup":"crashbox_L"},
+          ["cb1l","rx1r"],
+          ["cb1l","rx2r"],
+          ["cb1l","rx1l"],
+          ["cb1l","rx2l"],
+          ["cb1l","rx3r"],
+          ["cb1l","rx4r"],
+          ["cb1l","rx3l"],
+          ["cb1l","rx4l"],
+
+          ["cb3l","rx1r"],
+          ["cb3l","rx2r"],
+          ["cb3l","rx1l"],
+          ["cb3l","rx2l"],
+          ["cb3l","rx3r"],
+          ["cb3l","rx4r"],
+          ["cb3l","rx3l"],
+          ["cb3l","rx4l"],
+          {"beamSpring":55100,"beamDamp":100},
+          ["cb1l","rx2l"],
+          ["cb3l","rx2l"],
+          ["cb1l","rx4l"],
+          ["cb3l","rx4l"],
+          
+
+          {"optional":false},
+          {"breakGroup":""},
+
+          //support
+          {"beamType":"|SUPPORT","beamLongBound":8},
+          {"beamSpring":601000,"beamDamp":150},
+          {"beamDeform":900100,"beamStrength":"FLT_MAX"},
+          ["cb1r","rx3r"],
+          ["cb1r","rx1r"],
+          ["cb3r","rx3r"],
+          ["cb3r","rx1r"],
+          
+          ["cb1l","rx3l"],
+          ["cb1l","rx1l"],
+          ["cb3l","rx3l"],
+          ["cb3l","rx1l"],
+
+
+          {"breakGroup":""}
+
+          {"disableTriangleBreaking":false},
+          {"optional":false},
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+          {"deformLimitExpansion":1.1},
+    ],
+    "triangles": [
+            ["id1:","id2:","id3:"],
+            //rear crashbox
+            {"groundModel":"plastic"},
+            {"dragCoef":10},
+            {"group":"redbull_crashbox"},
+            ["cb3r", "cb3l", "cb4l"],
+            ["cb3r", "cb4l", "cb4r"],
+            ["cb4r", "cb4l", "cb2l"],
+            ["cb4r", "cb2l", "cb2r"],
+            ["cb4l", "cb3l", "cb1l"],
+            ["cb3r", "cb4r", "cb1r"],
+            ["cb3l", "cb3r", "cb1r"],
+            ["cb3l", "cb1r", "cb1l"],
+            ["cb1r", "cb4r", "cb2r"],
+            ["cb4l", "cb1l", "cb2l"],
+            ["cb2r", "cb2l", "cb1l"],
+            ["cb2r", "cb1l", "cb1r"],
+            {"group":""},
+    ],
+},
+}

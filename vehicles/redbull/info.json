@@ -1,0 +1,30 @@
+{
+  "Author":"LucasBE",
+  "Body Style":"Single-Seater",
+  "Brand":"Carbonworks",
+  "Country":"Italy",
+  "Derby Class":"Formula 4",
+  "Name":"F4",
+  "Performance Class":"9",
+  "Type":"Car",
+  "Years":{
+    "max":2023,
+    "min":2021
+  },
+  "defaultPaintName1":"Silver Metallic",
+  "default_pc":"okudai_baseline",
+  "paints":{
+    "Silver Metallic":{
+      "baseColor":[
+        0.65,
+        0.65,
+        0.65,
+        1.2
+      ],
+      "clearcoat":1,
+      "clearcoatRoughness":0.1,
+      "metallic":1.0,
+      "roughness":0.5
+    }
+  }
+}

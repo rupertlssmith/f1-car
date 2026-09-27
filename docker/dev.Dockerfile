@@ -45,12 +45,13 @@ ENV PATH=/opt/kotlin/kotlinc/bin:/opt/kotlin/bin:$PATH
 #     export; bookworm's 3.4 still ships the Collada exporter, which Blender 5
 #     drops), assimp CLI for mesh inspection/conversion, ImageMagick for texture
 #     resizing and .dds conversion, and git-lfs for large model/texture files.
-#     trimesh goes into the project venv for scripted mesh checks. Dev-only, so
-#     none of this reaches the runtime image.
+#     trimesh (mesh checks) and xxhash (mod manifest hashes, tools/build_mod.py)
+#     go into the project venv. Dev-only, so none of this reaches the runtime
+#     image.
 RUN apt-get update && apt-get install -y --no-install-recommends \
       blender assimp-utils imagemagick git-lfs \
  && rm -rf /var/lib/apt/lists/* \
- && VIRTUAL_ENV=/opt/venv uv pip install --no-cache trimesh numpy
+ && VIRTUAL_ENV=/opt/venv uv pip install --no-cache trimesh numpy xxhash
 
 # 4) Colour aliases + bash completion (eco-dev style; TERM is set by dev.sh).
 RUN printf '%s\n' \

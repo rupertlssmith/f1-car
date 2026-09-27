@@ -1,0 +1,84 @@
+{
+"redbull_differential_R": {
+    "information":{
+        "authors":"LucasBE",
+        "name":"Open Rear Differential",
+        "value":350,
+    },
+    "slotType" : "redbull_differential_R",
+    "slots": [
+        ["type", "default", "description"],
+        ["redbull_halfshafts_R","redbull_halfshafts_R", "Rear Halfshafts",]
+    ],
+    "powertrain" : [
+        ["type", "name", "inputName", "inputIndex"],
+        ["differential", "differential_R", "gearbox", 1, {"diffType":"open", "uiName":"Rear Differential","defaultVirtualInertia":0.25}],
+    ],
+    "differential_R": {
+        "friction": 4.13,
+        "dynamicFriction": 0.00195,
+        "torqueLossCoef": 0.030,
+        "gearRatio":3.1 ,
+    },
+    "nodes": [
+         ["id", "posX", "posY", "posZ"],
+         //--diff weight--
+         {"selfCollision":false},
+         {"collision":false},
+         {"nodeMaterial":"|NM_METAL"},
+         {"frictionCoef":0.5},
+         {"group":"redbull_differential_R"},
+         {"nodeWeight":5},
+         ["rdiff", 0.00, 1.55, 0.26],
+         {"group":""},
+    ],
+    "beams": [
+          ["id1:", "id2:"],
+          //differential node
+          {"beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+          {"beamSpring":1101000,"beamDamp":60},
+          {"beamDeform":35000,"beamStrength":"FLT_MAX"},
+          {"optional":true},
+          {"deformGroup":"differential_R", "deformationTriggerRatio":0.001}
+          ["rdiff", "rx1r"],
+          ["rdiff", "rx1l"],
+          ["rdiff", "rx2r"],
+          ["rdiff", "rx2l"],
+          ["rdiff", "rx3r"],
+          ["rdiff", "rx3l"],
+          ["rdiff", "rx4r"],
+          ["rdiff", "rx4l"],
+          {"deformGroup":""}
+          {"optional":false},
+    ],
+},
+"redbull_halfshafts_R": {
+    "information":{
+        "authors":"LucasBE",
+        "name":"Rear Halfshafts",
+        "value":200,
+    },
+    "slotType" : "redbull_halfshafts_R",
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         {"deformGroup":["wheelaxleRR","wheelaxleRL"], "deformMaterialBase":"redbull_engine", "deformMaterialDamaged":"invis"},
+         ["redbull_halfshafts", ["redbull_differential_R","redbull_hub_R","redbull_lowermounts_R","redbull_uppermounts_R","wheelhub_RR","wheelhub_RL"]],
+         {"deformGroup":""},
+    ],
+    "beams": [
+          ["id1:", "id2:"],
+          //halfshafts
+          {"beamType":"|BOUNDED", "beamLongBound":0.05, "beamShortBound":0.05,"boundZone":0.1},
+          {"beamSpring":0,"beamDamp":0,"beamDeform":3500,"beamStrength":7000},
+          {"beamLimitSpring":5001000,"beamLimitDamp":250},
+          ["rw1r","rdiff", {"name":"halfshaft_RR", "breakGroup":"wheel_RR", "breakGroupType":1, "deformGroup":"wheelaxleRR", "deformationTriggerRatio":0.2, "optional":true}],
+          ["rw1l","rdiff", {"name":"halfshaft_RL", "breakGroup":"wheel_RL", "breakGroupType":1, "deformGroup":"wheelaxleRL", "deformationTriggerRatio":0.2, "optional":true}],
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0,"boundZone":""},
+    ],
+    "powertrain" : [
+        ["type", "name", "inputName", "inputIndex"],
+        ["shaft", "wheelaxleRL", "differential_R", 1, {"deformGroups":["wheelaxleRL"], "breakTriggerBeam":"halfshaft_RL", "uiName":"Rear Left Halfshaft", "friction":1.65, "dynamicFriction":0.00407}],
+        ["shaft", "wheelaxleRR", "differential_R", 2, {"deformGroups":["wheelaxleRR"], "breakTriggerBeam":"halfshaft_RR", "uiName":"Rear Right Halfshaft", "friction":1.65, "dynamicFriction":0.00407}],
+    ],
+},
+}

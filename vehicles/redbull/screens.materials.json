@@ -1,0 +1,68 @@
+{
+  "redbull_screen" : {
+    "name" : "redbull_screen",
+    "mapTo": "redbull_screen",
+    "class" : "Material",
+    "Stages": [
+      {
+        "baseColorFactor": [
+          0.09,
+          0.09,
+          0.09,
+          1
+        ],
+        "emissiveIntensityNits": 4000,
+        "emissiveFactor": [
+          1,
+          1,
+          1
+        ],
+        "emissiveMap": "@redbull_screen",
+        "metallicFactor": 0.5,
+        "roughnessFactor": 0.1,
+        "useAnisotropic": true
+      },
+      {},
+      {}
+    ],
+    "alphaRef": 0,
+    "dynamicCubemap": true,
+    "materialTag0": "lucasbe",
+    "materialTag1": "vehicle",
+    "order_simset": 0,
+    "version": 1.5
+  },
+  "redbull_screen_accessory": {
+    "name": "redbull_screen_accessory",
+    "mapTo": "redbull_screen_accessory",
+    "class": "Material",
+    "Stages": [
+      {
+        "baseColorFactor": [
+          0.09,
+          0.09,
+          0.09,
+          1
+        ],
+        "emissiveIntensityNits": 4000,
+        "emissiveFactor": [
+          1,
+          1,
+          1
+        ],
+        "emissiveMap": "/vehicles/redbull/redbull_accessory.data.png",
+        "metallicFactor": 0.5,
+        "roughnessFactor": 0.1,
+        "useAnisotropic": true
+      },
+      {},
+      {}
+    ],
+    "alphaRef": 0,
+    "dynamicCubemap": true,
+    "materialTag0": "lucasbe",
+    "materialTag1": "vehicle",
+    "order_simset": 0,
+    "version": 1.5
+  }
+}
