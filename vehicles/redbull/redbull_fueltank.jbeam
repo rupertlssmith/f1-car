@@ -12,7 +12,7 @@
     ],
     "variables": [
         ["name", "type", "unit", "category", "default", "min", "max", "title", "description"],
-        ["$fuel", "range", "L", "Chassis", 48, 0, 48, "Fuel Volume", "Initial fuel volume", {"stepDis":0.5}],
+        ["$fuel", "range", "L", "Chassis", 60, 0, 140, "Fuel Volume", "Initial fuel volume", {"stepDis":0.5}],
     ],
     "energyStorage": [
         ["type", "name"],
@@ -20,7 +20,7 @@
     ],
     "mainTank": {
         "energyType":"gasoline",
-        "fuelCapacity": 48,
+        "fuelCapacity": 140,
         "startingFuelCapacity": "$fuel",
         "fuel": {"[engineGroup]:":["fuel"]},
         "breakTriggerBeam": "fuelTank",

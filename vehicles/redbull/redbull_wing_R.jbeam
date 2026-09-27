@@ -208,9 +208,6 @@
           {"breakGroup":"endplates_RR"},
           {"beamSpring":200100,"beamDamp":50},
           {"beamDeform":"FLT_MAX","beamStrength":5000},
-          ["rep1r","rwg1r"],
-          ["rep2r","rwg1r"],
-          ["rep3r","rwg1r"],
           ["rep4r","rwg1r"],
           ["rep1r","rwg2r"],
           ["rep2r","rwg2r"],
@@ -229,9 +226,6 @@
           {"breakGroup":"endplates_RL"},
           {"beamSpring":150100,"beamDamp":50},
           {"beamDeform":"FLT_MAX","beamStrength":5000},
-          ["rep1l","rwg1l"],
-          ["rep2l","rwg1l"],
-          ["rep3l","rwg1l"],
           ["rep4l","rwg1l"],
           ["rep1l","rwg2l"],
           ["rep2l","rwg2l"],
@@ -302,11 +296,17 @@
           {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
           {"deformLimitExpansion":1.1},
     ],
+    "hydros": [
+        ["id1:", "id2:"],
+        //DRS: lifts the leading edge (see tools/rb14/f1_setup.py)
+        ["rep1r","rwg1r", {"factor":0.1563, "inputSource":"drs", "inputFactor":1, "inRate":4, "outRate":4, "beamSpring":601000, "beamDamp":80, "beamDeform":"FLT_MAX", "beamStrength":6000, "breakGroup":"endplates_RR"}],
+        ["rep1l","rwg1l", {"factor":0.1563, "inputSource":"drs", "inputFactor":1, "inRate":4, "outRate":4, "beamSpring":601000, "beamDamp":80, "beamDeform":"FLT_MAX", "beamStrength":6000, "breakGroup":"endplates_RL"}],
+    ],
     "triangles": [
             ["id1:","id2:","id3:"],
             //rear wing
             {"groundModel":"metal"},
-            {"dragCoef":250},
+            {"dragCoef":1075},
             {"group":"redbull_wing_F"},
             ["rwg2","rwg2r","rwg1r",{"liftCoef":250, "stallAngle":0.44}],
             ["rwg2","rwg1r","rwg1", {"liftCoef":250, "stallAngle":0.44}],
@@ -314,7 +314,7 @@
             ["rwg1l","rwg2","rwg1", {"liftCoef":250, "stallAngle":0.44}],
             
             //beam wing
-            {"dragCoef":130},
+            {"dragCoef":559},
             {"group":"redbull_wing_F"},
             ["bwg2","bwg2r","bwg1r",{"liftCoef":340, "stallAngle":0.27}],
             ["bwg2","bwg1r","bwg1", {"liftCoef":340, "stallAngle":0.27}],
@@ -324,7 +324,7 @@
             
             //rear wing endplates
             {"groundModel":"metal"},
-            {"dragCoef":40},
+            {"dragCoef":172},
             {"group":"redbull_wing_R_endplates"},
             ["rep3r","rep4r","rep2r"],
             ["rep3r","rep2r","rep1r"],

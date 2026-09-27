@@ -1,4 +1,25 @@
 {
+"redbull_floor_groundeffect": {
+    "information":{
+        "authors":"redbull mod (RB14 conversion)",
+        "name":"Ride-Height Sensitive Floor (experimental)",
+        "value":5000,
+    },
+    "slotType" : "redbull_floor_groundeffect",
+    "controller": [
+        ["fileName"],
+        ["redbullGroundEffect", {"floorClA":2.000, "gain":12, "stallHeight":0.018, "stallLoss":0.8, "maxForce":8000, "radius":0.335, "h0F":0.0719, "h0R":0.1221}],
+    ],
+    "thrusters": [
+        ["id1:", "id2:", "factor", "thrustLimit", "control"],
+        //more downforce: push down on the car (force on id2, towards id1)
+        ["fl2", "fl6", 2880, 2880, "floorGEDown"],
+        ["rdiff", "rs1", 5120, 5120, "floorGEDown"],
+        //less downforce (too high, or stalled): pull up
+        ["fl6", "fl2", 2880, 2880, "floorGEUp"],
+        ["rs1", "rdiff", 5120, 5120, "floorGEUp"],
+    ],
+},
 "redbull_floor": {
     "information":{
         "authors":"LucasBE",
@@ -6,6 +27,10 @@
         "value":2280,
     },
     "slotType" : "redbull_floor",
+    "slots": [
+        ["type", "default", "description"],
+        ["redbull_floor_groundeffect", "", "Floor Aerodynamics"],
+    ],
     "flexbodies": [
          ["mesh", "[group]:", "nonFlexMaterials"],
          ["redbull_floor", ["redbull_floor"]],
@@ -21,25 +46,25 @@
          {"nodeWeight":1.0},
          {"group":"redbull_floor"},
          ["fl1rr",-0.8058, -0.2707, 0.1246],
-         ["fl1r", -0.2149, -0.6737, 0.0746, {"nodeWeight":1.8}],
-         ["fl1l",  0.2149, -0.6737, 0.0746, {"nodeWeight":1.8}],
+         ["fl1r", -0.2149, -0.6737, 0.0746, {"nodeWeight":9}],
+         ["fl1l",  0.2149, -0.6737, 0.0746, {"nodeWeight":9}],
          ["fl1ll", 0.8058, -0.2707, 0.1246],
          
          ["fl2rr",-0.8058, 0.0569, 0.1332],
-         ["fl2r", -0.3996, 0.0569, 0.0838],
-         ["fl2",   0.0, 0.0569, 0.0838, {"nodeWeight":1.8}],
-         ["fl2l",  0.3996, 0.0569, 0.0838],
+         ["fl2r", -0.3996, 0.0569, 0.0838, {"nodeWeight":6}],
+         ["fl2",   0.0, 0.0569, 0.0838, {"nodeWeight":14}],
+         ["fl2l",  0.3996, 0.0569, 0.0838, {"nodeWeight":6}],
          ["fl2ll", 0.8058, 0.0569, 0.1332],
          
          ["fl3rr",-0.8058, 0.5968, 0.1461],
-         ["fl3r", -0.3996, 0.5968, 0.0999],
-         ["fl3",   0.0, 0.5968, 0.0999, {"nodeWeight":1.8}],
-         ["fl3l",  0.3996, 0.5968, 0.0999],
+         ["fl3r", -0.3996, 0.5968, 0.0999, {"nodeWeight":15}],
+         ["fl3",   0.0, 0.5968, 0.0999, {"nodeWeight":25}],
+         ["fl3l",  0.3996, 0.5968, 0.0999, {"nodeWeight":15}],
          ["fl3ll", 0.8058, 0.5968, 0.1461],
          
-         ["fl4r", -0.5968, 1.3779, 0.1637],
-         ["fl4",   0.0, 1.3779, 0.1218, {"nodeWeight":1.8}],
-         ["fl4l",  0.5968, 1.3779, 0.1637],
+         ["fl4r", -0.5968, 1.3779, 0.1637, {"nodeWeight":7}],
+         ["fl4",   0.0, 1.3779, 0.1218, {"nodeWeight":20}],
+         ["fl4l",  0.5968, 1.3779, 0.1637, {"nodeWeight":7}],
          
          ["fl5r",-0.5398, 2.0449, 0.2014],
          ["fl5",  0.0, 2.0449, 0.2014],
@@ -283,7 +308,7 @@
             {"triangleType":"NORMALTYPE"},
             //floor
             {"dragCoef":90},
-            {"liftCoef":20, "stallAngle":0.10}
+            {"liftCoef":72.9, "stallAngle":0.10}
             {"group":"redbull_floor"},
             {"groundModel":"plastic"},
             ["fl4l", "fl3l", "fl4"],
@@ -301,7 +326,7 @@
             
             //diffuser
             {"dragCoef":40},
-            {"liftCoef":80, "stallAngle":0.20}
+            {"liftCoef":291.6, "stallAngle":0.20}
             {"group":"redbull_floor"},
             {"groundModel":"plastic"},
             ["fl5r", "fl5", "fl4"],

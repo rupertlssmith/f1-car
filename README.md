@@ -49,6 +49,24 @@ Options: `--out <dir>` writes the zip somewhere else (e.g. straight into the
 mods folder); `--update-manifest` also writes the regenerated file hashes back
 to `mod_info/redbull/info.json` — use it before committing changed mod files.
 
+## Driving it
+
+Four setups in the vehicle selector: **Baseline** (default), **Low
+Downforce**, **High Downforce** and **Aggressive** (qualifying trim). Extra
+keys, rebindable under Options > Controls > Bindings > Vehicle Specific:
+
+| Key | Action |
+|---|---|
+| U | DRS open/close (opens above 72 km/h, closes when you brake) |
+| O | ERS mode: harvest / balanced / overtake |
+| T / G | Brake bias forward / back |
+| Y | Pit limiter |
+
+The setup numbers (mass, rates, aero, power, gearing) and how they were
+derived are in [`plans/rb14-model-swap.md`](plans/rb14-model-swap.md)
+(Milestone 4); `python3 tools/rb14/setup_report.py --config baseline` prints
+them from the jbeam.
+
 ## Dev environment
 
 Containerised development environment for f1-car, from the devbox starter.

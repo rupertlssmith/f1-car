@@ -5,6 +5,8 @@
   "bindings":[
     {"control":"y", "action":"pitLimiter"},
     {"control":"t", "action":"biasPlus"},
-    {"control":"g", "action":"biasMinus"}
+    {"control":"g", "action":"biasMinus"},
+    {"control":"u", "action":"drsToggle"},
+    {"control":"o", "action":"ersMode"}
   ]
 }

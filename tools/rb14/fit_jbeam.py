@@ -52,7 +52,7 @@ VAL = rf'(?:{NUM}|"\$=[^"]*")'
 NODE_ROW = re.compile(rf'(\[\s*"([A-Za-z0-9_.\-]+)"\s*,\s*)({VAL})(\s*,\s*)({VAL})(\s*,\s*)({VAL})')
 NODE_OFFSET = re.compile(r'("nodeOffset"\s*:\s*\{\s*"x"\s*:\s*)(' + NUM + r')(\s*,\s*"y"\s*:\s*)(' + NUM +
                          r')(\s*,\s*"z"\s*:\s*)(' + NUM + r')')
-FLEX_POS = re.compile(r'(\[\s*"([A-Za-z0-9_.\-]+)"\s*,\s*\[[^\]]*\][^\n]*?"pos"\s*:\s*\{\s*"x"\s*:\s*)(' + NUM +
+FLEX_POS = re.compile(r'(\[\s*"([A-Za-z0-9_.\-]+)"\s*,\s*(\[[^\]]*\])[^\n]*?"pos"\s*:\s*\{\s*"x"\s*:\s*)(' + NUM +
                       r')(\s*,\s*"y"\s*:\s*)(' + NUM + r')(\s*,\s*"z"\s*:\s*)(' + NUM + r')')
 
 
@@ -83,7 +83,13 @@ def main():
     offsets = jbeam_nodes.slot_offsets(src_parts)
     offset_slots = set(offsets)
 
-    # absolute flexbody positions in the F4, keyed by (mesh, side)
+    # absolute flexbody positions in the F4, keyed by (mesh, side, groups):
+    # front and rear brakes share mesh names and differ only by group
+    def flex_key(groups):
+        if isinstance(groups, str):
+            groups = re.findall(r'"([^"]*)"', groups)
+        return tuple(g.replace("fr04", "redbull") for g in groups)
+
     flex_pos = {}
     for pname, (f, part) in src_parts.items():
         if part.get("slotType") in offset_slots:
@@ -92,7 +98,7 @@ def main():
             pos = r.get("pos")
             if isinstance(pos, dict):
                 p = tuple(jbeam_nodes.evaluate(pos[k], variables) for k in "xyz")
-                flex_pos[(r["mesh"].replace("fr04", "redbull"), p[0] >= 0)] = p
+                flex_pos[(r["mesh"].replace("fr04", "redbull"), p[0] >= 0, flex_key(r.get("[group]:") or []))] = p
 
     cameras = {}
     for _, (f, part) in src_parts.items():
@@ -136,17 +142,17 @@ def main():
 
             def flex_sub(m):
                 mesh = m.group(2)
-                x_old = float(m.group(3))
+                x_old = float(m.group(4))
                 if wheel_file:
                     # wheel and tyre meshes: centred on the tyre, which sits
                     # AXLE_MID outboard of the slot offset
                     x = AXLE_MID if x_old >= 0 else -AXLE_MID
-                    return f"{m.group(1)}{fmt(x)}{m.group(4)}0.0{m.group(6)}0.0"
-                p = flex_pos.get((mesh, x_old >= 0))
+                    return f"{m.group(1)}{fmt(x)}{m.group(5)}0.0{m.group(7)}0.0"
+                p = flex_pos.get((mesh, x_old >= 0, flex_key(m.group(3))))
                 if p is None:
                     return m.group(0)
                 q = fitmap.map_point(p)
-                return f"{m.group(1)}{fmt(q[0])}{m.group(4)}{fmt(q[1])}{m.group(6)}{fmt(q[2])}"
+                return f"{m.group(1)}{fmt(q[0])}{m.group(5)}{fmt(q[1])}{m.group(7)}{fmt(q[2])}"
 
             new = FLEX_POS.sub(flex_sub, new)
             new = MIRROR_ROW.sub(lambda m: "".join([m.group(1), fmt(MIRROR_OFFSET[m.group(2)][0]), m.group(4),

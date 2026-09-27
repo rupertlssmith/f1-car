@@ -12,16 +12,20 @@ local biasChanged = 0
 electrics.values.biasChange = 0
 electrics.values.biasDifferent = 0
 
---sets brake torque for front and rear brakes. Set identical in jbeam using usual brakeStrength and brakeBias arguments as well.
-local brakeTorqueFront = 1600
-local brakeTorqueRear = 1400
+--brake torque for front and rear brakes (per wheel, before the bias split) and
+--the bias range. Passed in from the jbeam controller row so they match the
+--brakes' own brakeStrength/brakeBias expressions (RB14: see redbull.jbeam).
+local brakeTorqueFront = 5000
+local brakeTorqueRear = 5000
+local minBias = 0.50
+local maxBias = 0.64
 
 -- clamp bias to max and min values
 local function clampBias(value)
-    if value > 0.65 then
-        return 0.65
-    elseif value < 0.45 then
-        return 0.45
+    if value > maxBias then
+        return maxBias
+    elseif value < minBias then
+        return minBias
     end
 
     return value
@@ -63,7 +67,11 @@ local function updateGFX(dt)
 end
 
 local function init(jbeamData)
-    startBias = jbeamData.startBias or 0.55 -- set in jbeam using usual controller formatting
+    startBias = jbeamData.startBias or 0.57 -- set in jbeam using usual controller formatting
+    brakeTorqueFront = jbeamData.torqueFront or brakeTorqueFront
+    brakeTorqueRear = jbeamData.torqueRear or brakeTorqueRear
+    minBias = jbeamData.minBias or minBias
+    maxBias = jbeamData.maxBias or maxBias
     electrics.values.biasChange = 0
 end
 

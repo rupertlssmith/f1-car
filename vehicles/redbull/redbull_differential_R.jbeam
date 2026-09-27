@@ -2,7 +2,7 @@
 "redbull_differential_R": {
     "information":{
         "authors":"LucasBE",
-        "name":"Open Rear Differential",
+        "name":"Limited Slip Rear Differential",
         "value":350,
     },
     "slotType" : "redbull_differential_R",
@@ -12,13 +12,20 @@
     ],
     "powertrain" : [
         ["type", "name", "inputName", "inputIndex"],
-        ["differential", "differential_R", "gearbox", 1, {"diffType":"open", "uiName":"Rear Differential","defaultVirtualInertia":0.25}],
+        ["differential", "differential_R", "gearbox", 1, {"diffType":"lsd", "lsdPreload":"$lsdpreload_R", "lsdLockCoef":"$lsdlockcoef_R", "lsdRevLockCoef":"$lsdlockcoefrev_R", "uiName":"Rear Differential","defaultVirtualInertia":0.25}],
+    ],
+    "variables": [
+        ["name", "type", "unit", "category", "default", "min", "max", "title", "description"],
+        ["$finaldrive_R", "range", ":1", "Differentials", 4.0, 3.2, 4.8, "Final Drive Gear Ratio", "Ratio of the rear differential; higher is shorter gearing", {"stepDis":0.01, "subCategory":"Rear"}],
+        ["$lsdpreload_R", "range", "N/m", "Differentials", 60, 0, 400, "Pre-load Torque", "Locking torque between the rear wheels at all times", {"stepDis":5, "subCategory":"Rear"}],
+        ["$lsdlockcoef_R", "range", "", "Differentials", 0.25, 0, 0.6, "Power Lock Rate", "Extra locking on throttle, as a share of drive torque (traction, exit understeer)", {"stepDis":0.01, "subCategory":"Rear"}],
+        ["$lsdlockcoefrev_R", "range", "", "Differentials", 0.12, 0, 0.6, "Coast Lock Rate", "Extra locking off throttle (entry stability)", {"stepDis":0.01, "subCategory":"Rear"}],
     ],
     "differential_R": {
         "friction": 4.13,
         "dynamicFriction": 0.00195,
         "torqueLossCoef": 0.030,
-        "gearRatio":3.1 ,
+        "gearRatio":"$finaldrive_R",
     },
     "nodes": [
          ["id", "posX", "posY", "posZ"],

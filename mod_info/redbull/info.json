@@ -59,11 +59,11 @@
         ],
         [
             "vehicles/common/redbull_wheels/redbull_tires_F_13.jbeam",
-            "1627f4db137638ae"
+            "0cbc8a7f8364ac30"
         ],
         [
             "vehicles/common/redbull_wheels/redbull_tires_R_13.jbeam",
-            "283d71d6576d854b"
+            "fa40059ebcf601bb"
         ],
         [
             "vehicles/common/redbull_wheels/redbull_wheels.dae",
@@ -71,11 +71,11 @@
         ],
         [
             "vehicles/common/redbull_wheels/redbull_wheels_F_13.jbeam",
-            "4316ca9fef5ec669"
+            "16e35ef81f69bf05"
         ],
         [
             "vehicles/common/redbull_wheels/redbull_wheels_R_13.jbeam",
-            "68b5c446086bd8c1"
+            "014e678abe1bb278"
         ],
         [
             "vehicles/redbull/aggressive.jpg",
@@ -83,7 +83,7 @@
         ],
         [
             "vehicles/redbull/aggressive.pc",
-            "1640915e85e5b13a"
+            "aaa39746268e22ec"
         ],
         [
             "vehicles/redbull/baseline.jpg",
@@ -91,7 +91,7 @@
         ],
         [
             "vehicles/redbull/baseline.pc",
-            "185ed624c26be51b"
+            "2d95e2c9705edcfd"
         ],
         [
             "vehicles/redbull/default.jpg",
@@ -103,7 +103,7 @@
         ],
         [
             "vehicles/redbull/highdf.pc",
-            "41f8b8dd3640a0d7"
+            "a5116685cca9a702"
         ],
         [
             "vehicles/redbull/info.json",
@@ -127,7 +127,7 @@
         ],
         [
             "vehicles/redbull/inputmaps/keyboard.json",
-            "35f350c0d3c06518"
+            "3bee201efe3f7d7f"
         ],
         [
             "vehicles/redbull/lowdf.jpg",
@@ -135,11 +135,23 @@
         ],
         [
             "vehicles/redbull/lowdf.pc",
-            "ba86581ac8034634"
+            "82c8bf98b0d54bd7"
         ],
         [
             "vehicles/redbull/lua/controller/flyBrakeBias.lua",
-            "133cc912fc4eaa62"
+            "6d1985a9c7df8b0e"
+        ],
+        [
+            "vehicles/redbull/lua/controller/redbullDRS.lua",
+            "0f47308290d23b41"
+        ],
+        [
+            "vehicles/redbull/lua/controller/redbullERS.lua",
+            "d3d46867fe13ec17"
+        ],
+        [
+            "vehicles/redbull/lua/controller/redbullGroundEffect.lua",
+            "cb4e9261e29e4091"
         ],
         [
             "vehicles/redbull/lua/redbullPitLimiter.lua",
@@ -239,11 +251,11 @@
         ],
         [
             "vehicles/redbull/redbull.interaction.json",
-            "2221194c01188d81"
+            "01d914621337ca64"
         ],
         [
             "vehicles/redbull/redbull.jbeam",
-            "a09c555cae11d84f"
+            "5a3743271f8419a7"
         ],
         [
             "vehicles/redbull/redbull_accessory.data.dds",
@@ -251,11 +263,11 @@
         ],
         [
             "vehicles/redbull/redbull_body.jbeam",
-            "d3e11e7f5026ab28"
+            "a99d31f43e929e81"
         ],
         [
             "vehicles/redbull/redbull_brakes.jbeam",
-            "0858cd35a260664d"
+            "74d4e2a871ad6f02"
         ],
         [
             "vehicles/redbull/redbull_cockpit_ao.data.dds",
@@ -283,11 +295,11 @@
         ],
         [
             "vehicles/redbull/redbull_differential_R.jbeam",
-            "099cdb423a9fb89a"
+            "f8c94e153ca3c316"
         ],
         [
             "vehicles/redbull/redbull_engine.jbeam",
-            "7c2feadcc557491e"
+            "db5be3727d73fe7d"
         ],
         [
             "vehicles/redbull/redbull_engine_ao.data.dds",
@@ -315,11 +327,11 @@
         ],
         [
             "vehicles/redbull/redbull_floor.jbeam",
-            "121130d65fe01024"
+            "808ed593d8cb3249"
         ],
         [
             "vehicles/redbull/redbull_fueltank.jbeam",
-            "65cce41aff3463ea"
+            "9a943581bba8bb9d"
         ],
         [
             "vehicles/redbull/redbull_lights_b.color.dds",
@@ -391,23 +403,23 @@
         ],
         [
             "vehicles/redbull/redbull_suspension_F.jbeam",
-            "143eb693b50cf892"
+            "7257b6379bdd26d0"
         ],
         [
             "vehicles/redbull/redbull_suspension_R.jbeam",
-            "8423becbe1cece6c"
+            "4a33fe9c9eef2f2a"
         ],
         [
             "vehicles/redbull/redbull_transaxle.jbeam",
-            "3b978d86fd94c74a"
+            "43a2d2658aab2773"
         ],
         [
             "vehicles/redbull/redbull_wing_F.jbeam",
-            "8a828bcac1da81ac"
+            "a7465fac3410d60e"
         ],
         [
             "vehicles/redbull/redbull_wing_R.jbeam",
-            "a26ff96311e643f5"
+            "d9ca4c3a97651ea6"
         ],
         [
             "vehicles/redbull/screen/ReloadAlt-Light.ttf",

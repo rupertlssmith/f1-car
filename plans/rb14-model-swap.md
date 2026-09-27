@@ -43,7 +43,11 @@ the renders, which use headless Blender.
 | `tools/rb14/envelope.py` | Which points are hidden inside the RB14 bodywork (used to decide which F4 internals to keep) |
 | `tools/rb14/preview.py` | Assembles the *built* mod (the `.dae`s, materials and textures the game loads) into a textured `.glb`, wheels and wings placed like the jbeam does |
 | `tools/rb14/render.py` | Blender (headless) preview renders, optional jbeam node/beam overlay and close-up camera |
-| `tools/check_mod.py` | Consistency checks: references, meshes, groups, materials, textures, configs; `--fit` measures how far each flexbody's vertices are from its nodes |
+| `tools/check_mod.py` | Consistency checks: references, meshes, groups, materials, textures, configs, controllers, actions and key bindings; `--fit` measures how far each flexbody's vertices are from its nodes |
+| `tools/rb14/f1_setup.py` | Milestone 4: turns the re-fitted F4 physics into the 2018 F1 setup (mass, tyres, suspension, alignment, power unit, gearbox, diff, brakes, aero, ERS/DRS, ride-height floor, the four configs). Sets absolute values, calibrating against `setup_report.py`, so it is safe to re-run |
+| `tools/rb14/setup_report.py` | Offline setup sheet read from the jbeam the way the game merges it: mass and balance, a linear spring-network model of each axle (wheel/heave/roll rates, ride frequency, static sag), flat-plate aero by part (and with DRS open), torque/power, gearing, a straight-line launch sim, tyre-limited lateral and braking g. `--config <name>` for a `.pc` |
+| `tools/rb14/jbeam_edit.py` | Format-preserving (CRLF, comments) jbeam text edits used by `f1_setup.py` |
+| `tools/rb14/test_controllers.lua` | Runs the ERS, DRS and ground-effect Lua controllers against stubbed BeamNG globals (`luajit tools/rb14/test_controllers.lua`) |
 
 Rebuild after changing any of these:
 
@@ -51,7 +55,10 @@ Rebuild after changing any of these:
 python3 tools/rb14/build_model.py   # meshes, materials, textures
 python3 tools/rb14/sync_jbeam.py    # drop jbeam rows for meshes that went away
 python3 tools/rb14/fit_jbeam.py     # re-fit coordinates (idempotent)
+python3 tools/rb14/f1_setup.py      # F1 physics and configs on top (idempotent)
 python3 tools/check_mod.py --fit    # must report 0 errors
+python3 tools/rb14/setup_report.py --config baseline   # numbers vs the targets
+luajit tools/rb14/test_controllers.lua                 # Lua controllers
 python3 tools/build_mod.py          # dist/redbull_<timestamp>.zip
 ```
 
@@ -69,6 +76,18 @@ without the game.
   parts), so the "one big body flexbody" step was skipped. `check_mod.py`:
   0 errors (21 warnings, all inherited from the original F4 jbeam).
   Previews: `plans/previews/m1_*.png`.
+- **Milestone 3 - done.** Four configs (`lowdf`, `baseline`, `highdf`,
+  `aggressive`) with thumbnails, F4 skins and liveries removed, metadata and
+  mod manager info.
+- **Milestone 4 - done offline (awaiting in-game test).** All of it is
+  applied by `tools/rb14/f1_setup.py`; details and the in-game checklist are
+  under "Milestone 4 result" below. Not done: flipping the rear pushrod to a
+  pullrod in the physics (the RB14 pullrod mesh is shown; the corner spring
+  acts hub-to-chassis, so the rod layout doesn't change the rates), tyre
+  thermals/wear beyond BeamNG's own.
+- **Fixed on the way:** front brake discs/calipers were placed at the rear
+  axle since Milestone 1 (front and rear brakes share mesh names; the fit
+  now keys them by node group too).
 
 ## Milestone 1 — Rough visual swap (drives in-game, looks like an RB14)
 
@@ -212,6 +231,80 @@ Use BeamNG's built-in G-meter / telemetry apps; you record, we tune.
 
 The goal is a car that feels like a 2018 F1 car and hits these numbers, not a
 replica of the real RB14 setup sheet.
+
+### Milestone 4 result
+
+Estimated offline by `setup_report.py` (BeamNG's exact aero and tyre models
+aren't public: aero drag is calibrated on the F4's known top speed, lift uses
+the same flat-plate model; the game is the ground truth).
+
+| | lowdf | baseline | highdf | aggressive |
+|---|---|---|---|---|
+| Wing angles F / R / beam (deg) | -5 / 4 / 3 | -3 / 8 / 3 | 0 / 15 / 3 | 0 / 12 / 3 |
+| ClA / CdA (m^2), front | 4.56 / 1.12, 43 % | 5.00 / 1.30, 43 % | 5.67 / 1.75, 43 % | 5.51 / 1.54, 44 % |
+| Downforce at 300 km/h | 2.6 x weight | 2.8 x | 3.2 x | 3.2 x |
+| 0-100 / 0-200 km/h | 2.7 / 4.9 s | 2.7 / 4.9 s | 2.7 / 5.0 s | 2.6 / 4.8 s |
+| Top speed (DRS open) | 339 (347) km/h | 324 (345) | 294 (328) | 306 (338) |
+| Lateral g, 300 km/h | 4.5 | 4.7 | 5.0 | 5.2 |
+
+Every config: 1.9 g at low speed, 5-6 g braking from 300 km/h.
+
+- **Mass:** 733 kg with driver and no fuel (777 kg with the configs' 60 L),
+  45.5 % front, CoG 0.32 m. Power unit 145 kg, gearbox 34 kg, light
+  corners, ballast in the plank.
+- **Suspension** (baseline, per wheel): heave 170 / 175 N/mm (5.6 / 5.1 Hz),
+  roll 317 / 238 N/mm (57 % front roll stiffness). Corner springs carry the
+  load; on top of them a **heave (third) spring** per axle -- a torsionbar
+  about a lengthwise axis with the two hubs as its arms, so it resists both
+  wheels rising together (aero load) but not roll -- and an anti-roll bar
+  per axle (the F4's rear bar was wired to the front bar's variable; now its
+  own). Heave and ARB variables read as added wheel rate in N/m. Packers
+  (progressive bump stops) after 25 / 32 mm of wheel travel; the car rides
+  them near 300 km/h. Spring preload is solved so the car sits exactly at
+  its modelled ride height and rake with 60 L of fuel (72 mm front / 122 mm
+  rear of the plank); "Spring Height" moves it by that many metres.
+- **Alignment:** camber -3.1 / -1.8 deg, toe -0.12 (out) / +0.25 (in) deg,
+  with new toe variables (the F4's fixed tie-rod setting gave 1.3 deg toe-in
+  on the RB14 geometry).
+- **Tyres:** 305 / 405 wide, 0.335 m radius, 21 / 19.5 psi, grip with strong
+  load sensitivity (mu ~1.9 at low load falling to ~1.2-1.3 at 300 km/h
+  loads). Wets kept.
+- **Power unit:** 1.6 L V6 hybrid: ICE 559 kW (749 hp) at 11,000 rpm, rev
+  limit 12,500, idle 4,000, light inertia, dry sump safe to 6.5 g (the F4's
+  2.5 g limit would have starved it in fast corners). The jbeam torque curve
+  is ICE + MGU-K; the **ERS** controller (`lua/controller/redbullERS.lua`)
+  caps the throttle to the ICE share unless the 4 MJ store is deploying
+  (+120 kW, 910 hp total), harvests under braking (MGU-K) and at high load
+  (MGU-H). Modes: harvest / balanced (keeps a 25 % reserve) / overtake;
+  key **O** cycles.
+- **Gearbox and diff:** 8-speed seamless sequential (105 ... 346 km/h at the
+  limiter on the 4.0 final drive), 30 ms shifts, short gear set for highdf;
+  limited-slip diff with preload / power / coast locking and final drive
+  as tuning variables.
+- **Brakes:** carbon (278 / 266 mm), 5,000 Nm per wheel before the bias
+  split (~10 kNm total), bias 57 % front (50-64 %, T / G keys). The bias
+  controller takes its torques from the jbeam now instead of the F4's
+  hard-coded values.
+- **Aero:** wings and floor rescaled from the F4 for the numbers above;
+  front wing ~30 %, rear wing ~30 %, floor ~40 % of downforce.
+- **DRS** (key **U**): a hydro per side lifts the rear wing's leading edge
+  so the upper wing turns flat about its trailing edge (-14 % downforce,
+  -22 % drag at baseline); opens above 72 km/h, closes when you brake.
+- **Ride-height floor (experimental, off by default):** Parts > Floor
+  Aerodynamics > "Ride-Height Sensitive Floor". A controller measures the
+  floor's height above the wheel plane and adds or removes downforce with
+  thrusters: +1.2 % per mm lower, stalling below ~18 mm at the front.
+
+**In-game checklist** (jbeam debug + the G-meter/telemetry apps):
+1. The car settles at its modelled height (plank ~7 cm front, ~12 cm rear);
+   nothing twitches at rest; DRS flap and ERS modes respond (on-screen
+   messages).
+2. Straight line: 0-100 ~2.7 s, 0-200 ~5 s, top speed per the table; no
+   bottoming or porpoising at top speed.
+3. Corners: < 2 g slow, 4-5 g fast; balance near neutral with mild
+   understeer on baseline.
+4. Braking from 300 km/h: ~5 g, no front lock at 57 % bias.
+5. Then try the experimental floor on baseline and report how it feels.
 
 ## Testing loop
 

@@ -13,7 +13,7 @@
         ],
         "variables": [
             ["name", "type", "unit", "category", "default", "min", "max", "title", "description"],
-            ["$tirepressure_R", "range", "psi", "Wheels", 15, 0, 50, "Tire Pressure", "Relative to atmospheric pressure", {"subCategory":"Rear"}],
+            ["$tirepressure_R", "range", "psi", "Wheels", 19.5, 0, 50, "Tire Pressure", "Relative to atmospheric pressure", {"subCategory":"Rear"}],
         ],
         "pressureWheels": [
             ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
@@ -50,7 +50,7 @@
             {"wheelPeripheryReinfBeamDampCutoffHz":500,"wheelPeripheryReinfBeamPrecompression":0.98},
     
             //general tire values
-            {"nodeWeight":0.18},
+            {"nodeWeight":0.34},
             {"nodeMaterial":"|NM_RUBBER"},
             {"triangleCollision":true},
             {"pressurePSI":"$tirepressure_R"},
@@ -63,9 +63,9 @@
             {"treadCoef":0},
     
             //advanced friction values
-            {"noLoadCoef":2.12},
-            {"loadSensitivitySlope":0.000190},
-            {"fullLoadCoef":0.65},
+            {"noLoadCoef":2.49},
+            {"loadSensitivitySlope":0.00025},
+            {"fullLoadCoef":1.0},
             {"softnessCoef":1},
     
             //deform values
@@ -88,7 +88,7 @@
     ],
     "variables": [
         ["name", "type", "unit", "category", "default", "min", "max", "title", "description"],
-        ["$tirepressure_R", "range", "psi", "Wheels", 15, 0, 50, "Tire Pressure", "Relative to atmospheric pressure", {"subCategory":"Rear"}],
+        ["$tirepressure_R", "range", "psi", "Wheels", 19.5, 0, 50, "Tire Pressure", "Relative to atmospheric pressure", {"subCategory":"Rear"}],
     ],
     "pressureWheels": [
         ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
@@ -125,7 +125,7 @@
         {"wheelPeripheryReinfBeamDampCutoffHz":500,"wheelPeripheryReinfBeamPrecompression":0.98},
 
         //general tire values
-        {"nodeWeight":0.18},
+        {"nodeWeight":0.34},
         {"nodeMaterial":"|NM_RUBBER"},
         {"triangleCollision":true},
         {"pressurePSI":"$tirepressure_R"},
@@ -138,9 +138,9 @@
         {"treadCoef":1.0},
 
         //advanced friction values
-        {"noLoadCoef":1.80},
-        {"loadSensitivitySlope":0.000110},
-        {"fullLoadCoef":0.55},
+        {"noLoadCoef":2.10},
+        {"loadSensitivitySlope":0.00025},
+        {"fullLoadCoef":0.85},
         {"softnessCoef":0.8},
 
         //deform values

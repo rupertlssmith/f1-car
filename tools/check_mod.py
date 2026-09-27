@@ -21,6 +21,7 @@ brake meshes, the "mirror" material...) are listed as notes, not errors.
 """
 import argparse
 import glob
+import json
 import os
 import re
 import sys
@@ -40,6 +41,7 @@ NODE_SECTIONS = {
     "triangles": ["id1:", "id2:", "id3:"],
     "torsionbars": ["id1:", "id2:", "id3:", "id4:"],
     "hydros": ["id1:", "id2:"],
+    "thrusters": ["id1:", "id2:"],
     "slidenodes": ["id:", "id1:", "id2:"],
     "props": ["idRef:", "idX:", "idY:"],
     "mirrors": ["idRef:", "id1:", "id2:"],
@@ -258,6 +260,36 @@ def main():
             for m in [k] + [v.get(s) for s in ("off", "on", "on_intense") if isinstance(v, dict) and v.get(s)]:
                 if m not in mats and m not in BASE_MATERIALS:
                     rep.error(f"{name}: glowMap material {m} not defined")
+
+    # controllers: a Lua file in the mod, or one the game ships; actions
+    # enabled by the vehicle must be defined in its interaction file
+    base_controllers = {"vehicleController", "shiftLights", "gauges/genericGauges", "esc", "tractionControl",
+                        "twoStepLaunch", "nitrousOxideInjection", "lightbar", "postCrashBrake", "drivingDynamics/CMU"}
+    enabled = []
+    for name, _ in tree:
+        for r in jbeam.table_rows(parts[name][1].get("controller") or []):
+            fn = r.get("fileName")
+            if not isinstance(fn, str):
+                continue
+            lua = [os.path.join(d, "lua", "controller", fn + ".lua") for d in dirs]
+            if fn not in base_controllers and not any(os.path.exists(x) for x in lua):
+                rep.error(f"{name}: controller {fn} has no lua/controller/{fn}.lua and is not a known base-game controller")
+        for r in jbeam.table_rows(parts[name][1].get("actionsEnabled") or []):
+            enabled.append((name, r.get("id")))
+    inter = f"vehicles/{args.mod}/{args.mod}.interaction.json"
+    actions = set()
+    if os.path.exists(inter):
+        try:
+            actions = set((json.load(open(inter)).get("actions") or {}).keys())
+        except ValueError as e:
+            rep.error(f"{inter}: {e}")
+    for name, a in enabled:
+        if a not in actions:
+            rep.error(f"{name}: enabled action {a} not defined in {os.path.basename(inter)}")
+    for km in glob.glob(f"vehicles/{args.mod}/inputmaps/*.json"):
+        for b in (json.load(open(km)).get("bindings") or []):
+            if b.get("action") not in actions:
+                rep.error(f"{os.path.basename(km)}: binding {b.get('control')} -> unknown action {b.get('action')}")
 
     # configurations
     for pc in sorted(glob.glob(f"vehicles/{args.mod}/*.pc")):

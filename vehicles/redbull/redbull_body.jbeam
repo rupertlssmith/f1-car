@@ -182,51 +182,51 @@
          //rear tub
          {"nodeWeight":5.0},
          {"group":["redbull_body"]},
-         ["rt1r",-0.3996, 0.5968, 0.1369, {"group":["redbull_body","redbull_radduct_R"]}],
-         ["rt1l", 0.3996, 0.5968, 0.1369, {"group":["redbull_body","redbull_radduct_L"]}],
-         ["rt2r",-0.3996, 0.5968, 0.7045, {"group":["redbull_body","redbull_rollhoop","redbull_radduct_R"]}],
-         ["rt2l", 0.3996, 0.5968, 0.7045, {"group":["redbull_body","redbull_rollhoop","redbull_radduct_L"]}],
+         ["rt1r",-0.3996, 0.5968, 0.1369, {"group":["redbull_body","redbull_radduct_R"], "nodeWeight":12}],
+         ["rt1l", 0.3996, 0.5968, 0.1369, {"group":["redbull_body","redbull_radduct_L"], "nodeWeight":12}],
+         ["rt2r",-0.3996, 0.5968, 0.7045, {"group":["redbull_body","redbull_rollhoop","redbull_radduct_R"], "nodeWeight":3}],
+         ["rt2l", 0.3996, 0.5968, 0.7045, {"group":["redbull_body","redbull_rollhoop","redbull_radduct_L"], "nodeWeight":3}],
 
-         ["rt3r",-0.3996, 0.0569, 0.1233, {"group":["redbull_body","redbull_radduct_R"]}],
-         ["rt3l", 0.3996, 0.0569, 0.1233, {"group":["redbull_body","redbull_radduct_L"]}],
-         ["rt4r",-0.3996, 0.0569, 0.71, {"group":["redbull_body","redbull_radduct_R"]}],
-         ["rt4l", 0.3996, 0.0569, 0.71, {"group":["redbull_body","redbull_radduct_L"]}],
+         ["rt3r",-0.3996, 0.0569, 0.1233, {"group":["redbull_body","redbull_radduct_R"], "nodeWeight":12}],
+         ["rt3l", 0.3996, 0.0569, 0.1233, {"group":["redbull_body","redbull_radduct_L"], "nodeWeight":12}],
+         ["rt4r",-0.3996, 0.0569, 0.71, {"group":["redbull_body","redbull_radduct_R"], "nodeWeight":3}],
+         ["rt4l", 0.3996, 0.0569, 0.71, {"group":["redbull_body","redbull_radduct_L"], "nodeWeight":3}],
          
          //mid tub
          {"nodeWeight":4.5},
-         ["mt1r",-0.33, -0.3504, 0.216, {"group":["redbull_body","redbull_radduct_R"]}],
-         ["mt1",  0.0, -0.3504, 0.1122, {"nodeWeight":5.0}],
-         ["mt1l", 0.33, -0.3504, 0.216, {"group":["redbull_body","redbull_radduct_L"]}],
+         ["mt1r",-0.33, -0.3504, 0.216, {"group":["redbull_body","redbull_radduct_R"], "nodeWeight":8}],
+         ["mt1",  0.0, -0.3504, 0.1122, {"nodeWeight":10}],
+         ["mt1l", 0.33, -0.3504, 0.216, {"group":["redbull_body","redbull_radduct_L"], "nodeWeight":8}],
 
          {"nodeWeight":5.0},
-         ["mt2r",-0.33, -0.3504, 0.71, {"group":["redbull_body","redbull_tierod_inner","redbull_radduct_R","redbull_halo"]}],
-         ["mt2l", 0.33, -0.3504, 0.71, {"group":["redbull_body","redbull_tierod_inner","redbull_radduct_L","redbull_halo"]}],
+         ["mt2r",-0.33, -0.3504, 0.71, {"group":["redbull_body","redbull_tierod_inner","redbull_radduct_R","redbull_halo"], "nodeWeight":3}],
+         ["mt2l", 0.33, -0.3504, 0.71, {"group":["redbull_body","redbull_tierod_inner","redbull_radduct_L","redbull_halo"], "nodeWeight":3}],
          
          {"nodeWeight":6.0},
-         ["mt3", 0.0, -0.9097, 0.7017, {"group":["redbull_body","redbull_halo"]}],
+         ["mt3", 0.0, -0.9097, 0.7017, {"group":["redbull_body","redbull_halo"], "nodeWeight":3}],
 
          //front tub/suspension mounts
          {"nodeMaterial":"|NM_METAL"},
          {"nodeWeight":5.5},
          //lower
          {"group":["redbull_body","redbull_lowermounts_F"]},
-         ["fx1r",-0.2324, -1.5942, 0.2553],
-         ["fx1l", 0.2324, -1.5942, 0.2553],
-         ["fx2r",-0.2568, -1.0482, 0.2636],
-         ["fx2l", 0.2568, -1.0482, 0.2636],
+         ["fx1r",-0.2324, -1.5942, 0.2553, {"nodeWeight":5.5}],
+         ["fx1l", 0.2324, -1.5942, 0.2553, {"nodeWeight":5.5}],
+         ["fx2r",-0.2568, -1.0482, 0.2636, {"nodeWeight":5.5}],
+         ["fx2l", 0.2568, -1.0482, 0.2636, {"nodeWeight":5.5}],
          //upper
          {"nodeWeight":5.5},
          {"group":["redbull_body","redbull_uppermounts_F"]},
-         ["fx3r",-0.2659, -1.638, 0.4597],
-         ["fx3l", 0.2659, -1.638, 0.4597],
-         ["fx4r",-0.2568, -1.0482, 0.4776],
-         ["fx4l", 0.2568, -1.0482, 0.4776],
+         ["fx3r",-0.2659, -1.638, 0.4597, {"nodeWeight":4}],
+         ["fx3l", 0.2659, -1.638, 0.4597, {"nodeWeight":4}],
+         ["fx4r",-0.2568, -1.0482, 0.4776, {"nodeWeight":4}],
+         ["fx4l", 0.2568, -1.0482, 0.4776, {"nodeWeight":4}],
 
 
          //shock
          {"nodeWeight":9.0},
          {"group":""},
-         ["fs1", 0.0, -1.3974, 0.7525, {"selfCollision":false,"collision":false}],
+         ["fs1", 0.0, -1.3974, 0.7525, {"selfCollision":false,"collision":false, "nodeWeight":4}],
 
          //halo
          {"nodeWeight":1.5},
@@ -583,7 +583,7 @@
         ["id1:", "id2:", "id3:"],
         {"triangleType":"NORMALTYPE"},
         //halo
-        {"dragCoef":4},
+        {"dragCoef":8},
         {"group":"redbull_halo"},
         {"groundModel":"metal"},
         ["halo", "halol", "halor"],
@@ -599,7 +599,7 @@
         ["halor", "halorr", "rt4r"],
         
         //hoop
-        {"dragCoef":8},
+        {"dragCoef":16},
         {"group":"redbull_hoop"},
         {"groundModel":"metal"},
         ["rt2r", "hoop", "rt2l"],
@@ -608,7 +608,7 @@
         ["hoop", "haloll", "rt2l"],
         
         //monocoque
-        {"dragCoef":10},
+        {"dragCoef":20},
         {"group":"redbull_monocoque"},
         {"groundModel":"plastic"},
         ["rt4r", "halorr", "rt2r"],

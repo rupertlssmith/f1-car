@@ -13,6 +13,18 @@
     "title": "Increase Brake Bias",
     "desc": "Increases the brake bias"
 },
+"drsToggle":{
+    "order":  100.4,
+    "onUp":"electrics.values.drsRequest = 1-(electrics.values.drsRequest or 0)",
+    "title": "Toggle DRS",
+    "desc": "Opens the rear wing flap (drag reduction); closes when braking"
+},
+"ersMode":{
+    "order":  100.5,
+    "onUp":"electrics.values.ersMode = ((electrics.values.ersMode or 1) + 1) % 3",
+    "title": "Cycle ERS Mode",
+    "desc": "Cycles the energy recovery system: harvest / balanced / overtake"
+},
 "biasMinus":{
     "order":  100.3,
     "onDown":"electrics.values.biasChange = electrics.values.biasChange - 0.01",
