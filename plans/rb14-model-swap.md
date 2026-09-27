@@ -103,13 +103,86 @@ reviewed without the game.
 
 ## Milestone 4 — Make it drive like an F1 car
 
-1. Mass (~733 kg with driver) and weight distribution.
-2. Engine: ~950 hp 1.6 L V6 turbo hybrid torque curve, rev limit ~12,000 rpm.
-3. Gearbox: 8-speed sequential, ratios; differential.
-4. Aero: downforce and drag at the four wing settings; DRS.
-5. Brakes: carbon discs, bias range.
-6. Tyres: 2018 13" slicks (front 305/670, rear 405/670), grip.
-7. Test laps and iterate on your feedback.
+Red Bull's real RB14 setup data (spring rates, damper curves, aero maps) is not
+public, so the car is set up from public 2018 F1 figures and informed
+estimates, then tuned against measurable targets (below) in game.
+
+### What the F4 already gives us
+
+`redbull_suspension_F/R.jbeam` is built like an F1 suspension: double
+wishbones with pushrods driving rockers, spring/damper on a rail
+(`shock_F*`), separate bump/rebound dampers with fast/slow rates, front and
+rear anti-roll bars, and tuning variables for camber, caster, ride height,
+springs and dampers. We reshape and retune this rather than build new
+suspension. Aero already uses jbeam wing surfaces with lift/drag
+coefficients, and the mod already ships Lua controllers (pit limiter, brake
+bias) as a pattern for custom logic.
+
+### Work items
+
+1. **Suspension geometry.** Re-fit wishbone, pushrod and rocker nodes to the
+   RB14 pick-up points (done coarsely in Milestone 1, refined here). RB14 is
+   **pushrod front, pullrod rear**: flip the rear pushrod to a pullrod
+   (lower-chassis rocker, rod to the upper upright). Very little travel
+   (a few cm), very low ride height, and Red Bull's **high rake** (rear set
+   noticeably higher than front) as the default.
+2. **Heave (third) springs.** Add a central spring + damper per axle between
+   the left and right rockers, so the car resists aero load (both sides
+   compressed together) separately from roll (corner springs + anti-roll
+   bars). New tuning variables: heave spring rate, heave damping, heave
+   packer gap. This is what keeps the platform stable as downforce builds and
+   is the key change from F4 behaviour.
+3. **Spring / damper / ARB rates.** Re-derive corner spring, heave spring and
+   ARB rates from target wheel rates and natural frequencies for a 733 kg car
+   with aero load; stiff rebound, bump stops/packers to cap travel.
+4. **Aerodynamics.** Rescale wing and floor lift/drag so downforce ≈ car
+   weight at ~150–180 km/h and ≈ 3–3.5× weight at 300 km/h, L/D ≈ 3–4, with
+   an aero balance around 40–45 % front. The four configs (`lowdf`,
+   `baseline`, `highdf`, `aggressive`) map to low/medium/high wing levels.
+   **DRS**: rear flap that drops rear-wing drag and downforce on a button,
+   via the existing wing-angle variables or a small controller.
+5. **Ride-height-sensitive floor.** Much of 2018 downforce comes from the floor
+   and depends on ride height and rake. BeamNG doesn't model ground effect
+   natively, so write a Lua controller (`lua/controller/redbullFloorAero.lua`)
+   that reads front/rear ride height each physics step and scales floor
+   downforce (drops off when too high, stalls when bottoming out). Hardest
+   part of the milestone; expect experimentation.
+6. **Mass and balance.** 733 kg minimum including driver; ~45–46 % front
+   weight. Set node weights; add ballast nodes to hit the total and balance.
+7. **Tyres.** 2018 13" slicks: front 305/670, rear 405/670. High peak grip
+   with strong load sensitivity (grip per kg falls as load rises), stiff
+   sidewalls. BeamNG's tyre thermals and wear are basic, so tune for grip
+   and feel rather than stint simulation. Wet tyres kept from the F4 setup.
+8. **Power unit.** 1.6 L V6 turbo, ~750 hp from the engine plus ~160 hp
+   (120 kW) electric boost. Start with an engine torque curve (rev limit
+   15,000, used to ~12,000 rpm) plus an ERS boost button; a full
+   battery/motor hybrid in BeamNG is a later option.
+9. **Gearbox and diff.** 8-speed sequential with near-instant shifts and
+   2018-typical ratios; limited-slip rear differential with adjustable
+   preload/locking.
+10. **Brakes.** Carbon-carbon discs: high torque, grip that needs temperature
+    (BeamNG brake thermals), rear brake-by-wire approximated by the existing
+    on-the-fly brake-bias controller.
+11. **Test and iterate** against the targets below, one system at a time
+    (platform → aero → tyres → power → brakes).
+
+### Targets (measured in game)
+
+Use BeamNG's built-in G-meter / telemetry apps; you record, we tune.
+
+| Test | Target |
+|---|---|
+| 0–100 km/h | ~2.6 s |
+| 0–200 km/h | ~5 s |
+| Top speed (low-downforce config) | ~330–350 km/h |
+| Peak lateral g, fast corners | ~4–5 g |
+| Peak lateral g, slow corners | < 2 g (little aero at low speed) |
+| Braking from 300 km/h | ~5 g peak, falling to mechanical grip as speed drops |
+| Platform | ride height and rake stay controlled as downforce builds; no bottoming out or porpoising on a straight |
+| Weight | 733 kg, ~45–46 % front |
+
+The goal is a car that feels like a 2018 F1 car and hits these numbers, not a
+replica of the real RB14 setup sheet.
 
 ## Testing loop
 
@@ -131,7 +204,14 @@ or screenshots. Fixes go into the scripts/data, never hand-edits to generated
   suspension internals; we keep F4 parts where hidden, otherwise go without.
 - **Physics re-fit.** Stretching a F4 frame to F1 size (+1 m length, +0.5 m
   width) may leave suspension geometry odd; Milestone 4 may need parts of the
-  suspension jbeam rebuilt rather than scaled.
+  suspension jbeam rebuilt rather than scaled (the rear becomes pullrod
+  anyway).
+- **Ground-effect floor.** Ride-height-sensitive downforce needs a custom Lua
+  controller; getting it stable (no oscillation/porpoising from the
+  aero-suspension feedback loop) may take several iterations.
+- **Tuning needs the game.** Every handling change is verified by you driving
+  and reading telemetry; there is no way to test driving dynamics in the
+  sandbox.
 - **Collada.** Blender 4.x (sandbox) and 3.4 (dev image) both export `.dae`;
   Blender 5 dropped it, so don't upgrade past 4.x for this pipeline.
 - **Repo size.** Generated `.dds`/`.dae` add hundreds of MB over iterations;
