@@ -29,7 +29,7 @@
          {"frictionCoef":0.5},
          {"group":"redbull_differential_R"},
          {"nodeWeight":5},
-         ["rdiff", 0.00, 1.55, 0.26],
+         ["rdiff", 0.0, 2.0116, 0.3241],
          {"group":""},
     ],
     "beams": [

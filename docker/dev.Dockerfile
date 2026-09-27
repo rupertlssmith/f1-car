@@ -41,15 +41,16 @@ RUN /tmp/install_kotlin.sh && rm /tmp/install_kotlin.sh
 # already carries JDK + Gradle from the runtime image). JAVA_HOME is inherited too.
 ENV PATH=/opt/kotlin/kotlinc/bin:/opt/kotlin/bin:$PATH
 
-# 3b) BeamNG mod tooling: headless Blender (scripted mesh edits + Collada .dae
-#     export; bookworm's 3.4 still ships the Collada exporter, which Blender 5
-#     drops), assimp CLI for mesh inspection/conversion, ImageMagick for texture
-#     resizing and .dds conversion, and git-lfs for large model/texture files.
-#     trimesh (mesh checks) and xxhash (mod manifest hashes, tools/build_mod.py)
-#     go into the project venv. Dev-only, so none of this reaches the runtime
-#     image.
+# 3b) BeamNG mod tooling: headless Blender for preview renders
+#     (tools/rb14/render.py; its glTF importer needs python3-numpy), assimp
+#     CLI for mesh inspection/conversion, ImageMagick for textures, and git-lfs
+#     for the model/texture files. Collada (.dae) is read and written by
+#     tools/rb14/dae.py, so Blender's own Collada support is not needed (the
+#     Debian/Ubuntu builds leave it out). trimesh (mesh checks) and xxhash (mod
+#     manifest hashes, tools/build_mod.py) go into the project venv. Dev-only,
+#     so none of this reaches the runtime image.
 RUN apt-get update && apt-get install -y --no-install-recommends \
-      blender assimp-utils imagemagick git-lfs \
+      blender python3-numpy assimp-utils imagemagick git-lfs \
  && rm -rf /var/lib/apt/lists/* \
  && VIRTUAL_ENV=/opt/venv uv pip install --no-cache trimesh numpy xxhash
 

@@ -1,0 +1,422 @@
+{
+  "rb14_carbon": {
+    "name": "rb14_carbon",
+    "mapTo": "rb14_carbon",
+    "class": "Material",
+    "version": 1.5,
+    "Stages": [
+      {
+        "baseColorMap": "/vehicles/redbull/rb14_ext_carbon_fiber_d_b.color.png",
+        "roughnessFactor": 0.35,
+        "metallicFactor": 0.0,
+        "normalMap": "/vehicles/redbull/rb14_ext_carbon_fiber_nm_n.normal.png",
+        "useAnisotropic": true
+      },
+      {},
+      {},
+      {}
+    ],
+    "doubleSided": true,
+    "dynamicCubemap": true,
+    "materialTag0": "beamng",
+    "materialTag1": "vehicle"
+  },
+  "rb14_paint": {
+    "name": "rb14_paint",
+    "mapTo": "rb14_paint",
+    "class": "Material",
+    "version": 1.5,
+    "Stages": [
+      {
+        "baseColorMap": "/vehicles/redbull/rb14_redbull_main_paint_d_b.color.png",
+        "roughnessFactor": 0.55,
+        "metallicFactor": 0.0
+      },
+      {},
+      {},
+      {}
+    ],
+    "doubleSided": true,
+    "dynamicCubemap": true,
+    "materialTag0": "beamng",
+    "materialTag1": "vehicle"
+  },
+  "rb14_halo": {
+    "name": "rb14_halo",
+    "mapTo": "rb14_halo",
+    "class": "Material",
+    "version": 1.5,
+    "Stages": [
+      {
+        "baseColorMap": "/vehicles/redbull/rb14_redbull_main_paint_d_b.color.png",
+        "roughnessFactor": 0.55,
+        "metallicFactor": 0.0
+      },
+      {},
+      {},
+      {}
+    ],
+    "doubleSided": true,
+    "dynamicCubemap": true,
+    "materialTag0": "beamng",
+    "materialTag1": "vehicle"
+  },
+  "rb14_detail": {
+    "name": "rb14_detail",
+    "mapTo": "rb14_detail",
+    "class": "Material",
+    "version": 1.5,
+    "Stages": [
+      {
+        "baseColorMap": "/vehicles/redbull/rb14_redbull_detail_d_b.color.png",
+        "roughnessFactor": 0.6,
+        "metallicFactor": 0.0
+      },
+      {},
+      {},
+      {}
+    ],
+    "doubleSided": true,
+    "dynamicCubemap": true,
+    "materialTag0": "beamng",
+    "materialTag1": "vehicle"
+  },
+  "rb14_mechanical": {
+    "name": "rb14_mechanical",
+    "mapTo": "rb14_mechanical",
+    "class": "Material",
+    "version": 1.5,
+    "Stages": [
+      {
+        "baseColorMap": "/vehicles/redbull/rb14_generic_main_d_b.color.png",
+        "roughnessFactor": 0.55,
+        "metallicFactor": 0.3
+      },
+      {},
+      {},
+      {}
+    ],
+    "doubleSided": true,
+    "dynamicCubemap": true,
+    "materialTag0": "beamng",
+    "materialTag1": "vehicle"
+  },
+  "rb14_cockpit": {
+    "name": "rb14_cockpit",
+    "mapTo": "rb14_cockpit",
+    "class": "Material",
+    "version": 1.5,
+    "Stages": [
+      {
+        "baseColorMap": "/vehicles/redbull/rb14_generic_cockpit_d_b.color.png",
+        "roughnessFactor": 0.7,
+        "metallicFactor": 0.0
+      },
+      {},
+      {},
+      {}
+    ],
+    "doubleSided": true,
+    "dynamicCubemap": true,
+    "materialTag0": "beamng",
+    "materialTag1": "vehicle"
+  },
+  "rb14_headrest": {
+    "name": "rb14_headrest",
+    "mapTo": "rb14_headrest",
+    "class": "Material",
+    "version": 1.5,
+    "Stages": [
+      {
+        "baseColorMap": "/vehicles/redbull/rb14_cf_pattern_3_d_b.color.png",
+        "roughnessFactor": 0.8,
+        "metallicFactor": 0.0
+      },
+      {},
+      {},
+      {}
+    ],
+    "doubleSided": true,
+    "dynamicCubemap": true,
+    "materialTag0": "beamng",
+    "materialTag1": "vehicle"
+  },
+  "rb14_decals": {
+    "name": "rb14_decals",
+    "mapTo": "rb14_decals",
+    "class": "Material",
+    "version": 1.5,
+    "Stages": [
+      {
+        "baseColorMap": "/vehicles/redbull/rb14_redbull_main_decal_da_b.color.png",
+        "roughnessFactor": 0.5,
+        "metallicFactor": 0.0
+      },
+      {},
+      {},
+      {}
+    ],
+    "doubleSided": true,
+    "dynamicCubemap": true,
+    "materialTag0": "beamng",
+    "materialTag1": "vehicle",
+    "alphaTest": true,
+    "alphaRef": 100
+  },
+  "rb14_numbers": {
+    "name": "rb14_numbers",
+    "mapTo": "rb14_numbers",
+    "class": "Material",
+    "version": 1.5,
+    "Stages": [
+      {
+        "baseColorMap": "/vehicles/redbull/rb14_redbull_driver_33_b.color.png",
+        "roughnessFactor": 0.5,
+        "metallicFactor": 0.0
+      },
+      {},
+      {},
+      {}
+    ],
+    "doubleSided": true,
+    "dynamicCubemap": true,
+    "materialTag0": "beamng",
+    "materialTag1": "vehicle",
+    "alphaTest": true,
+    "alphaRef": 100
+  },
+  "rb14_screen": {
+    "name": "rb14_screen",
+    "mapTo": "rb14_screen",
+    "class": "Material",
+    "version": 1.5,
+    "Stages": [
+      {
+        "baseColorMap": "/vehicles/redbull/rb14_glass_da_b.color.png",
+        "roughnessFactor": 0.05,
+        "metallicFactor": 0.0,
+        "opacityFactor": 1.0
+      },
+      {},
+      {},
+      {}
+    ],
+    "doubleSided": true,
+    "dynamicCubemap": true,
+    "materialTag0": "beamng",
+    "materialTag1": "vehicle",
+    "translucent": true,
+    "translucentBlendOp": "PreMulAlpha",
+    "castShadows": false
+  },
+  "rb14_rearlight": {
+    "name": "rb14_rearlight",
+    "mapTo": "rb14_rearlight",
+    "class": "Material",
+    "version": 1.5,
+    "Stages": [
+      {
+        "baseColorMap": "/vehicles/redbull/rb14_rear_light_a_b.color.png",
+        "roughnessFactor": 0.3,
+        "metallicFactor": 0.0
+      },
+      {},
+      {},
+      {}
+    ],
+    "doubleSided": true,
+    "dynamicCubemap": true,
+    "materialTag0": "beamng",
+    "materialTag1": "vehicle"
+  },
+  "rb14_rearlight_on": {
+    "name": "rb14_rearlight_on",
+    "mapTo": "rb14_rearlight_on",
+    "class": "Material",
+    "version": 1.5,
+    "Stages": [
+      {
+        "baseColorMap": "/vehicles/redbull/rb14_rear_light_a_b.color.png",
+        "roughnessFactor": 0.3,
+        "metallicFactor": 0.0,
+        "emissiveFactor": [
+          1.0,
+          0.1,
+          0.05
+        ],
+        "emissiveMap": "/vehicles/redbull/rb14_rear_light_a_b.color.png",
+        "glow": true
+      },
+      {},
+      {},
+      {}
+    ],
+    "doubleSided": true,
+    "dynamicCubemap": true,
+    "materialTag0": "beamng",
+    "materialTag1": "vehicle"
+  },
+  "rb14_sw_body": {
+    "name": "rb14_sw_body",
+    "mapTo": "rb14_sw_body",
+    "class": "Material",
+    "version": 1.5,
+    "Stages": [
+      {
+        "baseColorMap": "/vehicles/redbull/rb14_toro_rosso_steering_wheel_d_b.color.png",
+        "roughnessFactor": 0.6,
+        "metallicFactor": 0.0
+      },
+      {},
+      {},
+      {}
+    ],
+    "doubleSided": true,
+    "dynamicCubemap": true,
+    "materialTag0": "beamng",
+    "materialTag1": "vehicle"
+  },
+  "rb14_sw_decals": {
+    "name": "rb14_sw_decals",
+    "mapTo": "rb14_sw_decals",
+    "class": "Material",
+    "version": 1.5,
+    "Stages": [
+      {
+        "baseColorMap": "/vehicles/redbull/rb14_redbull_steering_wheel_decal_b.color.png",
+        "roughnessFactor": 0.5,
+        "metallicFactor": 0.0
+      },
+      {},
+      {},
+      {}
+    ],
+    "doubleSided": true,
+    "dynamicCubemap": true,
+    "materialTag0": "beamng",
+    "materialTag1": "vehicle",
+    "alphaTest": true,
+    "alphaRef": 100
+  },
+  "rb14_sw_detail": {
+    "name": "rb14_sw_detail",
+    "mapTo": "rb14_sw_detail",
+    "class": "Material",
+    "version": 1.5,
+    "Stages": [
+      {
+        "baseColorMap": "/vehicles/redbull/rb14_drs_b.color.png",
+        "roughnessFactor": 0.5,
+        "metallicFactor": 0.0
+      },
+      {},
+      {},
+      {}
+    ],
+    "doubleSided": true,
+    "dynamicCubemap": true,
+    "materialTag0": "beamng",
+    "materialTag1": "vehicle"
+  },
+  "rb14_sw_carbon": {
+    "name": "rb14_sw_carbon",
+    "mapTo": "rb14_sw_carbon",
+    "class": "Material",
+    "version": 1.5,
+    "Stages": [
+      {
+        "baseColorMap": "/vehicles/redbull/rb14_int_carbon_fiber_b.color.png",
+        "roughnessFactor": 0.4,
+        "metallicFactor": 0.0,
+        "normalMap": "/vehicles/redbull/rb14_int_carbon_fiber_nm_n.normal.png"
+      },
+      {},
+      {},
+      {}
+    ],
+    "doubleSided": true,
+    "dynamicCubemap": true,
+    "materialTag0": "beamng",
+    "materialTag1": "vehicle"
+  },
+  "rb14_sw_column": {
+    "name": "rb14_sw_column",
+    "mapTo": "rb14_sw_column",
+    "class": "Material",
+    "version": 1.5,
+    "Stages": [
+      {
+        "baseColorMap": "/vehicles/redbull/rb14_ext_carbon_fiber_b.color.png",
+        "roughnessFactor": 0.4,
+        "metallicFactor": 0.0
+      },
+      {},
+      {},
+      {}
+    ],
+    "doubleSided": true,
+    "dynamicCubemap": true,
+    "materialTag0": "beamng",
+    "materialTag1": "vehicle"
+  },
+  "rb14_sw_leds": {
+    "name": "rb14_sw_leds",
+    "mapTo": "rb14_sw_leds",
+    "class": "Material",
+    "version": 1.5,
+    "Stages": [
+      {
+        "baseColorMap": "/vehicles/redbull/rb14_clearled_b.color.png",
+        "roughnessFactor": 0.2,
+        "metallicFactor": 0.0
+      },
+      {},
+      {},
+      {}
+    ],
+    "doubleSided": true,
+    "dynamicCubemap": true,
+    "materialTag0": "beamng",
+    "materialTag1": "vehicle"
+  },
+  "rb14_sw_kers": {
+    "name": "rb14_sw_kers",
+    "mapTo": "rb14_sw_kers",
+    "class": "Material",
+    "version": 1.5,
+    "Stages": [
+      {
+        "baseColorMap": "/vehicles/redbull/rb14_color_green_b.color.png",
+        "roughnessFactor": 0.3,
+        "metallicFactor": 0.0
+      },
+      {},
+      {},
+      {}
+    ],
+    "doubleSided": true,
+    "dynamicCubemap": true,
+    "materialTag0": "beamng",
+    "materialTag1": "vehicle"
+  },
+  "rb14_sw_black": {
+    "name": "rb14_sw_black",
+    "mapTo": "rb14_sw_black",
+    "class": "Material",
+    "version": 1.5,
+    "Stages": [
+      {
+        "baseColorMap": "/vehicles/redbull/rb14_ac_black_b.color.png",
+        "roughnessFactor": 0.9,
+        "metallicFactor": 0.0
+      },
+      {},
+      {},
+      {}
+    ],
+    "doubleSided": true,
+    "dynamicCubemap": true,
+    "materialTag0": "beamng",
+    "materialTag1": "vehicle"
+  }
+}

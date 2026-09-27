@@ -8,19 +8,15 @@
     "slotType" : "redbull_radiator",
     "flexbodies": [
          ["mesh", "[group]:", "nonFlexMaterials"],
-         ["redbull_radiator_R", ["redbull_radiator_R"]],
-         ["redbull_radiator_L", ["redbull_radiator_L"]],
-         ["redbull_radduct_R", ["redbull_radiator_R","redbull_radduct_R"]],
-         ["redbull_radduct_R_grille", ["redbull_radiator_R","redbull_radduct_R"]],
-         ["redbull_radduct_L", ["redbull_radiator_L","redbull_radduct_L"]],
-         ["redbull_radduct_L_grille", ["redbull_radiator_L","redbull_radduct_L"]],
-         ["redbull_headertank", ["redbull_body"]],
+         // rb14: no mesh ["redbull_radiator_R", ["redbull_radiator_R"]],
+         // rb14: no mesh ["redbull_radiator_L", ["redbull_radiator_L"]],
+         // rb14: no mesh ["redbull_headertank", ["redbull_body"]],
          {"deformGroup":"radhose_M_damage", "deformMaterialBase":"redbull_engine", "deformMaterialDamaged":"invis"},
-         ["redbull_radhose_M", ["redbull_radiator_R","redbull_radiator_L","redbull_body"]],
+         // rb14: no mesh ["redbull_radhose_M", ["redbull_radiator_R","redbull_radiator_L","redbull_body"]],
          {"deformGroup":"radhose_R_damage", "deformMaterialBase":"redbull_engine", "deformMaterialDamaged":"invis"},
-         ["redbull_radhose_R", ["redbull_radiator_R","redbull_engine"]],
+         // rb14: no mesh ["redbull_radhose_R", ["redbull_radiator_R","redbull_engine"]],
          {"deformGroup":"radhose_L_damage", "deformMaterialBase":"redbull_engine", "deformMaterialDamaged":"invis"},
-         ["redbull_radhose_L", ["redbull_radiator_L","redbull_engine"]],
+         // rb14: no mesh ["redbull_radhose_L", ["redbull_radiator_L","redbull_engine"]],
          {"deformGroup":""},
     ],
     "props": [
@@ -55,18 +51,18 @@
          {"chemEnergy":200,"burnRate":0.4,"flashPoint":250,"specHeat":0.8,"smokePoint":150,"selfIgnitionCoef":false},
 
          {"group":"redbull_radiator_R"},
-         ["rad1r",-0.62, 0.15, 0.08],
-         ["rad2r",-0.42, 0.56, 0.08],
-         ["rad3r",-0.62, 0.15, 0.41],
-         ["rad4r",-0.42, 0.56, 0.41],
-         ["rad5r",-0.55,-0.23, 0.35], //rigidifier and flexbody help
+         ["rad1r",-0.7067, 0.1366, 0.145],
+         ["rad2r",-0.4692, 0.5526, 0.1544],
+         ["rad3r",-0.7067, 0.1366, 0.5012],
+         ["rad4r",-0.4692, 0.5526, 0.4994],
+         ["rad5r",-0.62,-0.1999, 0.4275], //rigidifier and flexbody help
 
          {"group":"redbull_radiator_L"},
-         ["rad1l", 0.62, 0.15, 0.08],
-         ["rad2l", 0.42, 0.56, 0.08],
-         ["rad3l", 0.62, 0.15, 0.41],
-         ["rad4l", 0.42, 0.56, 0.41],
-         ["rad5l", 0.55,-0.23, 0.35], //rigidifier and flexbody help
+         ["rad1l", 0.7067, 0.1366, 0.145],
+         ["rad2l", 0.4692, 0.5526, 0.1544],
+         ["rad3l", 0.7067, 0.1366, 0.5012],
+         ["rad4l", 0.4692, 0.5526, 0.4994],
+         ["rad5l", 0.62,-0.1999, 0.4275], //rigidifier and flexbody help
          {"chemEnergy":false,"burnRate":false,"flashPoint":false,"specHeat":false,"smokePoint":false,"selfIgnitionCoef":false},
 
          {"engineGroup":""},

@@ -1,0 +1,102 @@
+{
+  "rb14_rim": {
+    "name": "rb14_rim",
+    "mapTo": "rb14_rim",
+    "class": "Material",
+    "version": 1.5,
+    "Stages": [
+      {
+        "baseColorMap": "/vehicles/common/redbull_wheels/rb14_redbull_wheel_d_b.color.png",
+        "roughnessFactor": 0.45,
+        "metallicFactor": 0.6,
+        "baseColorFactor": [
+          0.32,
+          0.32,
+          0.34,
+          1
+        ]
+      },
+      {},
+      {},
+      {}
+    ],
+    "doubleSided": true,
+    "dynamicCubemap": true,
+    "materialTag0": "beamng",
+    "materialTag1": "vehicle"
+  },
+  "rb14_rim_alt": {
+    "name": "rb14_rim_alt",
+    "mapTo": "rb14_rim_alt",
+    "class": "Material",
+    "version": 1.5,
+    "Stages": [
+      {
+        "baseColorMap": "/vehicles/common/redbull_wheels/rb14_redbull_wheel_d_b.color.png",
+        "roughnessFactor": 0.5,
+        "metallicFactor": 0.4,
+        "baseColorFactor": [
+          0.12,
+          0.12,
+          0.13,
+          1
+        ]
+      },
+      {},
+      {},
+      {}
+    ],
+    "doubleSided": true,
+    "dynamicCubemap": true,
+    "materialTag0": "beamng",
+    "materialTag1": "vehicle"
+  },
+  "rb14_tyre": {
+    "name": "rb14_tyre",
+    "mapTo": "rb14_tyre",
+    "class": "Material",
+    "version": 1.5,
+    "Stages": [
+      {
+        "baseColorMap": "/vehicles/common/redbull_wheels/rb14_tyre_b.color.png",
+        "roughnessFactor": 0.8,
+        "metallicFactor": 0.0,
+        "normalMap": "/vehicles/common/redbull_wheels/rb14_tyre_nm_n.normal.png"
+      },
+      {},
+      {},
+      {}
+    ],
+    "doubleSided": true,
+    "dynamicCubemap": true,
+    "materialTag0": "beamng",
+    "materialTag1": "vehicle"
+  },
+  "rb14_tyre_alt": {
+    "name": "rb14_tyre_alt",
+    "mapTo": "rb14_tyre_alt",
+    "class": "Material",
+    "version": 1.5,
+    "Stages": [
+      {
+        "baseColorMap": "/vehicles/common/redbull_wheels/rb14_tyre_b.color.png",
+        "roughnessFactor": 0.7,
+        "metallicFactor": 0.0,
+        "baseColorFactor": [
+          0.85,
+          0.9,
+          1.0,
+          1
+        ],
+        "normalMap": "/vehicles/common/redbull_wheels/rb14_tyre_nm_n.normal.png"
+      },
+      {},
+      {},
+      {}
+    ],
+    "doubleSided": true,
+    "dynamicCubemap": true,
+    "materialTag0": "beamng",
+    "materialTag1": "vehicle"
+  }
+}

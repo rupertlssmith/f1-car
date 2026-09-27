@@ -2,10 +2,10 @@
 "redbull_wheel_01a_13x10_R": {
     "information":{
         "authors":"LucasBE",
-        "name":"13x10 Dreid F4-13 Front Wheels (Silver)",
+        "name":"RB14 13x13.7 Rear Wheels",
         "value":2500,
     },
-    "slotType" : "wheel_R_CLF4",
+    "slotType" : "wheel_R_RB14",
 
     "slots": [
         ["type", "default", "description"],
@@ -13,8 +13,8 @@
     ],
     "flexbodies": [
         ["mesh", "[group]:", "nonFlexMaterials"],
-        ["redbull_wheel_01a_13x10", ["wheel_RR","wheelhub_RR"], [], {"pos":{"x":-0.49, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
-        ["redbull_wheel_01a_13x10", ["wheel_RL","wheelhub_RL"], [], {"pos":{"x": 0.49, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0},   "scale":{"x":1, "y":1, "z":1}}],
+        ["redbull_wheel_01a_13x10", ["wheel_RR","wheelhub_RR"], [], {"pos":{"x":-0.465, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
+        ["redbull_wheel_01a_13x10", ["wheel_RL","wheelhub_RL"], [], {"pos":{"x": 0.465, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0},   "scale":{"x":1, "y":1, "z":1}}],
     ],
     "nodes": [
         ["id", "posX", "posY", "posZ"],
@@ -54,8 +54,8 @@
 
         //general settings
         {"hubRadius":0.175},
-        {"wheelOffset":-0.000},
-        {"hubWidth":0.25},
+        {"wheelOffset":0.0},
+        {"hubWidth":0.35},
         {"numRays":16},
 
          //hub options
@@ -71,10 +71,10 @@
 "redbull_wheel_01b_13x10_R": {
     "information":{
         "authors":"LucasBE",
-        "name":"13x10 Dreid F4-13 Front Wheels (Black)",
+        "name":"RB14 13x13.7 Rear Wheels (Black)",
         "value":2500,
     },
-    "slotType" : "wheel_R_CLF4",
+    "slotType" : "wheel_R_RB14",
 
     "slots": [
         ["type", "default", "description"],
@@ -82,8 +82,8 @@
     ],
     "flexbodies": [
         ["mesh", "[group]:", "nonFlexMaterials"],
-        ["redbull_wheel_01b_13x10", ["wheel_RR","wheelhub_RR"], [], {"pos":{"x":-0.49, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
-        ["redbull_wheel_01b_13x10", ["wheel_RL","wheelhub_RL"], [], {"pos":{"x": 0.49, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0},   "scale":{"x":1, "y":1, "z":1}}],
+        ["redbull_wheel_01b_13x10", ["wheel_RR","wheelhub_RR"], [], {"pos":{"x":-0.465, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
+        ["redbull_wheel_01b_13x10", ["wheel_RL","wheelhub_RL"], [], {"pos":{"x": 0.465, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0},   "scale":{"x":1, "y":1, "z":1}}],
     ],
     "nodes": [
         ["id", "posX", "posY", "posZ"],
@@ -123,8 +123,8 @@
 
         //general settings
         {"hubRadius":0.175},
-        {"wheelOffset":-0.000},
-        {"hubWidth":0.25},
+        {"wheelOffset":0.0},
+        {"hubWidth":0.35},
         {"numRays":16},
 
          //hub options

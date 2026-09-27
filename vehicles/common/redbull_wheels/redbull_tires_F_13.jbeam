@@ -2,14 +2,14 @@
     "tire_F_redbull": {
         "information":{
             "authors":"LucasBE",
-            "name":"205/30R13 Race Front Tires",
+            "name":"Pirelli P Zero 305/670 R13 Front Slicks",
             "value":320,
         },
         "slotType" : "tire_F_redbull",
         "flexbodies": [
             ["mesh", "[group]:", "nonFlexMaterials"],
-            ["redbull_tire_01a_F", ["wheel_FR","tire_FR"], [], {"pos":{"x":-0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
-            ["redbull_tire_01a_F", ["wheel_FL","tire_FL"], [], {"pos":{"x": 0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0},   "scale":{"x":1, "y":1, "z":1}}],
+            ["redbull_tire_01a_F", ["wheel_FR","tire_FR"], [], {"pos":{"x":-0.465, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
+            ["redbull_tire_01a_F", ["wheel_FL","tire_FL"], [], {"pos":{"x": 0.465, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0},   "scale":{"x":1, "y":1, "z":1}}],
         ],
         "variables": [
             ["name", "type", "unit", "category", "default", "min", "max", "title", "description"],
@@ -26,8 +26,8 @@
             {"enableTirePeripheryReinfBeams":true},
     
             //general settings
-            {"radius":0.27},
-            {"tireWidth":0.175},
+            {"radius":0.335},
+            {"tireWidth":0.305},
     
             //tire options
             {"wheelSideBeamSpring":"$=$tirepressure_F*2","wheelSideBeamDamp":50},
@@ -77,14 +77,14 @@
 "tire_F_redbull_wet": {
     "information":{
         "authors":"LucasBE",
-        "name":"205/30R13 Rain Front Tires",
+        "name":"Pirelli Cinturato 305/670 R13 Front Wets",
         "value":400,
     },
     "slotType" : "tire_F_redbull",
     "flexbodies": [
         ["mesh", "[group]:", "nonFlexMaterials"],
-        ["redbull_tire_01b_F", ["wheel_FR","tire_FR"], [], {"pos":{"x":-0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
-        ["redbull_tire_01b_F", ["wheel_FL","tire_FL"], [], {"pos":{"x": 0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0},   "scale":{"x":1, "y":1, "z":1}}],
+        ["redbull_tire_01b_F", ["wheel_FR","tire_FR"], [], {"pos":{"x":-0.465, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+        ["redbull_tire_01b_F", ["wheel_FL","tire_FL"], [], {"pos":{"x": 0.465, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0},   "scale":{"x":1, "y":1, "z":1}}],
     ],
     "variables": [
         ["name", "type", "unit", "category", "default", "min", "max", "title", "description"],
@@ -101,8 +101,8 @@
         {"enableTirePeripheryReinfBeams":true},
 
         //general settings
-        {"radius":0.27},
-        {"tireWidth":0.175},
+        {"radius":0.335},
+        {"tireWidth":0.305},
 
         //tire options
         {"wheelSideBeamSpring":"$=$tirepressure_F*2","wheelSideBeamDamp":50},

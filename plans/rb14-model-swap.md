@@ -25,21 +25,50 @@ sits on its nodes. Materials are resolved by name from `*.materials.json`.
 
 ## Tooling
 
-All scripted and repeatable from the source `.glb`, so the model can be
-re-processed after any fix instead of hand-edited:
+All scripted and repeatable from the source `.glb` and the untouched F4 in
+`vehicles/fr04`, so the model can be re-processed after any fix instead of
+hand-edited. Pure Python (numpy; trimesh only for colour previews) except
+the renders, which use headless Blender.
 
 | Script | Does |
 |---|---|
-| `tools/rb14/inspect.py` | Report meshes, loose parts, bounds and materials of the `.glb` |
-| `tools/rb14/parts.json` | Declarative split map: which loose pieces of which source mesh become which BeamNG part (by material + position/bounding box rules) |
-| `tools/rb14/prepare_model.py` | Blender (headless): import `.glb`, fix axes, split per `parts.json`, name parts, set origins, export `.dae` |
-| `tools/rb14/textures.py` | Convert PNG → DDS with BeamNG naming (`_b.color`, `_n.normal`, …), write `main.materials.json` entries |
-| `tools/rb14/fit_jbeam.py` | Measure key points on the RB14 mesh and remap jbeam node coordinates to them |
-| `tools/rb14/render.py` | Blender preview renders (views of the car, optionally with jbeam nodes drawn as dots and beams as lines) for review |
-| `tools/check_mod.py` | Consistency checks: every file reference resolves, every flexbody/prop mesh exists in a `.dae`, every material used by a mesh is defined, flexbody vertices lie near their node groups |
+| `tools/jbeam.py` | Tolerant jbeam / relaxed-JSON reader (comments, trailing and missing commas) |
+| `tools/rb14/glb.py` | Reads `rb14.glb` directly (geometry, UVs, embedded textures) into BeamNG axes |
+| `tools/rb14/dae.py` | Collada reader/writer in the layout the F4's Blender export used. Ubuntu/Debian Blender builds ship **without** Collada, so the pipeline does not depend on Blender for `.dae` |
+| `tools/rb14/fitmap.py` | The F4 → RB14 coordinate map: piecewise-linear along the car through stations (wing tip, wing trailing edge, front axle, steering wheel, roll hoop, rear axle, tail), with width and height breakpoints (tub, wheel faces, floor with the RB14's rake, hub, cockpit rim, halo, hoop). Monotonic, so no beam can invert |
+| `tools/rb14/fit_jbeam.py` | Applies the map to every jbeam coordinate (nodes, wheel `nodeOffset`s, wing pivots, brakes, cameras, mirrors), always from the F4 originals, so re-running never compounds. Expression coordinates stay expressions, rescaled |
+| `tools/rb14/build_model.py` | Splits the RB14 into the F4's part names by position rules, carries over the F4 internals that fit inside the RB14 (moved through the same map), writes `redbull.dae`, `redbull_wheels.dae`, materials and textures |
+| `tools/rb14/materials.py` | RB14 → BeamNG material names and definitions; textures written as PNG with BeamNG's `_b.color` / `_n.normal` naming for the game to cook |
+| `tools/rb14/sync_jbeam.py` | Comments out (`// rb14: no mesh`) jbeam flexbody/prop rows whose mesh no longer exists |
+| `tools/rb14/envelope.py` | Which points are hidden inside the RB14 bodywork (used to decide which F4 internals to keep) |
+| `tools/rb14/preview.py` | Assembles the *built* mod (the `.dae`s, materials and textures the game loads) into a textured `.glb`, wheels and wings placed like the jbeam does |
+| `tools/rb14/render.py` | Blender (headless) preview renders, optional jbeam node/beam overlay and close-up camera |
+| `tools/check_mod.py` | Consistency checks: references, meshes, groups, materials, textures, configs; `--fit` measures how far each flexbody's vertices are from its nodes |
 
-Previews go to `plans/previews/` (committed, small PNGs) so progress can be
-reviewed without the game.
+Rebuild after changing any of these:
+
+```bash
+python3 tools/rb14/build_model.py   # meshes, materials, textures
+python3 tools/rb14/sync_jbeam.py    # drop jbeam rows for meshes that went away
+python3 tools/rb14/fit_jbeam.py     # re-fit coordinates (idempotent)
+python3 tools/check_mod.py --fit    # must report 0 errors
+python3 tools/build_mod.py          # dist/redbull_<timestamp>.zip
+```
+
+Previews go to `plans/previews/` (committed) so progress can be reviewed
+without the game.
+
+## Status
+
+- **Milestone 1 - done (awaiting in-game test).** The RB14 body, aero,
+  cockpit, steering wheel (with the dashboard display on its LCD), wishbones,
+  uprights, rims and 2018-size tyres are in; the F4 physics is re-fitted to
+  the RB14's 3.555 m wheelbase and track, its rake and its wheel centres. The
+  split went straight to Milestone 2's component level (nose, wings and
+  endplates, sidepods, engine cover, floor... keep the F4's breakable
+  parts), so the "one big body flexbody" step was skipped. `check_mod.py`:
+  0 errors (21 warnings, all inherited from the original F4 jbeam).
+  Previews: `plans/previews/m1_*.png`.
 
 ## Milestone 1 — Rough visual swap (drives in-game, looks like an RB14)
 
@@ -194,6 +223,10 @@ or screenshots. Fixes go into the scripts/data, never hand-edits to generated
 
 ## Risks and open questions
 
+- **Licence of the F4 jbeam.** The original files carry the note "Made by
+  LucasBE - Do not reuse or modify without permission. Feel free to take
+  inspiration from my Jbeam files." This mod modifies them, so it needs the
+  author's permission before being shared or published; fine for private use.
 - **Licence of `rb14.glb`.** Texture names (`toro_rosso_steering_wheel`,
   `generic_main_d`) suggest it was extracted from a game. Fine for personal
   use; check before publishing to the BeamNG repository.

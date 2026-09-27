@@ -42,8 +42,20 @@
     "via": "packed by repo on Mon, 03 Aug 2026 12:17:14 GMT",
     "hashes": [
         [
-            "vehicles/common/redbull_wheels/F4_wheels.dae",
-            "aed0df96a0c9843a"
+            "vehicles/common/redbull_wheels/rb14_redbull_wheel_d_b.color.png",
+            "96dc43166a31ea1e"
+        ],
+        [
+            "vehicles/common/redbull_wheels/rb14_tyre_b.color.png",
+            "c01f3bde544198cd"
+        ],
+        [
+            "vehicles/common/redbull_wheels/rb14_tyre_nm_n.normal.png",
+            "3b054826b16d2aaf"
+        ],
+        [
+            "vehicles/common/redbull_wheels/rb14_wheels.materials.json",
+            "8a37db70d5213ca6"
         ],
         [
             "vehicles/common/redbull_wheels/redbull_tire_01a_b.color.dds",
@@ -75,11 +87,11 @@
         ],
         [
             "vehicles/common/redbull_wheels/redbull_tires_F_13.jbeam",
-            "81ba8847aea10be0"
+            "1627f4db137638ae"
         ],
         [
             "vehicles/common/redbull_wheels/redbull_tires_R_13.jbeam",
-            "4f2f7b5d218add22"
+            "283d71d6576d854b"
         ],
         [
             "vehicles/common/redbull_wheels/redbull_wheel_01a_ao.data.dds",
@@ -106,20 +118,20 @@
             "1e571cc463610f35"
         ],
         [
+            "vehicles/common/redbull_wheels/redbull_wheels.dae",
+            "c82ed765a64bee78"
+        ],
+        [
             "vehicles/common/redbull_wheels/redbull_wheels.materials.json",
             "c16f546d1b96ba1f"
         ],
         [
             "vehicles/common/redbull_wheels/redbull_wheels_F_13.jbeam",
-            "c77dc848f3fc25bc"
+            "4316ca9fef5ec669"
         ],
         [
             "vehicles/common/redbull_wheels/redbull_wheels_R_13.jbeam",
-            "632ae99dc7549dd8"
-        ],
-        [
-            "vehicles/redbull/F4.dae",
-            "ccf0b84473f806bb"
+            "68b5c446086bd8c1"
         ],
         [
             "vehicles/redbull/campus_aggressive.jpg",
@@ -610,6 +622,94 @@
             "d8f318dbe3266755"
         ],
         [
+            "vehicles/redbull/rb14.materials.json",
+            "30c1b40a0a7ac9a1"
+        ],
+        [
+            "vehicles/redbull/rb14_ac_black_b.color.png",
+            "250d8312355496a4"
+        ],
+        [
+            "vehicles/redbull/rb14_cf_pattern_3_d_b.color.png",
+            "b5706318f7534ab9"
+        ],
+        [
+            "vehicles/redbull/rb14_clearled_b.color.png",
+            "424263d6a80deaac"
+        ],
+        [
+            "vehicles/redbull/rb14_color_green_b.color.png",
+            "6cbc0a938bcd7f7c"
+        ],
+        [
+            "vehicles/redbull/rb14_drs_b.color.png",
+            "7d9da6095b214b5b"
+        ],
+        [
+            "vehicles/redbull/rb14_ext_carbon_fiber_b.color.png",
+            "d1e740845b1415cc"
+        ],
+        [
+            "vehicles/redbull/rb14_ext_carbon_fiber_d_b.color.png",
+            "d1e740845b1415cc"
+        ],
+        [
+            "vehicles/redbull/rb14_ext_carbon_fiber_nm_n.normal.png",
+            "74d6cf3dcf631c74"
+        ],
+        [
+            "vehicles/redbull/rb14_generic_cockpit_d_b.color.png",
+            "6e5deb6f2f01b522"
+        ],
+        [
+            "vehicles/redbull/rb14_generic_main_d_b.color.png",
+            "4d584cfe0c42e50a"
+        ],
+        [
+            "vehicles/redbull/rb14_glass_da_b.color.png",
+            "2b1f2f764b578a5e"
+        ],
+        [
+            "vehicles/redbull/rb14_int_carbon_fiber_b.color.png",
+            "dc98b8bfd8d0e3cc"
+        ],
+        [
+            "vehicles/redbull/rb14_int_carbon_fiber_nm_n.normal.png",
+            "35fe8e2b432d7e8f"
+        ],
+        [
+            "vehicles/redbull/rb14_rear_light_a_b.color.png",
+            "7e69f7974f7fcd20"
+        ],
+        [
+            "vehicles/redbull/rb14_redbull_detail_d_b.color.png",
+            "2872441038264188"
+        ],
+        [
+            "vehicles/redbull/rb14_redbull_driver_33_b.color.png",
+            "9916e10cc51f26f6"
+        ],
+        [
+            "vehicles/redbull/rb14_redbull_main_decal_da_b.color.png",
+            "4b5ffcd798be1dba"
+        ],
+        [
+            "vehicles/redbull/rb14_redbull_main_paint_d_b.color.png",
+            "159a96b1012ced26"
+        ],
+        [
+            "vehicles/redbull/rb14_redbull_steering_wheel_decal_b.color.png",
+            "d49c158e7bd28202"
+        ],
+        [
+            "vehicles/redbull/rb14_toro_rosso_steering_wheel_d_b.color.png",
+            "55a4f2125d238660"
+        ],
+        [
+            "vehicles/redbull/redbull.dae",
+            "410c388d8cb88e74"
+        ],
+        [
             "vehicles/redbull/redbull.interaction.json",
             "2221194c01188d81"
         ],
@@ -623,11 +723,11 @@
         ],
         [
             "vehicles/redbull/redbull_body.jbeam",
-            "9eccd2b7687b99de"
+            "d3e11e7f5026ab28"
         ],
         [
             "vehicles/redbull/redbull_brakes.jbeam",
-            "487f14b276725a5c"
+            "0858cd35a260664d"
         ],
         [
             "vehicles/redbull/redbull_cockpit_ao.data.dds",
@@ -651,15 +751,15 @@
         ],
         [
             "vehicles/redbull/redbull_crashbox.jbeam",
-            "fdc46221e549d1e5"
+            "416361842c1b4a41"
         ],
         [
             "vehicles/redbull/redbull_differential_R.jbeam",
-            "efbd7db44dfe2504"
+            "099cdb423a9fb89a"
         ],
         [
             "vehicles/redbull/redbull_engine.jbeam",
-            "b41e8abd43f5e86f"
+            "7c2feadcc557491e"
         ],
         [
             "vehicles/redbull/redbull_engine_ao.data.dds",
@@ -683,15 +783,15 @@
         ],
         [
             "vehicles/redbull/redbull_exhaust.jbeam",
-            "c98f989ecbcb9b6e"
+            "6b01983cc3c14b02"
         ],
         [
             "vehicles/redbull/redbull_floor.jbeam",
-            "cba756114e05125a"
+            "121130d65fe01024"
         ],
         [
             "vehicles/redbull/redbull_fueltank.jbeam",
-            "b929bd72c97b31c2"
+            "65cce41aff3463ea"
         ],
         [
             "vehicles/redbull/redbull_lights_b.color.dds",
@@ -759,15 +859,15 @@
         ],
         [
             "vehicles/redbull/redbull_panels.jbeam",
-            "642972b6dbb6f72c"
+            "da6744fe4cb07fdd"
         ],
         [
             "vehicles/redbull/redbull_radiator.jbeam",
-            "c380ea11808be437"
+            "0ae3d3771111c686"
         ],
         [
             "vehicles/redbull/redbull_sidepods.jbeam",
-            "4a692779b5080580"
+            "980fd1b278957699"
         ],
         [
             "vehicles/redbull/redbull_skin_UV.png",
@@ -875,27 +975,27 @@
         ],
         [
             "vehicles/redbull/redbull_steeringwheels.jbeam",
-            "2dd29afb2acd6298"
+            "86afdcc8f96de047"
         ],
         [
             "vehicles/redbull/redbull_suspension_F.jbeam",
-            "1bde717f7b83e9d2"
+            "143eb693b50cf892"
         ],
         [
             "vehicles/redbull/redbull_suspension_R.jbeam",
-            "b2f60d567b9dcd4d"
+            "8423becbe1cece6c"
         ],
         [
             "vehicles/redbull/redbull_transaxle.jbeam",
-            "daeade786fad0a69"
+            "3b978d86fd94c74a"
         ],
         [
             "vehicles/redbull/redbull_wing_F.jbeam",
-            "36c51d5e5e22adb9"
+            "8a828bcac1da81ac"
         ],
         [
             "vehicles/redbull/redbull_wing_R.jbeam",
-            "9bc224923ef1a168"
+            "a26ff96311e643f5"
         ],
         [
             "vehicles/redbull/screen/ReloadAlt-Light.ttf",

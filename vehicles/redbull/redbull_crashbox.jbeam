@@ -27,7 +27,7 @@
         }]
     ],
     "glowMap":{
-        "redbull_rainlight":{"simpleFunction":{"hazard":1}, "off":"redbull_lights", "on":"redbull_lights_on_intense"},
+        "rb14_rearlight":{"simpleFunction":{"hazard":1}, "off":"rb14_rearlight", "on":"rb14_rearlight_on"},
     },
     "nodes": [
          ["id", "posX", "posY", "posZ"],
@@ -38,14 +38,14 @@
          {"selfCollision":true},
          {"nodeWeight":1.0},
          {"group":"redbull_crashbox"},
-         ["cb1r",-0.10, 1.87, 0.13],
-         ["cb1l", 0.10, 1.87, 0.13],
-         ["cb2r",-0.06, 2.31, 0.23,{"frictionCoef":0.1}],
-         ["cb2l", 0.06, 2.31, 0.23,{"frictionCoef":0.1}],
-         ["cb3r",-0.10, 1.87, 0.39],
-         ["cb3l", 0.10, 1.87, 0.39],
-         ["cb4r",-0.06, 2.31, 0.39,{"frictionCoef":0.1}],
-         ["cb4l", 0.06, 2.31, 0.39,{"frictionCoef":0.1}],
+         ["cb1r",-0.1167, 2.2916, 0.2244],
+         ["cb1l", 0.1167, 2.2916, 0.2244],
+         ["cb2r",-0.0615, 2.666, 0.3011,{"frictionCoef":0.1}],
+         ["cb2l", 0.0615, 2.666, 0.3011,{"frictionCoef":0.1}],
+         ["cb3r",-0.1167, 2.2916, 0.4578],
+         ["cb3l", 0.1167, 2.2916, 0.4578],
+         ["cb4r",-0.0615, 2.666, 0.4578,{"frictionCoef":0.1}],
+         ["cb4l", 0.0615, 2.666, 0.4578,{"frictionCoef":0.1}],
 
          {"group":""},
     ],
