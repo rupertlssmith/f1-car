@@ -287,6 +287,13 @@ Every config: 1.9 g at low speed, 5-6 g braking from 300 km/h.
   and tyre beams 3x the F4's. Worst beam: 40 % (rear lower wishbone in
   4.7 g cornering). Note the linear model says arm stiffness isn't the
   visible flex (12 kN sideways moves a wheel 2-3 mm); yielding beams were.
+- **Rim rings:** the pressure wheel's rim ring spins with the wheel. At the
+  RB14's real rim widths (0.30 / 0.35 m, wider than the 0.27 m between the
+  axle nodes) the rear ring's inner edge ran through the rear upright's top
+  node, so the rear wheels caught once a revolution pulling away (fifth
+  test). Rings are now 0.26 m wide, between the axle nodes like the F4's
+  (tyres stay 305 / 405 mm); `f1_setup.py` refuses any node within 25 mm of
+  a spinning wheel's rim/sidewall/tread section (closest now 38 mm; F4 40).
 - **Rear tyre clearance:** the rear floor / diffuser edge nodes sat 20-50 mm
   inside the 405 mm rear tyres' inner face; moved ~8 cm inboard (aero
   factors re-solved for the smaller floor).

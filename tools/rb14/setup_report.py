@@ -373,6 +373,50 @@ def generated_wheels(v):
     return pos, mass, beams
 
 
+def _poly_distance(poly, x, y):
+    """Signed distance from (x, y) to a convex polygon (negative inside)."""
+    best, inside = 1e9, True
+    for (x1, y1), (x2, y2) in zip(poly, poly[1:] + poly[:1]):
+        ex, ey = x2 - x1, y2 - y1
+        t = max(0.0, min(1.0, ((x - x1) * ex + (y - y1) * ey) / (ex * ex + ey * ey)))
+        best = min(best, math.hypot(x - x1 - t * ex, y - y1 - t * ey))
+        if ex * (y - y1) - ey * (x - x1) < 0:
+            inside = False
+    return -best if inside else best
+
+
+def wheel_clearance(v, margin=0.025):
+    """Nodes (other than a wheel's own axle nodes) inside or within `margin`
+    of the volume a wheel sweeps as it spins: its rim ring (hubRadius,
+    +-hubWidth/2) and the tyre around it (out to the radius, +-tireWidth/2).
+    Such nodes catch the spinning rim/tyre every revolution.
+    Returns [(gap_m, wheel, node)] sorted, negative = inside."""
+    out = []
+    for r in v.wheels():
+        n1, n2 = r.get("node1:"), r.get("node2:")
+        if n1 not in v.pos or n2 not in v.pos:
+            continue
+        a, b = v.pos[n1], v.pos[n2]
+        ax = (b - a) / np.linalg.norm(b - a)
+        c = (a + b) / 2
+        hr, hw = v.val(r.get("hubRadius"), 0.2), v.val(r.get("hubWidth"), 0.2)
+        R, W = v.val(r.get("radius"), 0.3), v.val(r.get("tireWidth"), 0.2)
+        # cross-section of the spinning wheel in (axial, radial): rim ring
+        # at hubRadius +-hubWidth/2, sidewalls out to the tread at the
+        # radius +-tireWidth/2 (the barrel inside the rim is open)
+        poly = [(-hw / 2, hr), (hw / 2, hr), (W / 2, R), (-W / 2, R)]
+        for n, p in v.pos.items():
+            if n in (n1, n2):
+                continue
+            d = p - c
+            al = float(np.dot(d, ax))
+            rad = float(np.linalg.norm(d - al * ax))
+            gap = _poly_distance(poly, abs(al), rad)
+            if gap < margin:
+                out.append((gap, r["name"], n))
+    return sorted(out)
+
+
 def stability_report(v, dt=1 / 2000, top=5):
     """BeamNG's explicit 2 kHz integration is stable while every vibration
     mode of the node/beam network has omega * dt < 2 (in practice the F4,

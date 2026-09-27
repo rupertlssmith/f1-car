@@ -253,6 +253,12 @@ def check_stability():
         if st["max"] > MAX_OMEGA_DT:
             raise SystemExit(f"{cfg}: highest mode omega*dt {st['max']:.2f} > {MAX_OMEGA_DT}: {st['modes'][0]}")
     print("stability: highest mode omega*dt %.2f (limit 2, target <= %.2f)" % (worst, MAX_OMEGA_DT))
+    for cfg in CONFIGS:
+        hits = sr.wheel_clearance(sr.Vehicle("redbull", cfg), WHEEL_CLEARANCE)
+        if hits:
+            raise SystemExit("%s: nodes inside / within %d mm of a spinning wheel: %s" % (
+                cfg, WHEEL_CLEARANCE * 1000, ", ".join("%s %s %+.0f mm" % (w, n, g * 1000) for g, w, n in hits[:6])))
+    print("wheel clearance: nothing within %d mm of a spinning wheel" % (WHEEL_CLEARANCE * 1000))
     worst = None
     for cfg in CONFIGS:
         v = sr.Vehicle("redbull", cfg)
@@ -270,7 +276,19 @@ def check_stability():
     print(msg)
 
 
+# Rim ring width. The pressure wheel's rim ring spins with the wheel; the
+# RB14's real rim widths (0.30 / 0.35 m) put the rear ring's inner edge
+# 175 mm inboard of the wheel centre, exactly on the rear upright's top
+# node (rh4, 172 mm from the axle): the wheel caught on it every
+# revolution. Keep the rings between the axle nodes (0.27 m apart), as the
+# F4 did; the tyres keep their 305 / 405 mm width.
+HUB_WIDTH = {"F": 0.26, "R": 0.26}
+WHEEL_CLEARANCE = 0.025         # m, nothing within this of a spinning wheel
+
+
 def wheels():
+    for a in ("F", "R"):
+        je.set_all(f"{W}/redbull_wheels_{a}_13.jbeam", r'\{"hubWidth":[\d.]+\}', '{"hubWidth":%s}' % HUB_WIDTH[a])
     # axle nodes of the wheel parts: 3 kg each (were 5)
     for f in (f"{W}/redbull_wheels_F_13.jbeam", f"{W}/redbull_wheels_R_13.jbeam"):
         je.set_all(f, r'\{"nodeWeight":[\d.]+\}', '{"nodeWeight":%s}' % WHEEL_AXLE_WEIGHT)

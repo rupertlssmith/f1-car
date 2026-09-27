@@ -55,7 +55,7 @@
         //general settings
         {"hubRadius":0.175},
         {"wheelOffset":0.0},
-        {"hubWidth":0.35},
+        {"hubWidth":0.26},
         {"numRays":16},
 
          //hub options
@@ -124,7 +124,7 @@
         //general settings
         {"hubRadius":0.175},
         {"wheelOffset":0.0},
-        {"hubWidth":0.35},
+        {"hubWidth":0.26},
         {"numRays":16},
 
          //hub options
