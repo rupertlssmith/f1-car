@@ -1,0 +1,67 @@
+<html ng-app="gaugesScreen">
+
+<head>
+    <script src="/ui/lib/ext/angular/angular.js"></script>
+    <script src="fr04_screen.js"></script>
+    <link type="text/css" rel="stylesheet" href="fr04_screen.css">
+    <title></title>
+</head>
+
+<body ng-controller="GaugesScreenController as gaugeCtrl">
+    <div id="screen">
+            <div id="TopLeft" class="smallbox">
+                <fieldset id="FuelLevelField">
+                  <legend>{{data.TopLeftText}}</legend>
+                    <p class="small-value">{{data.TopLeftVal}}{{data.FuelUnit}}</p>
+                </fieldset>
+            </div>
+            <div id="TopRight" class="smallbox">
+                <fieldset>
+                  <legend>{{data.TopRightText}}</legend>
+                    <p class="small-value">{{data.TopRightVal}}</p>
+                </fieldset>
+            </div>
+            <div id="BottomLeft" class="smallbox">
+                <fieldset id="OilTempField">
+                  <legend>{{data.BottomLeftText}}</legend>
+                          <div>
+                              <p class="small-value">{{data.BottomLeftVal}}{{data.BottomUnit}}</p>
+                          </div>
+                </fieldset>
+            </div>
+            <div id="BottomRight" class="smallbox">
+                <fieldset id="WaterTempField">
+                  <legend>{{data.BottomRightText}}</legend>
+                          <div>
+                              <p class="small-value">{{data.BottomRightVal}}{{data.BottomUnit}}</p>
+                          </div>
+                </fieldset>
+            </div>
+            <div id="TopCenter" class="smallbox">
+                <fieldset>
+                  <legend>RPM</legend>
+                          <div>
+                              <p class="small-value">{{data.TopCenterVal}}</p>
+                          </div>
+                </fieldset>
+            </div>
+           <div id="GearCenter" class="bigbox">
+            <fieldset>
+              <legend>Gear</legend>
+                      <div>
+                          <p class="big-value">{{data.gear}}</p>
+                      </div>
+            </fieldset>
+			</div>
+            <div id="InfoBox">
+                <p class="info-message">{{data.InfoMessage}}</p>
+			</div>
+            <div id="BiasBox">
+                <p class="bias-message">{{data.BiasMessage}}</p>
+			</div>
+    </div>
+</body>
+
+</html>
+
+

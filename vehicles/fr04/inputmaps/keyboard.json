@@ -1,0 +1,10 @@
+{
+  "devicetype":"keyboard",
+  "name":"Keyboard",
+  "version":1,
+  "bindings":[
+    {"control":"y", "action":"pitLimiter"},
+    {"control":"t", "action":"biasPlus"},
+    {"control":"g", "action":"biasMinus"}
+  ]
+}

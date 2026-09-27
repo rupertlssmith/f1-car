@@ -1,0 +1,294 @@
+{
+  "fr04_main": {
+    "name": "fr04_main",
+    "mapTo": "fr04_main",
+    "class": "Material",
+    "Stages": [
+      {
+        "ambientOcclusionMap": "/vehicles/fr04/fr04_main_ao.data.png",
+        "baseColorMap": "/vehicles/fr04/fr04_main_b.color.png",
+        "metallicFactor": 1,
+        "metallicMap": "/vehicles/fr04/fr04_main_m.data.png",
+        "normalMap": "vehicles/fr04/fr04_main_n.normal.png",
+        "pixelSpecular": true,
+        "roughnessMap": "/vehicles/fr04/fr04_main_r.data.png",
+        "useAnisotropic": true
+      },
+      {},
+      {},
+      {}
+    ],
+    "activeLayers": 1,
+    "dynamicCubemap": true,
+    "materialTag0": "LucasBE",
+    "materialTag1": "vehicle",
+    "order_simset": 0,
+    "version": 1.5
+  },
+  "fr04_mechanical": {
+    "name": "fr04_mechanical",
+    "mapTo": "fr04_mechanical",
+    "class": "Material",
+    "Stages": [
+      {
+        "ambientOcclusionMap": "vehicles/fr04/fr04_mechanical_ao.data.png",
+        "baseColorMap": "vehicles/fr04/fr04_mechanical_b.color.png",
+        "metallicFactor": 1,
+        "metallicMap": "/vehicles/fr04/fr04_mechanical_m.data.png",
+        "normalMap": "vehicles/fr04/fr04_mechanical_n.normal.png",
+        "pixelSpecular": true,
+        "roughnessMap": "vehicles/fr04/fr04_mechanical_r.data.png",
+        "useAnisotropic": true
+      },
+      {},
+      {},
+      {}
+    ],
+    "dynamicCubemap": true,
+    "materialTag0": "LucasBE",
+    "materialTag1": "vehicle",
+    "order_simset": 1852795252,
+    "version": 1.5
+  },
+  "fr04_engine": {
+    "name": "fr04_engine",
+    "mapTo": "fr04_engine",
+    "class": "Material",
+    "Stages": [
+      {
+        "ambientOcclusionMap": "vehicles/fr04/fr04_engine_ao.data.png",
+        "baseColorMap": "vehicles/fr04/fr04_engine_b.color.png",
+        "metallicFactor": 1,
+        "metallicMap": "/vehicles/fr04/fr04_engine_m.data.png",
+        "normalMap": "vehicles/fr04/fr04_engine_n.normal.png",
+        "pixelSpecular": true,
+        "roughnessMap": "vehicles/fr04/fr04_engine_r.data.png",
+        "useAnisotropic": true
+      },
+      {},
+      {},
+      {}
+    ],
+    "dynamicCubemap": true,
+    "materialTag0": "LucasBE",
+    "materialTag1": "vehicle",
+    "order_simset": 1852795252,
+    "version": 1.5
+  },
+  "fr04_cockpit": {
+    "name": "fr04_cockpit",
+    "mapTo": "fr04_cockpit",
+    "class": "Material",
+    "Stages": [
+      {
+        "ambientOcclusionMap": "vehicles/fr04/fr04_cockpit_ao.data.png",
+        "baseColorMap": "vehicles/fr04/fr04_cockpit_b.color.png",
+        "metallicFactor": 1,
+        "metallicMap": "/vehicles/fr04/fr04_cockpit_m.data.png",
+        "normalMap": "vehicles/fr04/fr04_cockpit_n.normal.png",
+        "pixelSpecular": true,
+        "roughnessMap": "vehicles/fr04/fr04_cockpit_r.data.png",
+        "useAnisotropic": true
+      },
+      {},
+      {},
+      {}
+    ],
+    "dynamicCubemap": true,
+    "materialTag0": "LucasBE",
+    "materialTag1": "vehicle",
+    "order_simset": 1852795252,
+    "version": 1.5
+  },
+  "fr04_glass": {
+    "name": "fr04_glass",
+    "mapTo": "fr04_glass",
+    "class": "Material",
+    "Stages": [
+      {
+        "baseColorMap": "vehicles/fr04/fr04_lights_b.color.png",
+        "metallicFactor": 0.5,
+        "normalMap": "/vehicles/fr04/fr04_lights_n.normal.png",
+        "opacityMap": "/vehicles/fr04/fr04_lights_o.data.png",
+        "pixelSpecular": true,
+        "roughnessFactor": 0.0
+      },
+      {},
+      {},
+      {}
+    ],
+    "alphaRef": 0,
+    "castShadows": false,
+    "dynamicCubemap": true,
+    "materialTag0": "lucasbe",
+    "materialTag1": "vehicle",
+    "translucent": true,
+    "translucentBlendOp": "PreMulAlpha",
+    "translucentRecvShadows": true,
+    "version": 1.5
+  },
+  "fr04_lights": {
+    "name": "fr04_lights",
+    "mapTo": "fr04_lights",
+    "class": "Material",
+    "Stages": [
+      {
+        "baseColorMap": "vehicles/fr04/fr04_lights_b.color.png",
+        "metallicFactor": 0.5,
+        "normalMap": "/vehicles/fr04/fr04_lights_n.normal.png",
+        "pixelSpecular": true,
+        "roughnessFactor": 0.5
+      },
+      {},
+      {},
+      {}
+    ],
+    "alphaRef": 0,
+    "dynamicCubemap": true,
+    "materialTag0": "lucasbe",
+    "materialTag1": "vehicle",
+    "version": 1.5
+  },
+  "fr04_lights_on": {
+    "name": "fr04_lights_on",
+    "mapTo": "fr04_lights_on",
+    "class": "Material",
+    "Stages": [
+      {
+        "baseColorMap": "vehicles/fr04/fr04_lights_b.color.png",
+        "metallicFactor": 0.5,
+        "emissiveIntensityNits": 10000,
+        "emissiveFactor": [
+          1,
+          1,
+          1
+        ],
+        "emissiveMap": "/vehicles/fr04/fr04_lights_g.color.png",
+        "normalMap": "/vehicles/fr04/fr04_lights_n.normal.png",
+        "pixelSpecular": true,
+        "roughnessFactor": 0.5
+      },
+      {},
+      {},
+      {}
+    ],
+    "alphaRef": 0,
+    "dynamicCubemap": true,
+    "materialTag0": "lucasbe",
+    "materialTag1": "vehicle",
+    "version": 1.5
+  },
+  "fr04_lights_on_intense": {
+    "name": "fr04_lights_on_intense",
+    "mapTo": "fr04_lights_on_intense",
+    "class": "Material",
+    "Stages": [
+      {
+        "baseColorMap": "vehicles/fr04/fr04_lights_b.color.png",
+        "metallicFactor": 0.5,
+        "emissiveIntensityNits": 500000,
+        "emissiveFactor": [
+          1,
+          1,
+          1
+        ],
+        "emissiveMap": "/vehicles/fr04/fr04_lights_g.color.png",
+        "normalMap": "/vehicles/fr04/fr04_lights_n.normal.png",
+        "pixelSpecular": true,
+        "roughnessFactor": 0.5
+      },
+      {},
+      {},
+      {}
+    ],
+    "alphaRef": 0,
+    "dynamicCubemap": true,
+    "materialTag0": "lucasbe",
+    "materialTag1": "vehicle",
+    "version": 1.5
+  },
+  "fr04_shiftlights_p0": {
+    "name": "fr04_shiftlights_p0",
+    "mapTo": "fr04_shiftlights_p0",
+    "class": "Material",
+    "materialTag0": "lucasbe",
+    "materialTag1": "vehicle"
+  },
+  "fr04_shiftlights_p1": {
+    "name": "fr04_shiftlights_p1",
+    "mapTo": "fr04_shiftlights_p1",
+    "class": "Material",
+    "materialTag0": "lucasbe",
+    "materialTag1": "vehicle"
+  },
+  "fr04_shiftlights_l0": {
+    "name": "fr04_shiftlights_l0",
+    "mapTo": "fr04_shiftlights_l0",
+    "class": "Material",
+    "materialTag0": "lucasbe",
+    "materialTag1": "vehicle"
+  },
+  "fr04_shiftlights_l1": {
+    "name": "fr04_shiftlights_l1",
+    "mapTo": "fr04_shiftlights_l1",
+    "class": "Material",
+    "materialTag0": "lucasbe",
+    "materialTag1": "vehicle"
+  },
+  "fr04_shiftlights_l2": {
+    "name": "fr04_shiftlights_l2",
+    "mapTo": "fr04_shiftlights_l2",
+    "class": "Material",
+    "materialTag0": "lucasbe",
+    "materialTag1": "vehicle"
+  },
+  "fr04_shiftlights_l3": {
+    "name": "fr04_shiftlights_l3",
+    "mapTo": "fr04_shiftlights_l3",
+    "class": "Material",
+    "materialTag0": "lucasbe",
+    "materialTag1": "vehicle"
+  },
+  "fr04_shiftlights_l4": {
+    "name": "fr04_shiftlights_l4",
+    "mapTo": "fr04_shiftlights_l4",
+    "class": "Material",
+    "materialTag0": "lucasbe",
+    "materialTag1": "vehicle"
+  },
+  "fr04_shiftlights_l5": {
+    "name": "fr04_shiftlights_l5",
+    "mapTo": "fr04_shiftlights_l5",
+    "class": "Material",
+    "materialTag0": "lucasbe",
+    "materialTag1": "vehicle"
+  },
+  "fr04_shiftlights_l6": {
+    "name": "fr04_shiftlights_l6",
+    "mapTo": "fr04_shiftlights_l6",
+    "class": "Material",
+    "materialTag0": "lucasbe",
+    "materialTag1": "vehicle"
+  },
+  "fr04_shiftlights_l7": {
+    "name": "fr04_shiftlights_l7",
+    "mapTo": "fr04_shiftlights_l7",
+    "class": "Material",
+    "materialTag0": "lucasbe",
+    "materialTag1": "vehicle"
+  },
+  "fr04_shiftlights_l8": {
+    "name": "fr04_shiftlights_l8",
+    "mapTo": "fr04_shiftlights_l8",
+    "class": "Material",
+    "materialTag0": "lucasbe",
+    "materialTag1": "vehicle"
+  },
+  "fr04_rainlight": {
+    "name": "fr04_rainlight",
+    "mapTo": "fr04_rainlight",
+    "class": "Material",
+    "materialTag0": "lucasbe",
+    "materialTag1": "vehicle"
+  }
+}

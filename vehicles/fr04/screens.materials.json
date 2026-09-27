@@ -1,0 +1,68 @@
+{
+  "fr04_screen" : {
+    "name" : "fr04_screen",
+    "mapTo": "fr04_screen",
+    "class" : "Material",
+    "Stages": [
+      {
+        "baseColorFactor": [
+          0.09,
+          0.09,
+          0.09,
+          1
+        ],
+        "emissiveIntensityNits": 4000,
+        "emissiveFactor": [
+          1,
+          1,
+          1
+        ],
+        "emissiveMap": "@fr04_screen",
+        "metallicFactor": 0.5,
+        "roughnessFactor": 0.1,
+        "useAnisotropic": true
+      },
+      {},
+      {}
+    ],
+    "alphaRef": 0,
+    "dynamicCubemap": true,
+    "materialTag0": "lucasbe",
+    "materialTag1": "vehicle",
+    "order_simset": 0,
+    "version": 1.5
+  },
+  "fr04_screen_accessory": {
+    "name": "fr04_screen_accessory",
+    "mapTo": "fr04_screen_accessory",
+    "class": "Material",
+    "Stages": [
+      {
+        "baseColorFactor": [
+          0.09,
+          0.09,
+          0.09,
+          1
+        ],
+        "emissiveIntensityNits": 4000,
+        "emissiveFactor": [
+          1,
+          1,
+          1
+        ],
+        "emissiveMap": "/vehicles/fr04/fr04_accessory.data.png",
+        "metallicFactor": 0.5,
+        "roughnessFactor": 0.1,
+        "useAnisotropic": true
+      },
+      {},
+      {}
+    ],
+    "alphaRef": 0,
+    "dynamicCubemap": true,
+    "materialTag0": "lucasbe",
+    "materialTag1": "vehicle",
+    "order_simset": 0,
+    "version": 1.5
+  }
+}
