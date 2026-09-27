@@ -18,7 +18,7 @@
     ],
     "variables": [
         ["name", "type", "unit", "category", "default", "min", "max", "title", "description"],
-        ["$camber_R", "range", "", "Wheel Alignment", 0.9974, 0.97, 1.03, "Camber Adjust", "Adjusts the wheel camber angles", {"subCategory":"Rear"}],
+        ["$camber_R", "range", "", "Wheel Alignment", 0.9976, 0.97, 1.03, "Camber Adjust", "Adjusts the wheel camber angles", {"subCategory":"Rear"}],
         ["$toe_R", "range", "", "Wheel Alignment", 0.9946, 0.98, 1.02, "Toe Adjust", "Adjusts the toe angle (lower: more toe-in)", {"subCategory":"Rear"}],
     ],
     "flexbodies": [
@@ -88,8 +88,8 @@
           //--REAR RUNNING GEAR--
           //multilink suspension
           {"beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
-          {"beamDeform":75500,"beamStrength":275000},
-          {"beamSpring":5000000,"beamDamp":125},
+          {"beamDeform":226500,"beamStrength":825000},
+          {"beamSpring":4500000,"beamDamp":125},
           //rear hub
           ["rh1r","rh3r"],
           ["rh1r","rh4r"],
@@ -112,7 +112,7 @@
           //["fh5l","fh2l"],
 
           //rockers
-          {"beamDeform":150100,"beamStrength":10000},
+          {"beamDeform":450300,"beamStrength":30000},
           {"beamSpring":150000,"beamDamp":50},
           ["rkr0","rkr1r"],
           ["rkr0","rkr1l"],
@@ -129,7 +129,7 @@
           ["rs2l","rps1l"],
 
           //fix to transaxle
-          {"beamDeform":150100,"beamStrength":5000},
+          {"beamDeform":450300,"beamStrength":15000},
           ["rkr1r","rx1r"],
           ["rkr1r","rx1l"],
           ["rkr1r","rx2r"],
@@ -158,15 +158,15 @@
           ["rkr0","rx4l"],
 
           //pushrods
-          {"beamDeform":150100,"beamStrength":8000},
+          {"beamDeform":450300,"beamStrength":24000},
           {"beamSpring":50000,"beamDamp":50},
           ["rps1r","rh1r",{"breakGroup":"lowerarm_RR","breakGroupType":1,"beamPrecompression":1.0,"beamPrecompressionTime":0.5}],
           ["rps1l","rh1l",{"breakGroup":"lowerarm_RL","breakGroupType":1,"beamPrecompression":1.0,"beamPrecompressionTime":0.5}],
 
           //attach to wheel
           {"optional":true},
-          {"beamSpring":5000000,"beamDamp":125},
-          {"beamDeform":90100,"beamStrength":800100},
+          {"beamSpring":4500000,"beamDamp":125},
+          {"beamDeform":270300,"beamStrength":2400300},
           {"breakGroup":"wheel_RR"},
           ["rh1r","rw1r", {"name":"axle_RR"}],
           ["rh3r","rw1r"],
@@ -193,8 +193,8 @@
 
           //lower arm
           {"deformLimitExpansion":1.5},
-          {"beamDeform":23100,"beamStrength":1000100},
-          {"beamSpring":5000000,"beamDamp":1500},
+          {"beamDeform":69300,"beamStrength":3000300},
+          {"beamSpring":4500000,"beamDamp":1500},
 
           ["rx2r","rh1r", {"breakGroup":"lowerarm_RR","dampCutoffHz":500}],
           ["rx2l","rh1l", {"breakGroup":"lowerarm_RL","dampCutoffHz":500}],
@@ -216,7 +216,7 @@
           
           //tethers
           {"beamPrecompression":1, "beamType":"|BOUNDED", "beamLongBound":0.05, "beamShortBound":0.0, "boundZone":0.15},
-          {"beamSpring":150100,"beamDamp":200,"beamDeform":900100,"beamStrength":150100},
+          {"beamSpring":150100,"beamDamp":200,"beamDeform":2700300,"beamStrength":450300},
           {"beamLimitSpring":2001000,"beamLimitDamp":2500},
           ["rx1r","rh1r", {"dampCutoffHz":500}],
           ["rx1l","rh1l", {"dampCutoffHz":500}],
@@ -224,11 +224,11 @@
           //rear limiters
           {"beamPrecompression":0.65, "beamType":"|SUPPORT", "beamLongBound":3},
           {"beamSpring":2501000,"beamDamp":200},
-          {"beamDeform":30000,"beamStrength":400000},
+          {"beamDeform":90000,"beamStrength":1200000},
 
           //"steering" limit
           {"beamPrecompression":1, "beamType":"|SUPPORT", "beamLongBound":1.0},
-          {"beamSpring":2501000,"beamDamp":250,"beamDeform":45000,"beamStrength":600000},
+          {"beamSpring":2501000,"beamDamp":250,"beamDeform":135000,"beamStrength":1800000},
           {"beamPrecompression":0.90},
           ["rh3r","rx1r",{"breakGroup":"upperarm_RR"}],
           ["rh3l","rx1l",{"breakGroup":"upperarm_RL"}],
@@ -240,7 +240,7 @@
 
           //upper arm anti-invert
           {"beamLimitSpring":2001000,"beamLimitDamp":1000},
-          {"beamSpring":0,"beamDamp":0,"beamDeform":15000,"beamStrength":300000},
+          {"beamSpring":0,"beamDamp":0,"beamDeform":45000,"beamStrength":900000},
           {"beamPrecompression":1, "beamType":"|BOUNDED", "beamLongBound":0.25, "beamShortBound":0.25},
           ["rh4r","rx1r",{"breakGroup":"upperarm_RR"}],
           ["rh4l","rx1l",{"breakGroup":"upperarm_RL"}],
@@ -250,14 +250,14 @@
 
           //travel hard limit
           {"beamPrecompression":1, "beamType":"|BOUNDED", "beamLongBound":1, "beamShortBound":1},
-          {"beamSpring":0,"beamDamp":0,"beamDeform":12000,"beamStrength":150000},
+          {"beamSpring":0,"beamDamp":0,"beamDeform":36000,"beamStrength":450000},
           {"beamLimitSpring":801000,"beamLimitDamp":2000},
           ["rh1r","rs1", {"breakGroup":"lowerarm_RR","longBoundRange":0.03,"shortBoundRange":0.05,"boundZone":0.016,"beamLimitDampRebound":0,"dampCutoffHz":500}],
           ["rh1l","rs1", {"breakGroup":"lowerarm_RL","longBoundRange":0.03,"shortBoundRange":0.05,"boundZone":0.016,"beamLimitDampRebound":0,"dampCutoffHz":500}],
 
           //rocker travel limit
           {"beamPrecompression":1.0, "beamType":"|BOUNDED", "beamLongBound":1, "beamShortBound":1},
-          {"beamSpring":500,"beamDamp":50,"beamDeform":15000,"beamStrength":60000},
+          {"beamSpring":500,"beamDamp":50,"beamDeform":45000,"beamStrength":180000},
           {"beamLimitSpring":121000,"beamLimitDamp":2000},
           ["rx4r","rs2r", {"longBoundRange":0.05,"shortBoundRange":0.05,"boundZone":0.016,"beamLimitDampRebound":0,"dampCutoffHz":500}],
           ["rx4l","rs2l", {"longBoundRange":0.05,"shortBoundRange":0.05,"boundZone":0.016,"beamLimitDampRebound":0,"dampCutoffHz":500}],
@@ -327,11 +327,11 @@
         {"hubcapBreakGroup":"hubcap_RR"},
         {"hubcapGroup":"hubcap_RR"},
         {"axleBeams":["axle_RR"]},
-        ["RR", "wheel_RR", "tire_RR", "rw1rr", "rw1r", 9999, "rh1r", 1, {"torqueCoupling:":"tra1", "torqueArm:":"rdiff","torqueArm2:":"e1r"}],
+        ["RR", "wheel_RR", "tire_RR", "rw1rr", "rw1r", 9999, "rh3r", 1, {"torqueCoupling:":"rdiff", "torqueArm:":"rx1r", "torqueArm2:":"rx3l"}],
         {"hubcapBreakGroup":"hubcap_RL"},
         {"hubcapGroup":"hubcap_RL"},
         {"axleBeams":["axle_RL"]},
-        ["RL", "wheel_RL", "tire_RL", "rw1ll", "rw1l", 9999, "rh1l", -1, {"torqueCoupling:":"tra1", "torqueArm:":"rdiff","torqueArm2:":"e1l"}],
+        ["RL", "wheel_RL", "tire_RL", "rw1ll", "rw1l", 9999, "rh3l", -1, {"torqueCoupling:":"rdiff", "torqueArm:":"rx1l", "torqueArm2:":"rx3r"}],
         {"selfCollision":true},
         {"axleBeams":[]},{"disableMeshBreaking":false,"disableTriangleBreaking":false},
         {"hubcapBreakGroup":""},
@@ -427,7 +427,7 @@
     "torsionbars": [
         ["id1:", "id2:", "id3:", "id4:"],
         //heave (third) spring: lengthwise axis on the centreline, hubs as arms
-        {"spring":"$=$heave_spring_R*0.5346", "damp":"$=$heave_spring_R*0.5346*0.03", "deform":10000, "strength":9999999},
+        {"spring":"$=$heave_spring_R*0.5396", "damp":"$=$heave_spring_R*0.5396*0.03", "deform":10000, "strength":9999999},
         ["rh1r", "rs1", "fl7", "rh1l"],
     ],
     "beams": [
@@ -472,9 +472,9 @@
           {"beamDeform":20000,"beamStrength":200000,"deformLimitExpansion":1.2},
           {"beamSpring":"$spring_R","beamDamp":0},
           //To change the base ride height, edit the springheight_R offset in the expression.
-          ["rh1r","rs1", {"breakGroup":"lowerarm_RR","name":"spring_RR", "beamPrecompression":"$=$rideheight_R","precompressionRange":"$=($springheight_R*(0.5898*$spring_R + $heave_spring_R/0.5898) + 6403.0)/$spring_R",
+          ["rh1r","rs1", {"breakGroup":"lowerarm_RR","name":"spring_RR", "beamPrecompression":"$=$rideheight_R","precompressionRange":"$=($springheight_R*(0.5995*$spring_R + $heave_spring_R/0.5995) + 6410.0)/$spring_R",
               "soundFile":"event:>Vehicle>Suspension>car_modn_med_01>spring_compress_01","colorFactor":0.4,"attackFactor":60,"volumeFactor":1.6,"decayFactor":40,"noiseFactor":0.01,"pitchFactor":1.0,"maxStress":4300}],
-          ["rh1l","rs1", {"breakGroup":"lowerarm_RL","name":"spring_RL", "beamPrecompression":"$=$rideheight_R","precompressionRange":"$=($springheight_R*(0.5898*$spring_R + $heave_spring_R/0.5898) + 6403.0)/$spring_R",
+          ["rh1l","rs1", {"breakGroup":"lowerarm_RL","name":"spring_RL", "beamPrecompression":"$=$rideheight_R","precompressionRange":"$=($springheight_R*(0.5995*$spring_R + $heave_spring_R/0.5995) + 6410.0)/$spring_R",
               "soundFile":"event:>Vehicle>Suspension>car_modn_med_01>spring_compress_01","colorFactor":0.4,"attackFactor":60,"volumeFactor":1.6,"decayFactor":40,"noiseFactor":0.01,"pitchFactor":1.0,"maxStress":4300}],
           //damper
           {"beamPrecompression":1, "beamType":"|BOUNDED", "beamLongBound":1, "beamShortBound":1},
@@ -486,8 +486,8 @@
           {"beamSpring":0,"beamDamp":0},
           {"beamDeform":15000,"beamStrength":150000},
           {"beamLimitSpring":501000,"beamLimitDamp":2000},
-          ["rh1r","rs1", {"breakGroup":"lowerarm_RR","longBoundRange":0.04,"shortBoundRange":"$=$packer_R*0.5898","boundZone":0.012,"beamLimitDampRebound":0,"dampCutoffHz":500}],
-          ["rh1l","rs1", {"breakGroup":"lowerarm_RL","longBoundRange":0.04,"shortBoundRange":"$=$packer_R*0.5898","boundZone":0.012,"beamLimitDampRebound":0,"dampCutoffHz":500}],
+          ["rh1r","rs1", {"breakGroup":"lowerarm_RR","longBoundRange":0.04,"shortBoundRange":"$=$packer_R*0.5995","boundZone":0.012,"beamLimitDampRebound":0,"dampCutoffHz":500}],
+          ["rh1l","rs1", {"breakGroup":"lowerarm_RL","longBoundRange":0.04,"shortBoundRange":"$=$packer_R*0.5995","boundZone":0.012,"beamLimitDampRebound":0,"dampCutoffHz":500}],
           //fake shock stopper
           {"beamSpring":0,"beamDamp":0},
           {"beamLimitSpring":501000,"beamLimitDamp":2000},
@@ -578,7 +578,7 @@
     "torsionbars": [
         ["id1:", "id2:", "id3:", "id4:"],
         //I hate open diffs
-        {"spring":"$=$arb_spring_R*0.143", "damp":10, "deform":10000, "strength":9999999},
+        {"spring":"$=$arb_spring_R*0.1462", "damp":10, "deform":10000, "strength":9999999},
         ["rh3r", "rx3r", "rx3l", "rh3l"],
     ],
 },

@@ -38,6 +38,15 @@ WHEEL_CENTRE = {"F": (0.7925, -1.5247, 0.3377), "R": (0.789, 2.03, 0.3347)}
 # Cameras placed from the RB14 itself rather than mapped from the F4: the
 # driver's eye sits under the halo, just ahead of the headrest.
 CAMERA_OVERRIDE = {"dash": (0.0, -0.08, 0.80)}
+# Nodes placed by hand instead of by the map. The F4's front wing endplates
+# run back beside its narrow front tyres; mapped, their rear nodes end up
+# 15 cm behind the RB14 endplate (y -1.963) and inside the 305 mm tyres'
+# steering sweep, so the tyres hit invisible endplate collision triangles
+# and bend the wing. Put them on the RB14 endplate's rear edge.
+NODE_OVERRIDE = {
+    "fep2r": (-0.862, -1.975, 0.100), "fep4r": (-0.862, -1.975, 0.290),
+    "fep2l": (0.862, -1.975, 0.100), "fep4l": (0.862, -1.975, 0.290),
+}
 # Mirror view origins: offsets (vehicle axes) from the mirror's reference
 # node to the centre of the RB14 mirror glass.
 MIRROR_OFFSET = {"redbull_mirror_R": (-0.14, 0.06, 0.571), "redbull_mirror_L": (0.138, 0.06, 0.571)}
@@ -126,6 +135,9 @@ def main():
                 if n is None or wheel_file or any(abs(c) > 0 for c in n["offset"]):
                     return m.group(0)
                 p = n["pos"]
+                if nid in NODE_OVERRIDE:
+                    q = NODE_OVERRIDE[nid]
+                    return f"{m.group(1)}{fmt(q[0])}{m.group(4)}{fmt(q[1])}{m.group(6)}{fmt(q[2])}"
                 q = fitmap.map_point(p)
                 vals = [mapped_value(n["raw"][i], i, p, q, variables) for i in range(3)]
                 return f"{m.group(1)}{vals[0]}{m.group(4)}{vals[1]}{m.group(6)}{vals[2]}"

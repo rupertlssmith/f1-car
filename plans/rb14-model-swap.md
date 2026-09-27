@@ -261,13 +261,25 @@ Every config: 1.9 g at low speed, 5-6 g braking from 300 km/h.
   this model (wheel axles); our first M4 build (2.4) exploded, the second
   (1.96 at the wheel axles, 1.77 on the front bulkhead) lost its wheels and
   visibly shook in front of the cockpit. Fixes: suspension and steering
-  beams capped at 5 MN/m (still ~30x the wheel rate), front steering-arm
-  torsionbar 200 -> 80 kNm/rad, wheel hub beams at 45 % of the F4's with
-  0.35 kg hub nodes, wheel axle nodes 3.5 kg, and mass moved from the plank
+  beams capped at 4.5 MN/m (still ~25x the wheel rate), front steering-arm
+  torsionbar 200 -> 80 kNm/rad, wheel hub beams at 40 % of the F4's with
+  0.35 kg hub nodes, wheel axle nodes 4 kg (wheel clusters now 1.55), and mass moved from the plank
   ballast onto chassis and gearbox nodes (gearbox 40 kg). Ballast is solved
   for 733 kg / 45.5 % front; the CoG rose ~12 mm to 0.34 m.
-- **Suspension** (baseline, per wheel): heave 166 / 170 N/mm (5.6 / 5.0 Hz),
-  roll 312 / 229 N/mm (57 % front roll stiffness). Corner springs carry the
+- **Torque paths:** drive and brake torque reach the chassis through the
+  nodes each wheel names, with force = torque / lever. The F4 (third test:
+  rear struts bent under acceleration) named a drive coupling node that
+  doesn't exist and a torque arm 2 cm from the axle line; its rear brake arm
+  was 7 cm from the axle. Now: coupling at the differential, arms on the
+  gearbox 40-48 cm away (drive ~10-12 kN instead of hundreds), rear brake
+  arm on the upper upright (13 cm, 16.5 kN). Suspension and diff-mount beam
+  deform/break thresholds are 3x the F4's (loads are 3.4-4.7x).
+- **Front wing endplates:** their rear jbeam nodes (collision surfaces)
+  sat 15 cm behind the visible RB14 endplate, inside the 305 mm front tyres'
+  steering sweep, so turning the wheels bent the wing. Moved to the visible
+  endplate's rear edge; the tyre now clears them by 51 mm at full lock.
+- **Suspension** (baseline, per wheel): heave 166 / 168 N/mm (5.6 / 5.0 Hz),
+  roll 310 / 227 N/mm (57 % front roll stiffness). Corner springs carry the
   load; on top of them a **heave (third) spring** per axle -- a torsionbar
   about a lengthwise axis with the two hubs as its arms, so it resists both
   wheels rising together (aero load) but not roll -- and an anti-roll bar

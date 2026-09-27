@@ -118,14 +118,14 @@ def ballast():
 # changes). Chassis and gearbox nodes get mass instead, paid for by the
 # plank ballast (solved in ballast()).
 MAX_OMEGA_DT = float(os.environ.get("RB14_MAX_OMEGA_DT", 1.65))
-HUB_SPRING_SCALE = 0.45                      # hub beams vs the F4's (hub nodes 0.35 vs 0.55 kg)
-WHEEL_AXLE_WEIGHT = 3.5                      # kg, wheel axle nodes (F4: 5)
+HUB_SPRING_SCALE = 0.40                      # hub beams vs the F4's (hub nodes 0.35 vs 0.55 kg)
+WHEEL_AXLE_WEIGHT = 4.0                      # kg, wheel axle nodes (F4: 5)
 CHASSIS_MIN_MASS = {"rt4r": 4.5, "rt4l": 4.5}
 HUB_TORSION_F = 80000                        # was 200000 (F4)
 SPRING_CAP = {                               # part -> highest beamSpring (N/m)
-    "redbull_suspension_F": 5.0e6,
-    "redbull_steering": 5.0e6,
-    "redbull_suspension_R": 5.0e6,
+    "redbull_suspension_F": 4.5e6,
+    "redbull_steering": 4.5e6,
+    "redbull_suspension_R": 4.5e6,
 }
 SPRING_CAP_FILES = {"redbull_suspension_F": "suspension_F", "redbull_steering": "suspension_F",
                     "redbull_suspension_R": "suspension_R"}
@@ -160,6 +160,55 @@ def stiffness():
         je.set_all(f, r'\{"hubTreadBeamSpring":\d+,', '{"hubTreadBeamSpring":%d,' % (990900 * k))
         je.set_all(f, r'\{"hubPeripheryBeamSpring":\d+,', '{"hubPeripheryBeamSpring":%d,' % (990900 * k))
         je.set_all(f, r'\{"hubSideBeamSpring":\d+,', '{"hubSideBeamSpring":%d,' % (1601000 * k))
+
+
+# --------------------------------------------------------- torque paths
+# Drive and brake torque reach the chassis through the nodes each pressure
+# wheel names; the force is torque / lever, so short levers make huge forces.
+# The F4 named a drive torqueCoupling ("tra1") that doesn't exist, a
+# torqueArm 2 cm from the axle line and an engine node as torqueArm2; its
+# rear brake arm was the lower upright node (7 cm lever on the RB14). Fine
+# for the F4's ~2 kNm of drive torque, not for ~9.7 kNm in first gear and
+# 2-3 kNm of brake torque per wheel. Per BeamNG's docs: coupling at the
+# differential, arms on the same rigid structure (the gearbox), not in line.
+# And the beams on those load paths are made ~3x stronger than the F4's
+# (loads are 3.4-4.7x higher; the longer levers take the rest).
+DRIVE_REACTION = {"R": ("rdiff", "rx1r", "rx3l"), "L": ("rdiff", "rx1l", "rx3r")}
+BRAKE_ARM_R = {"R": "rh3r", "L": "rh3l"}      # upper upright node, 13 cm lever
+STRENGTH_SCALE = 3.0
+STRENGTH_PARTS = {"redbull_suspension_F": "suspension_F", "redbull_suspension_R": "suspension_R",
+                  "redbull_differential_R": "differential_R", "redbull_halfshafts_R": "differential_R"}
+
+
+def torque_paths():
+    import re
+    f = f"{V}/redbull_suspension_R.jbeam"
+    for side in ("R", "L"):
+        c, a1, a2 = DRIVE_REACTION[side]
+        text = je._read(f)
+        pat = re.compile(r'(\["R%s", "wheel_R%s", "tire_R%s", "rw1%s", "rw1%s", 9999, )"[^"]+"(, -?1, \{)"torqueCoupling:":"[^"]*", "torqueArm:":"[^"]*",\s*"torqueArm2:":"[^"]*"'
+                         % (side, side, side, side.lower() * 2, side.lower()))
+        text, n = pat.subn(lambda m: m.group(1) + '"%s"' % BRAKE_ARM_R[side] + m.group(2)
+                           + '"torqueCoupling:":"%s", "torqueArm:":"%s", "torqueArm2:":"%s"' % (c, a1, a2), text)
+        if n != 1:
+            raise ValueError(f"rear wheel {side}: pressureWheels row not found")
+        je._write(f, text)
+    # beam strengths on the torque paths, from the F4 originals
+    for part, name in STRENGTH_PARTS.items():
+        f = f"{V}/redbull_{name}.jbeam"
+        orig = open(f"vehicles/fr04/fr04_{name}.jbeam", encoding="utf-8", newline="").read()
+        a0, b0 = _part_block(orig, part.replace("redbull", "fr04"))
+        text = je._read(f)
+        a, b = _part_block(text, part)
+        block = text[a:b]
+        for key in ("beamDeform", "beamStrength"):
+            pat = re.compile(r'("%s"\s*:\s*)(\d+(?:\.\d+)?)' % key)
+            src = [float(m.group(2)) for m in pat.finditer(orig[a0:b0])]
+            if len(pat.findall(block)) != len(src):
+                raise ValueError(f"{part}: {key} count differs from the F4")
+            it = iter(src)
+            block = pat.sub(lambda m: m.group(1) + "%d" % (next(it) * STRENGTH_SCALE), block)
+        je._write(f, text[:a] + block + text[b:])
 
 
 def check_stability():
@@ -811,6 +860,7 @@ def configs():
 if __name__ == "__main__":
     os.chdir(REPO)
     stiffness()
+    torque_paths()
     wheels()
     tyres()
     fuel()

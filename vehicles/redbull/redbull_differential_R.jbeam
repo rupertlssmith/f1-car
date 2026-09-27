@@ -44,7 +44,7 @@
           //differential node
           {"beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
           {"beamSpring":1101000,"beamDamp":60},
-          {"beamDeform":35000,"beamStrength":"FLT_MAX"},
+          {"beamDeform":105000,"beamStrength":"FLT_MAX"},
           {"optional":true},
           {"deformGroup":"differential_R", "deformationTriggerRatio":0.001}
           ["rdiff", "rx1r"],
@@ -76,7 +76,7 @@
           ["id1:", "id2:"],
           //halfshafts
           {"beamType":"|BOUNDED", "beamLongBound":0.05, "beamShortBound":0.05,"boundZone":0.1},
-          {"beamSpring":0,"beamDamp":0,"beamDeform":3500,"beamStrength":7000},
+          {"beamSpring":0,"beamDamp":0,"beamDeform":10500,"beamStrength":21000},
           {"beamLimitSpring":5001000,"beamLimitDamp":250},
           ["rw1r","rdiff", {"name":"halfshaft_RR", "breakGroup":"wheel_RR", "breakGroupType":1, "deformGroup":"wheelaxleRR", "deformationTriggerRatio":0.2, "optional":true}],
           ["rw1l","rdiff", {"name":"halfshaft_RL", "breakGroup":"wheel_RL", "breakGroupType":1, "deformGroup":"wheelaxleRL", "deformationTriggerRatio":0.2, "optional":true}],
