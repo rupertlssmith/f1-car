@@ -250,7 +250,7 @@ the same flat-plate model; the game is the ground truth).
 Every config: 1.9 g at low speed, 5-6 g braking from 300 km/h.
 
 - **Mass:** 733 kg with driver and no fuel (777 kg with the configs' 60 L),
-  45.5 % front, CoG 0.32 m. Power unit 145 kg, gearbox 40 kg, light
+  45.5 % front, CoG 0.34 m. Power unit 145 kg, gearbox 40 kg, light
   corners, ballast in the plank.
 - **Solver stability:** BeamNG integrates at 2 kHz, and every vibration
   mode of the node/beam network must stay below omega*dt = 2 or the solver
