@@ -48,6 +48,7 @@ def mass():
     # gearbox + casing ~40 kg
     weights(f"{V}/redbull_transaxle.jbeam", {
         "rx1r": 5, "rx1l": 5, "rx2r": 5, "rx2l": 5, "rx3r": 5, "rx3l": 5, "rx4r": 5, "rx4l": 5})
+    weights(f"{V}/redbull_differential_R.jbeam", {"rdiff": DIFF_NODE_WEIGHT})
     # rear crash structure: the F4's 1 kg nodes sit right at the stability limit
     weights(f"{V}/redbull_crashbox.jbeam", {n: 1.15 for n in ("cb1r", "cb1l", "cb3r", "cb3l")})
     # uprights, brakes, wishbone ends: roughly half the F4's corner mass
@@ -187,7 +188,14 @@ def stiffness():
 # differential, arms on the same rigid structure (the gearbox), not in line.
 # And the beams on those load paths are made ~3x stronger than the F4's
 # (loads are 3.4-4.7x higher; the longer levers take the rest).
-DRIVE_REACTION = {"R": ("rdiff", "rx1r", "rx3l"), "L": ("rdiff", "rx1l", "rx3r")}
+# Coupling at the differential; arms on the engine block (bolted rigidly to
+# the gearbox): the lower engine node (25 kg, 0.77 m away) and the opposite
+# upper one (11 kg, 0.78 m, out of line). BeamNG: "nodes that are heavier and
+# further apart allow more torque before running into stability issues" --
+# 5 kg gearbox nodes 0.4-0.5 m away made the rear wheels shake and break
+# under first-gear torque (4.8 kNm per wheel).
+DRIVE_REACTION = {"R": ("rdiff", "e2r", "e4l"), "L": ("rdiff", "e2l", "e4r")}
+DIFF_NODE_WEIGHT = 10.0         # kg, differential + final drive (was 5)
 BRAKE_ARM_R = {"R": "rh3r", "L": "rh3l"}      # upper upright node, 13 cm lever
 # part -> (file, deform/strength multiple of the F4's). setup_report's
 # strength_report() load cases (aero at 300 km/h, 5 g braking, 4.7 g

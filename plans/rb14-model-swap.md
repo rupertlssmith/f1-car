@@ -269,10 +269,13 @@ Every config: 1.9 g at low speed, 5-6 g braking from 300 km/h.
 - **Torque paths:** drive and brake torque reach the chassis through the
   nodes each wheel names, with force = torque / lever. The F4 (third test:
   rear struts bent under acceleration) named a drive coupling node that
-  doesn't exist and a torque arm 2 cm from the axle line; its rear brake arm
-  was 7 cm from the axle. Now: coupling at the differential, arms on the
-  gearbox 40-48 cm away (drive ~10-12 kN instead of hundreds), rear brake
-  arm on the upper upright (13 cm, 16.5 kN).
+  doesn't exist (so the game generated no drive reaction at all) and a
+  torque arm 2 cm from the axle line; its rear brake arm was 7 cm from the
+  axle. Now: coupling at the differential (10 kg), arms on the engine block
+  -- the lower 25 kg node 0.77 m away and the opposite upper 11 kg node --
+  after 5 kg gearbox arms 0.4 m away made the rear wheels shake and break
+  pulling away in first gear (4.8 kNm per wheel); rear brake arm on the
+  upper upright (13 cm, 16.5 kN).
 - **Strength for F1 loads:** the F4's beams yield at forces sized for a
   650 kg car at ~1.5 g. `setup_report.strength_report()` loads each corner
   with aero at 300 km/h, 5 g braking, 4.7 g cornering and full traction
