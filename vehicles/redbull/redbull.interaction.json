@@ -31,6 +31,12 @@
     "title": "Toggle Torque Map",
     "desc": "Low-gear torque map / traction limiter on or off"
 },
+"steerCheck":{
+    "order":  100.7,
+    "onUp":"electrics.values.steerCheck = 1-(electrics.values.steerCheck or 0)",
+    "title": "Toggle Steering Check",
+    "desc": "Shows the steering input and the front wheels' measured angles"
+},
 "biasMinus":{
     "order":  100.3,
     "onDown":"electrics.values.biasChange = electrics.values.biasChange - 0.01",

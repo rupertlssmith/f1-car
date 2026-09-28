@@ -415,6 +415,24 @@ Every config: 1.9 g at low speed, 5-6 g braking from 300 km/h.
   stiffness per kg, and the generated-tyre approximation in setup_report
   cannot see it (it rated both the same). New gate, `check_tyres()`: every
   tyre spring per kg of tyre node <= the F4's (now 0.53x at most).
+- **Round 10 (gearing, sound, steering):**
+  - *Punchier low gears:* 4.15 / 3.15 / 2.54 / 2.12 / 1.79 / 1.535 / 1.32 /
+    1.14 -- 1st to 5th top out at 95 / 125 / 155 / 186 / 220 km/h (were
+    105 / 136 / 166 / 197 / 229); 8th unchanged (346). More wheel torque in
+    2nd-5th and smaller rpm drops per shift; downshift points follow the
+    ratios; the short set stays 9 % shorter.
+  - *Engine sound:* same samples, re-voiced toward a 2018 V6 hybrid: less
+    bass boom, more intake and exhaust, treble and upper mids up, the
+    firing-order fundamental forward, more overrun.
+  - *Steering:* at full lock the rack (slidenodes on the fx3r-fx3l rail)
+    travelled 46.2 mm, past the 45.7 mm to the capped end of its rail;
+    factor 0.090 / lock 170 deg keeps it 2 mm short with the same ratio
+    (steering() checks it). No steering or front-corner beam comes near
+    yielding in hard cornering (tie rods 8 %, worst front beam 25 %), and
+    the steering-damper beams are light (25 N s/m), so neither a bent part
+    nor damping explains an offset that stays. New readout, key **J**
+    (`lua/controller/redbullSteerCheck.lua`): steering input and each front
+    wheel's measured steer angle, to tell a steering offset from a pull.
 - **Rear tyre clearance:** the rear floor / diffuser edge nodes sat 20-50 mm
   inside the 405 mm rear tyres' inner face; moved ~8 cm inboard (aero
   factors re-solved for the smaller floor).

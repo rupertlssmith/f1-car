@@ -279,11 +279,23 @@ def torque_paths():
 # (round 7). F1 steering is direct: faster actuators, more road-wheel angle
 # per input (factor), fewer steering-wheel degrees to full lock.
 STEER_RATE = 4.0
-STEER_FACTOR = 0.095            # hydro length change at full input (F4 0.072)
-STEER_WHEEL_LOCK = 180          # steering-wheel degrees at full lock (F4 230)
+STEER_FACTOR = 0.090            # hydro length change at full input (F4 0.072)
+STEER_WHEEL_LOCK = 170          # steering-wheel degrees at full lock (F4 230)
+# Round 10: at 0.095 the rack (slidenodes fh6r/l) travelled 46.2 mm at full
+# lock, past the 45.7 mm to the end of its capped rail (fx3r-fx3l), so it
+# rode into the rail cap while the hydros kept pushing. 0.090 stays 2 mm
+# short of it; the lock drops to match, so the ratio (road-wheel angle per
+# steering-wheel degree) is unchanged. steering() checks the clearance.
 
 
 def steering():
+    import setup_report as sr
+    import numpy as np
+    v = sr.Vehicle("redbull", None)
+    L0 = np.linalg.norm(v.pos["fh6r"] - v.pos["fx3l"])
+    room = abs(v.pos["fx3r"][0] - v.pos["fh6r"][0])
+    if STEER_FACTOR * L0 > room - 0.001:
+        raise ValueError("steering: rack travel %.1f mm reaches the rail end (%.1f mm)" % (STEER_FACTOR * L0 * 1000, room * 1000))
     f = f"{V}/redbull_suspension_F.jbeam"
     for side, sign in (("r", ""), ("l", "-")):
         je.set_all(f, r'\["fh6%s","fx3[rl]", \{"factor":\s*-?[\d.]+,"steeringWheelLock":\d+, "inRate":[\d.]+,"outRate":[\d.]+\}\]' % side,
@@ -783,10 +795,10 @@ def power_unit():
 # ------------------------------------------------------ gearbox and diff
 # 8-speed seamless sequential. Overall ratios for ~105 km/h in 1st and
 # ~345 km/h in 8th at 12,500 rpm on the 0.335 m rears, final drive 4.0.
-GEARS = {
-    "standard": [3.76, 2.90, 2.375, 2.00, 1.725, 1.50, 1.30, 1.14],
-    "short": [4.10, 3.16, 2.59, 2.18, 1.88, 1.635, 1.417, 1.245],    # ~9 % shorter: tight tracks
-}
+# Round 10: 1st-4th shorter for punch out of slow corners (1st ~95 km/h,
+# 4th ~185 km/h; 8th unchanged), the steps closing up toward the top.
+GEARS = {"standard": [4.15, 3.15, 2.54, 2.12, 1.79, 1.535, 1.32, 1.14]}
+GEARS["short"] = [round(g * 1.09, 3) for g in GEARS["standard"]]    # ~9 % shorter: tight tracks
 
 
 def gearbox():
@@ -912,12 +924,13 @@ def hybrid():
     tc = '["redbullTraction", {"order":1100, "targetSlip":0.12, "minSlipSpeed":2.5, "gain":4.0, "release":3.0}]'
     text = je._read(m)
     import re
-    for c in ("redbullERS", "redbullDRS", "redbullTraction"):
+    sc = '["redbullSteerCheck", {}]'
+    for c in ("redbullERS", "redbullDRS", "redbullTraction", "redbullSteerCheck"):
         text = re.sub(r',\r\n        \["%s", \{.*?\}\]' % c, "", text)
     i = text.index('        ["flyBrakeBias"')
     j = text.index("\r\n", i)
-    text = text[:j] + ",\r\n        " + ers + ",\r\n        " + drs + ",\r\n        " + tc + text[j:]
-    for action in ("ersMode", "drsToggle", "tcMode"):
+    text = text[:j] + ",\r\n        " + ers + ",\r\n        " + drs + ",\r\n        " + tc + ",\r\n        " + sc + text[j:]
+    for action in ("ersMode", "drsToggle", "tcMode", "steerCheck"):
         if '["%s"]' % action not in text:
             k = text.index('        ["biasMinus"],')
             k = text.index("\r\n", k) + 2
@@ -1285,6 +1298,33 @@ def cooling():
 # stiffness, not capacity. Left as the F4's (not verifiable offline).
 # 11. Sound: the samples stay (BeamNG ships no V6 turbo hybrid set); the
 # pitch follows a V6's firing order.
+# Round 10: a 2018 V6 hybrid is high-pitched and raspy -- a single exhaust,
+# lots of upper harmonics, little bass. Same samples (BeamNG ships no V6
+# turbo-hybrid set), re-voiced: less low-end boom, more intake and exhaust,
+# upper-mid and treble lifted, the firing-order fundamental brought forward,
+# more overrun.
+SOUND_ENGINE = {"intakeMuffling": 0.4, "mainGain": 0, "offLoadGain": 0.5, "lowShelfGain": -6, "highShelfGain": 2,
+                "eqLowGain": -6, "eqHighGain": 4, "eqHighFreq": 3000, "eqFundamentalGain": 3}
+SOUND_EXHAUST = {"mainGain": 6, "offLoadGain": 0.45, "maxLoadMix": 0.8, "lowShelfGain": -12, "highShelfGain": 7,
+                 "eqHighGain": 5, "eqHighFreq": 1500, "eqHighWidth": 0.3, "eqFundamentalGain": 2}
+
+
+def engine_sound():
+    import re
+    f = f"{V}/redbull_engine.jbeam"
+    text = je._read(f)
+    for block, vals in (('"soundConfig"', SOUND_ENGINE), ('"soundConfigExhaust"', SOUND_EXHAUST)):
+        a = text.index(block + ": {")
+        b = text.index("}", a)
+        body = text[a:b]
+        for key, val in vals.items():
+            body, n = re.subn(r'("%s":\s*)-?[\d.]+' % key, lambda m: m.group(1) + "%g" % val, body)
+            if n != 1:
+                raise ValueError(f"{block}: {key} not found")
+        text = text[:a] + body + text[b:]
+    je._write(f, text)
+
+
 def engine_misc():
     f = f"{V}/redbull_engine.jbeam"
     for key, val in (("headGasketDamageThreshold", 4500000), ("pistonRingDamageThreshold", 4500000),
@@ -1345,6 +1385,7 @@ def migrations():
     wheel_beams()
     cooling()
     engine_misc()
+    engine_sound()
     panels()
     camera()
     travel_stops()

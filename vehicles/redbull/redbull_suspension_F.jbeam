@@ -677,8 +677,8 @@
             ["id1:","id2:"],
             {"beamPrecompression":1.0, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
             {"beamSpring":10000000,"beamDamp":25,"beamDeform":"FLT_MAX","beamStrength":277500},
-            ["fh6r","fx3l", {"factor":0.095,"steeringWheelLock":180, "inRate":4.0,"outRate":4.0}],
-            ["fh6l","fx3r", {"factor":-0.095,"steeringWheelLock":180, "inRate":4.0,"outRate":4.0}],
+            ["fh6r","fx3l", {"factor":0.09,"steeringWheelLock":170, "inRate":4.0,"outRate":4.0}],
+            ["fh6l","fx3r", {"factor":-0.09,"steeringWheelLock":170, "inRate":4.0,"outRate":4.0}],
             {"beamPrecompression":1.0, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
             
     ],

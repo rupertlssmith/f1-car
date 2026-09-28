@@ -125,64 +125,64 @@
     },
     "soundConfig": {
         "sampleName": "i4p_01600cc_endurance_01_engine_rear",
-        "intakeMuffling": 0.65,
+        "intakeMuffling": 0.4,
 
-        "mainGain": -4,
+        "mainGain": 0,
         "onLoadGain":1,
-        "offLoadGain":0.40,
+        "offLoadGain":0.5,
 
         "maxLoadMix": 0.8,
         "minLoadMix": 0,
 
-        "lowShelfGain":-3,
+        "lowShelfGain":-6,
         "lowShelfFreq":80,
 
-        "highShelfGain":-4,
+        "highShelfGain":2,
         "highShelfFreq":2500,
 
         "eqLowGain": -6,
         "eqLowFreq": 500,
         "eqLowWidth": 0.1,
 
-        "eqHighGain": 0,
-        "eqHighFreq": 2500,
+        "eqHighGain": 4,
+        "eqHighFreq": 3000,
         "eqHighWidth": 0.2,
 
         "fundamentalFrequencyCylinderCount":6,
-        "eqFundamentalGain": -1,
+        "eqFundamentalGain": 3,
     },
     "soundConfigExhaust": {
         "sampleName": "i4p_02000cc_endurance_01_exhaust",
 
-        "mainGain": 3,
+        "mainGain": 6,
         "onLoadGain":1,
-        "offLoadGain":0.26,
+        "offLoadGain":0.45,
 
-        "maxLoadMix": 0.6,
+        "maxLoadMix": 0.8,
         "minLoadMix": 0,
 
-        "lowShelfGain":-11,
+        "lowShelfGain":-12,
         "lowShelfFreq":50,
 
-        "highShelfGain":4,
+        "highShelfGain":7,
         "highShelfFreq":2500,
 
         "eqLowGain": 0,
         "eqLowFreq": 90,
         "eqLowWidth": 0.5,
 
-        "eqHighGain": 0,
-        "eqHighFreq": 600,
-        "eqHighWidth": 0.2,
+        "eqHighGain": 5,
+        "eqHighFreq": 1500,
+        "eqHighWidth": 0.3,
 
         "fundamentalFrequencyCylinderCount":6,
-        "eqFundamentalGain": -5,
+        "eqFundamentalGain": 2,
     },
     "vehicleController": {
         "clutchLaunchStartRPM":7000,
         "clutchLaunchTargetRPM":7500,
         //**highShiftDown can be overwritten by automatic transmissions**
-        "highShiftDownRPM":[0,0,0,8850,9400,9650,9900,10000,9950,10050],
+        "highShiftDownRPM":[0,0,0,8700,9250,9550,9700,9850,9850,9900],
         //**highShiftUp can be overwritten by intake modifications**
         "highShiftUpRPM":12000,
     },

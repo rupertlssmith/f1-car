@@ -167,5 +167,32 @@ e.tcMode = 0
 for _ = 1, 5 do rr.wheelSpeed, rl.wheelSpeed = 20, 20; e.throttle = 1; tc.updateGFX(0.02) end
 check(e.throttle == 1, "switched off: no trimming")
 
+-- ------------------------------------------------------------ steering check
+print("redbullSteerCheck")
+electrics.values = {}
+e = electrics.values
+local sn = {   -- x left, y rear, z up
+  fx1r = vec3(-0.23, -1.59, 0.26), fx1l = vec3(0.23, -1.59, 0.26), fx2r = vec3(-0.26, -1.05, 0.26), fx2l = vec3(0.26, -1.05, 0.26),
+  fw1l = vec3(0.33, -1.85, 0.34), fw1ll = vec3(0.60, -1.85, 0.34), fw1r = vec3(-0.33, -1.85, 0.34), fw1rr = vec3(-0.60, -1.85, 0.34),
+}
+local snames = {}
+local si = 0
+v = {data = {nodes = {}}}
+for n, _ in pairs(sn) do v.data.nodes[si] = {name = n, cid = si}; snames[si] = n; si = si + 1 end
+obj = {getNodePosition = function(self, c) return sn[snames[c]] end}
+local sc = require("redbullSteerCheck")
+sc.init({})
+sc.updateGFX(0.02)
+check(math.abs(e.steerAngleFL) < 1e-6 and math.abs(e.steerAngleFR) < 1e-6, "straight wheels read 0 deg")
+-- steer both wheels 5 deg left (forward is -y, left +x): the axles' outer ends swing rearward
+local d = math.rad(-5)
+local function rot(c, p) local r = p - c; return c + vec3(r.x * math.cos(d) + r.y * math.sin(d), -r.x * math.sin(d) + r.y * math.cos(d), r.z) end
+sn.fw1ll = rot(sn.fw1l, sn.fw1ll)
+sn.fw1rr = rot(sn.fw1r, sn.fw1rr)
+e.steerCheck = 1
+sc.updateGFX(0.02)
+check(math.abs(e.steerAngleFL - 5) < 0.01 and math.abs(e.steerAngleFR - 5) < 0.01,
+      string.format("5 deg left lock reads L %+.2f R %+.2f", e.steerAngleFL, e.steerAngleFR))
+
 print(failures == 0 and "all controller checks passed" or (failures .. " check(s) FAILED"))
 os.exit(failures == 0 and 0 or 1)

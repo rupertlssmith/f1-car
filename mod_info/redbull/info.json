@@ -343,7 +343,7 @@
         ],
         [
             "vehicles/redbull/inputmaps/keyboard.json",
-            "0e42d51f95c42125"
+            "20dc9b260cb76d8a"
         ],
         [
             "vehicles/redbull/lowdf.jpg",
@@ -368,6 +368,10 @@
         [
             "vehicles/redbull/lua/controller/redbullGroundEffect.lua",
             "cb4e9261e29e4091"
+        ],
+        [
+            "vehicles/redbull/lua/controller/redbullSteerCheck.lua",
+            "42c1a8cd4544462e"
         ],
         [
             "vehicles/redbull/lua/controller/redbullTraction.lua",
@@ -471,11 +475,11 @@
         ],
         [
             "vehicles/redbull/redbull.interaction.json",
-            "ee04035590c666fc"
+            "92d94c52b17045ab"
         ],
         [
             "vehicles/redbull/redbull.jbeam",
-            "a093f8e27e0cc78d"
+            "18dcc7774c1969e8"
         ],
         [
             "vehicles/redbull/redbull_accessory.data.dds",
@@ -519,7 +523,7 @@
         ],
         [
             "vehicles/redbull/redbull_engine.jbeam",
-            "c410e97ab43e653f"
+            "465a3e695f233b14"
         ],
         [
             "vehicles/redbull/redbull_engine_ao.data.dds",
@@ -623,7 +627,7 @@
         ],
         [
             "vehicles/redbull/redbull_suspension_F.jbeam",
-            "43f4134e256bdee6"
+            "53e8d41398a37e3f"
         ],
         [
             "vehicles/redbull/redbull_suspension_R.jbeam",
@@ -631,7 +635,7 @@
         ],
         [
             "vehicles/redbull/redbull_transaxle.jbeam",
-            "5f2514133c341077"
+            "b62394fb935eef03"
         ],
         [
             "vehicles/redbull/redbull_wing_F.jbeam",

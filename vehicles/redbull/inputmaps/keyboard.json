@@ -8,6 +8,7 @@
     {"control":"g", "action":"biasMinus"},
     {"control":"u", "action":"drsToggle"},
     {"control":"o", "action":"ersMode"},
-    {"control":"k", "action":"tcMode"}
+    {"control":"k", "action":"tcMode"},
+    {"control":"j", "action":"steerCheck"}
   ]
 }
