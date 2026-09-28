@@ -50,7 +50,9 @@ def mass():
         "rx1r": 5, "rx1l": 5, "rx2r": 5, "rx2l": 5, "rx3r": 5, "rx3l": 5, "rx4r": 5, "rx4l": 5})
     weights(f"{V}/redbull_differential_R.jbeam", {"rdiff": DIFF_NODE_WEIGHT})
     # rear crash structure: the F4's 1 kg nodes sit right at the stability limit
-    weights(f"{V}/redbull_crashbox.jbeam", {n: 1.15 for n in ("cb1r", "cb1l", "cb3r", "cb3l")})
+    weights(f"{V}/redbull_crashbox.jbeam", {n: 1.15 for n in ("cb1r", "cb1l")})
+    # upper crash structure carries the rear-wing pylon
+    weights(f"{V}/redbull_crashbox.jbeam", {n: 2.0 for n in ("cb3r", "cb3l", "cb4r", "cb4l")})
     # uprights, brakes, wishbone ends: roughly half the F4's corner mass
     weights(f"{V}/redbull_suspension_F.jbeam", {
         "fh1r": 4, "fh1l": 4, "fh2r": 1, "fh2l": 1, "fh3r": 3, "fh3l": 3, "fh4r": 3, "fh4l": 3, "fh5r": 3, "fh5l": 3})
@@ -98,6 +100,8 @@ def ballast():
     xF, xR = np.linalg.solve(A, b)
     if xF < 0 or xR < 0:
         raise ValueError(f"ballast would be negative (front {xF:.1f}, rear {xR:.1f} kg): car too heavy")
+    if min(xF / sF, xR / sR) * min(min(BALLAST_F.values()), min(BALLAST_R.values())) < 1.0:
+        raise ValueError(f"ballast too small (front {xF:.1f}, rear {xR:.1f} kg): floor nodes would drop under 1 kg")
     new = {n: round(w * xF / sF, 2) for n, w in BALLAST_F.items()}
     new.update({n: round(w * xR / sR, 2) for n, w in BALLAST_R.items()})
     weights(f, new)
@@ -119,7 +123,9 @@ def ballast():
 # changes). Chassis and gearbox nodes get mass instead, paid for by the
 # plank ballast (solved in ballast()).
 MAX_OMEGA_DT = float(os.environ.get("RB14_MAX_OMEGA_DT", 1.65))
-HUB_SPRING_SCALE = 0.40                      # hub beams vs the F4's (hub nodes 0.35 vs 0.55 kg)
+HUB_SPRING_SCALE = 0.55                      # hub beams vs the F4's (hub nodes 0.35 vs 0.55 kg)
+HUB_NODE_WEIGHT = 0.45                       # kg x 32 per rim (was 0.35; F4 0.55)
+CARRIER_DAMP = 400                           # beamDamp floor on the capped wheel-carrier beams
 WHEEL_AXLE_WEIGHT = 4.0                      # kg, wheel axle nodes (F4: 5)
 CHASSIS_MIN_MASS = {"rt4r": 4.5, "rt4l": 4.5}
 HUB_TORSION_F = 80000                        # was 200000 (F4)
@@ -142,13 +148,23 @@ def stiffness():
         a0, b0 = _part_block(orig, part.replace("redbull", "fr04"))
         text = je._read(f)
         a, b = _part_block(text, part)
-        pat = re.compile(r'("beamSpring"\s*:\s*)(\d+(?:\.\d+)?)')
-        src = [float(m.group(2)) for m in pat.finditer(orig[a0:b0])]
+        pat = re.compile(r'("beamSpring"\s*:\s*)(\d+(?:\.\d+)?)(\s*,\s*"beamDamp"\s*:\s*\d+(?:\.\d+)?)?')
+        src = [(float(m.group(2)), m.group(3)) for m in pat.finditer(orig[a0:b0])]
         block = text[a:b]
         if len(pat.findall(block)) != len(src):
             raise ValueError(f"{part}: beamSpring count differs from the F4")
         it = iter(src)
-        block = pat.sub(lambda m: m.group(1) + "%d" % min(next(it), cap), block)
+
+        def cap_row(m):
+            k, damp = next(it)
+            out = m.group(1) + "%d" % min(k, cap)
+            if damp:
+                d = float(re.search(r'([\d.]+)$', damp).group(1))
+                if k > cap and part != "redbull_steering":
+                    d = max(d, CARRIER_DAMP)      # capped carrier beams: damp the wheel judder
+                out += re.sub(r'[\d.]+$', "%d" % d, damp)
+            return out
+        block = pat.sub(cap_row, block)
         je._write(f, text[:a] + block + text[b:])
     # the front steering-arm rigidifier torsionbar has ~0.13 m arms, so its
     # 200 kNm/rad acts like a ~10 MN/m spring on the light upright nodes
@@ -245,6 +261,73 @@ def torque_paths():
         je._write(f, text[:a] + block + text[b:])
 
 
+# ------------------------------------------------------------- steering
+# The F4's steering actuators (hydros) move at inRate/outRate 1.25 -- slower
+# than BeamNG's default 2 -- so the rack lagged the input by up to ~0.8 s
+# lock to centre: vague, and off-centre for a moment after a sharp turn
+# (round 7). F1 steering is direct: faster actuators, more road-wheel angle
+# per input (factor), fewer steering-wheel degrees to full lock.
+STEER_RATE = 4.0
+STEER_FACTOR = 0.095            # hydro length change at full input (F4 0.072)
+STEER_WHEEL_LOCK = 180          # steering-wheel degrees at full lock (F4 230)
+
+
+def steering():
+    f = f"{V}/redbull_suspension_F.jbeam"
+    for side, sign in (("r", ""), ("l", "-")):
+        je.set_all(f, r'\["fh6%s","fx3[rl]", \{"factor":\s*-?[\d.]+,"steeringWheelLock":\d+, "inRate":[\d.]+,"outRate":[\d.]+\}\]' % side,
+                   '["fh6%s","fx3%s", {"factor":%s%s,"steeringWheelLock":%d, "inRate":%s,"outRate":%s}]'
+                   % (side, "l" if side == "r" else "r", sign, STEER_FACTOR, STEER_WHEEL_LOCK, STEER_RATE, STEER_RATE))
+
+
+# ------------------------------------------------------------ rear wing
+# Round 7: the rear wing flexed back and forth at speed. It hung only from
+# its endplates and beam wing (F4 stiffness, sized for a fraction of the
+# RB14's ~6 kN of rear-wing downforce) on 0.25-0.4 kg nodes. Now: a central
+# pylon (the RB14's swan neck) from the wing's trailing edge -- which DRS
+# doesn't move -- to the crash structure, the wing's own beams 3x stiffer
+# and better damped, a stiffer DRS actuator, and ~10 kg of wing assembly.
+WING_R_STIFF = 3.0
+WING_R_DAMP = 150
+WING_R_WEIGHTS = {"wing": 0.6, "beamwing": 0.8, "beamwing_mid": 0.9, "endplate": 0.6}
+PYLON = dict(spring=1201000, damp=200, deform=60000, strength=150000)
+
+
+def rear_wing():
+    import re
+    f = f"{V}/redbull_wing_R.jbeam"
+    text = je._read(f)
+    for group, key in (("redbull_wing_R", "wing"), ("redbull_wing_B", "beamwing"), ("redbull_endplate_RR", "endplate")):
+        text, n = re.subn(r'(\{"nodeWeight":)[\d.]+(\},\r\n         \{"group":"%s"\})' % group,
+                          lambda m: m.group(1) + str(WING_R_WEIGHTS[key]) + m.group(2), text)
+        if n != 1:
+            raise ValueError(f"rear wing: node weight row for {group} not found")
+    text = re.sub(r'(\["bwg1",\s*0\.0, [\d.]+, [\d.]+,\{"nodeWeight":)[\d.]+', lambda m: m.group(1) + str(WING_R_WEIGHTS["beamwing_mid"]), text)
+    # wing beams from the F4 originals (the "{spring, damp}" option rows)
+    orig = open("vehicles/fr04/fr04_wing_R.jbeam", encoding="utf-8", newline="").read()
+    pat = re.compile(r'\{"beamSpring":(\d+),"beamDamp":(\d+)\}')
+    src = [(int(a), int(b)) for a, b in pat.findall(orig)]
+    if len(pat.findall(text)) != len(src):
+        raise ValueError("rear wing: option rows differ from the F4")
+    it = iter(src)
+
+    def row(m):
+        k, d = next(it)
+        if k >= 50000:                       # structure, not the weak helper links
+            k, d = int(k * WING_R_STIFF), max(d, WING_R_DAMP)
+        return '{"beamSpring":%d,"beamDamp":%d}' % (k, d)
+    text = pat.sub(row, text)
+    # pylon, inline options so nothing carries on into later parts
+    text = re.sub(r'          //pylon \(f1_setup\.py\).*?\r\n(          \["rwg2","cb[34][rl]", \{[^}]*\}\],\r\n)+', "", text, flags=re.S)
+    opts = ('{"beamSpring":%d, "beamDamp":%d, "beamDeform":%d, "beamStrength":%d, "breakGroup":"wing_R_pylon"}'
+            % (PYLON["spring"], PYLON["damp"], PYLON["deform"], PYLON["strength"]))
+    block = "          //pylon (f1_setup.py): swan neck from the trailing edge to the crash structure\r\n" + "".join(
+        '          ["rwg2","%s", %s],\r\n' % (n, opts) for n in ("cb3r", "cb3l", "cb4r", "cb4l"))
+    at = text.index('    ],\r\n    "hydros": [')
+    text = text[:at] + block + text[at:]
+    je._write(f, text)
+
+
 def check_stability():
     import setup_report as sr
     worst = 0.0
@@ -294,7 +377,7 @@ def wheels():
     for f in (f"{W}/redbull_wheels_F_13.jbeam", f"{W}/redbull_wheels_R_13.jbeam"):
         je.set_all(f, r'\{"nodeWeight":[\d.]+\}', '{"nodeWeight":%s}' % WHEEL_AXLE_WEIGHT)
         # rims + hubs + discs: 32 hub nodes x 0.35 kg = 11 kg per wheel (were 0.55)
-        je.set_all(f, r'\{"hubNodeWeight":[\d.]+\}', '{"hubNodeWeight":0.35}')
+        je.set_all(f, r'\{"hubNodeWeight":[\d.]+\}', '{"hubNodeWeight":%s}' % HUB_NODE_WEIGHT)
 
 
 # --------------------------------------------------------------- tyres
@@ -303,14 +386,19 @@ def wheels():
 # sensitivity, BeamNG's mu = full + (noLoad - full) * exp(-slope * load):
 # ~1.9 at 2 kN (slow corners, ~2 g) falling to ~1.26 at 7 kN (fast corners
 # with 3x-weight downforce, ~4.5 g).
+# The 405 mm rears get ~5 % more grip than the 305 mm fronts (round 7: the
+# rear let go too easily; wider tyres, same load sensitivity).
+TYRE_GRIP = {"F": (2.49, 1.00), "R": (2.61, 1.05)}      # noLoadCoef, fullLoadCoef
+
+
 def tyres():
     for axle, node_w in (("F", 0.30), ("R", 0.34)):
         f = f"{W}/redbull_tires_{axle}_13.jbeam"
         dry, wet = f"tire_{axle}_redbull", f"tire_{axle}_redbull_wet"
         for part in (dry, wet):
             je.set_in_part(f, part, r'\{"nodeWeight":[\d.]+\}', '{"nodeWeight":%s}' % node_w)
-        je.set_in_part(f, dry, r'\{"noLoadCoef":[\d.]+\}', '{"noLoadCoef":2.49}')
-        je.set_in_part(f, dry, r'\{"fullLoadCoef":[\d.]+\}', '{"fullLoadCoef":1.0}')
+        je.set_in_part(f, dry, r'\{"noLoadCoef":[\d.]+\}', '{"noLoadCoef":%s}' % TYRE_GRIP[axle][0])
+        je.set_in_part(f, dry, r'\{"fullLoadCoef":[\d.]+\}', '{"fullLoadCoef":%s}' % TYRE_GRIP[axle][1])
         je.set_in_part(f, dry, r'\{"loadSensitivitySlope":[\d.]+\}', '{"loadSensitivitySlope":0.00025}')
         # wets: less grip than slicks on a dry track, tread for standing water
         je.set_in_part(f, wet, r'\{"noLoadCoef":[\d.]+\}', '{"noLoadCoef":2.10}')
@@ -348,13 +436,17 @@ def fuel():
 # height slider moves the car by that many metres.
 SUSP = {
     # axle: spring, heave, arb, bump, rebound, packer gap (m wheel travel)
-    "F": dict(spring=355000, heave=70000, arb=220000, bump=14000, rebound=24000, packer=0.025),
-    "R": dict(spring=495000, heave=65000, arb=130000, bump=19000, rebound=30000, packer=0.032),
+    "F": dict(spring=355000, heave=70000, arb=260000, bump=14000, rebound=24000, packer=0.025),
+    "R": dict(spring=495000, heave=65000, arb=110000, bump=19000, rebound=30000, packer=0.032),
 }
 # Starting values only: _calibrate() replaces them with values solved on the
 # setup_report FEM (spring preload for zero static sag, spring-beam motion
 # ratio, torsionbar factors so the variables read as wheel rate).
 PRELOAD = {"F": 2650.0, "R": 3700.0}    # static spring-beam force (N)
+# Baseline sits this much above the modelled (RB14 model) ride height: the
+# plank and front wing endplates scraped at speed at the modelled height
+# (round 7). Spring Height 0 = this raised baseline.
+RIDE_RAISE = {"F": 0.010, "R": 0.010}
 MOTION = {"F": 0.55, "R": 0.50}         # spring-beam travel / wheel travel
 HEAVE_ARM2 = {"F": 0.40, "R": 0.40}     # heave torsionbar: k_t = rate * HEAVE_ARM2
 ARB_ARM2 = {"F": 0.1225, "R": 0.1225}   # ARB torsionbar:   k_t = rate * ARB_ARM2
@@ -374,7 +466,7 @@ def suspension():
 # The F4 set toe through fixed tie-rod precompression, which on the RB14
 # geometry gives ~1.3 deg front toe-in; toe gets its own variables here and
 # the defaults are solved on the setup_report FEM.
-ALIGN = {"camber_F": -3.2, "camber_R": -1.8, "toe_F": -0.10, "toe_R": 0.25}
+ALIGN = {"camber_F": -3.2, "camber_R": -1.8, "toe_F": -0.10, "toe_R": 0.40}   # rear toe-in 0.25 -> 0.40 (round 7: rear too loose)
 
 
 def _alignment():
@@ -513,8 +605,8 @@ def _write_suspension():
         _dedupe_rows(f, (f"$heave_spring_{a}", f"$packer_{a}"))
         # spring preload: static load at the modelled height, plus spring height
         je.set_all(f, r'"precompressionRange":"\$=[^"]*"',
-                   '"precompressionRange":"$=($springheight_%s*(%s*$spring_%s + $heave_spring_%s/%s) + %s)/$spring_%s"'
-                   % (a, MOTION[a], a, a, MOTION[a], PRELOAD[a], a))
+                   '"precompressionRange":"$=(($springheight_%s + %s)*(%s*$spring_%s + $heave_spring_%s/%s) + %s)/$spring_%s"'
+                   % (a, RIDE_RAISE[a], MOTION[a], a, a, MOTION[a], PRELOAD[a], a))
         # pushrods/pullrods only drive the rockers: no preload of their own
         je.set_all(f, r'"breakGroupType":1,"beamPrecompression":(?:"\$=\(\$springheight_%s \+ 1\.0\d\)"|1\.0)' % a,
                    '"breakGroupType":1,"beamPrecompression":1.0')
@@ -660,6 +752,7 @@ def gearbox():
                '"uiName":"Rear Differential","defaultVirtualInertia":0.25}')
     je.set_all(d, r'"gearRatio":\s*(?:[\d.]+|"\$finaldrive_R")\s*,', '"gearRatio":"$finaldrive_R",')
     je.set_in_part(d, "redbull_differential_R", r'"name":"[^"]*"', '"name":"Limited Slip Rear Differential"')
+    je.set_all(d, r'\["\$lsdlockcoef_R", "range", "", "Differentials", [\d.]+,', '["$lsdlockcoef_R", "range", "", "Differentials", 0.20,')
     text = je._read(d)
     if '"$finaldrive_R"' not in text.split('"variables"')[-1] or '"variables"' not in text:
         i = text.index('    "differential_R": {')
@@ -696,7 +789,7 @@ def brakes():
     je.set_in_part(f, "redbull_brake_R", r'"name":"[^"]*"', '"name":"Rear Carbon Brakes"')
     m = f"{V}/redbull.jbeam"
     je.set_all(m, r'\["\$brakebias", "range", "", "Brakes", [^\]]*\]',
-               '["$brakebias", "range", "", "Brakes", 0.57, 0.50, 0.64, "Brake Bias", "Share of brake torque on the front wheels", {"minDis":50, "maxDis":64}]')
+               '["$brakebias", "range", "", "Brakes", 0.58, 0.50, 0.64, "Brake Bias", "Share of brake torque on the front wheels", {"minDis":50, "maxDis":64}]')
     je.set_all(m, r'\["flyBrakeBias", \{[^}]*\}\]',
                '["flyBrakeBias", {"startBias":"$brakebias", "torqueFront":"$=$brakestrength*%d", "torqueRear":"$=$brakestrength*%d", '
                '"minBias":0.50, "maxBias":0.64}]' % (BRAKE_TQ, BRAKE_TQ))
@@ -711,9 +804,9 @@ def brakes():
 # its downforce, and the body picks up the drag of the exposed 13" wheels
 # and the cooling the F4 doesn't model.
 AERO = {
-    # factors solved with setup_report for ClA 5.0, 43 % front, floor 40 %
-    "redbull_wing_F": dict(lift=1.257, drag=1.257),   # L/D ~7 (in ground effect)
-    "redbull_wing_R": dict(lift=1.015, drag=4.3),       # L/D ~3.5, like a real high-AoA rear wing
+    # factors solved with setup_report for ClA 5.0, 41 % front (round 7: 43 % let the rear go too easily), floor 40 %
+    "redbull_wing_F": dict(lift=1.195, drag=1.195),   # L/D ~7 (in ground effect)
+    "redbull_wing_R": dict(lift=1.069, drag=4.53),       # L/D ~3.5, like a real high-AoA rear wing
     "redbull_floor": dict(lift=3.97, drag=1.0),
     "redbull_body": dict(lift=1.0, drag=2.0),         # + exposed wheels, cooling
 }
@@ -798,7 +891,7 @@ def drs_hydros():
         L0 = np.linalg.norm(b - a)
         L1 = np.linalg.norm(b + np.array([0, 0, DRS_LIFT]) - a)
         rows.append('        ["rep1%s","rwg1%s", {"factor":%.4f, "inputSource":"drs", "inputFactor":1, "inRate":4, "outRate":4, '
-                    '"beamSpring":601000, "beamDamp":80, "beamDeform":"FLT_MAX", "beamStrength":6000, "breakGroup":"endplates_R%s"}],\r\n'
+                    '"beamSpring":2001000, "beamDamp":200, "beamDeform":"FLT_MAX", "beamStrength":20000, "breakGroup":"endplates_R%s"}],\r\n'
                     % (side, side, (L1 - L0) / L0, side.upper()))
     # every setting inline: option rows would carry on into the steering
     # hydro of a later part
@@ -829,8 +922,8 @@ def ground_effect():
     q300 = 0.5 * sr.RHO * (300 / 3.6) ** 2
     cla = -per["redbull_floor"][0] / q300
     radius = 0.335
-    h0F = (v.pos["fl1l"][2] + v.pos["fl1r"][2]) / 2 - (v.pos["fw1l"][2] + v.pos["fw1r"][2]) / 2 + radius
-    h0R = v.pos["fl4"][2] - (v.pos["rw1l"][2] + v.pos["rw1r"][2]) / 2 + radius
+    h0F = (v.pos["fl1l"][2] + v.pos["fl1r"][2]) / 2 - (v.pos["fw1l"][2] + v.pos["fw1r"][2]) / 2 + radius + RIDE_RAISE["F"]
+    h0R = v.pos["fl4"][2] - (v.pos["rw1l"][2] + v.pos["rw1r"][2]) / 2 + radius + RIDE_RAISE["R"]
     fmax, rear = 8000, 0.64
     part = ('"redbull_floor_groundeffect": {\r\n'
             '    "information":{\r\n'
@@ -936,6 +1029,8 @@ if __name__ == "__main__":
     power_unit()
     gearbox()
     brakes()
+    steering()
+    rear_wing()
     aero()
     hybrid()
     ground_effect()

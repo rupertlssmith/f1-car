@@ -1,7 +1,7 @@
 {
   "Config Type": "Custom",
   "Configuration": "Sweep 02 · Roll Balance front+ (2/5)",
-  "Description": "Setup sweep 02, step 2 of 5: roll balance front+. Everything else is Baseline. Tuning menu: Suspension > Anti-Roll Bar (front and rear) (arb_spring_F 260000, arb_spring_R 110000). Offline estimate: ClA 5.00 m², 43% front at 300 km/h, front roll stiffness 62%.",
+  "Description": "Setup sweep 02, step 2 of 5: roll balance front+. Everything else is Baseline. Tuning menu: Suspension > Anti-Roll Bar (front and rear) (arb_spring_F 300000, arb_spring_R 90000). Offline estimate: ClA 5.00 m², 41% front at 300 km/h, front roll stiffness 67%.",
   "Drivetrain": "RWD",
   "Fuel Type": "Gasoline",
   "Induction Type": "Turbo",

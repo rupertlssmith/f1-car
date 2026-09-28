@@ -296,6 +296,28 @@ Every config: 1.9 g at low speed, 5-6 g braking from 300 km/h.
   test). Rings are now 0.26 m wide, between the axle nodes like the F4's
   (tyres stay 305 / 405 mm); `f1_setup.py` refuses any node within 25 mm of
   a spinning wheel's rim/sidewall/tread section (closest now 38 mm; F4 40).
+- **Round 7 (sixth in-game test):**
+  - *Rear wing flexing at speed:* removing the leading edge's vertical mounts
+    for DRS had left the wing nearly free (the linear model: ~200 mm at the
+    trailing edge under its 6 kN). Now a central pylon (swan neck) from the
+    trailing edge -- which DRS doesn't move -- to the crash structure, the
+    wing's beams 3x stiffer and better damped, a stiffer DRS actuator,
+    ~10 kg of wing assembly: 7 mm at the leading edge, 2 mm at the trailing.
+  - *Wheel judder in skids / burnouts:* rim beams 55 % of the F4's (was 40 %)
+    on 0.45 kg rim nodes (was 0.35), damping on the capped wheel-carrier
+    beams raised to 400.
+  - *Steering vague and off-centre after sharp turns:* the steering
+    actuators moved at 1.25 (slower than BeamNG's default of 2), lagging the
+    input up to ~0.8 s lock to centre. Now 4, with ~32 % more road-wheel
+    angle per input and 180 deg of steering wheel to full lock (was 230).
+    The lock stops still never engage; the tyres clear the front wing by
+    51 mm up to 40 deg of steer.
+  - *Rear too loose:* aero balance 43 -> 41 % front, front roll stiffness
+    58 -> 62 %, rear toe-in 0.25 -> 0.40 deg, rear tyres ~5 % more grip
+    than the fronts, brake bias 58 %, diff power lock 0.25 -> 0.20.
+  - *Underbody scraping:* baseline ride height +10 mm front and rear
+    (Spring Height 0 is the new baseline).
+  - Sweeps are now relative to Baseline (`build_sweeps()`), so they follow it.
 - **Rear tyre clearance:** the rear floor / diffuser edge nodes sat 20-50 mm
   inside the 405 mm rear tyres' inner face; moved ~8 cm inboard (aero
   factors re-solved for the smaller floor).

@@ -25,7 +25,7 @@
     ],
     "variables": [
         ["name", "type", "unit", "category", "default", "min", "max", "title", "description"],
-        ["$brakebias", "range", "", "Brakes", 0.57, 0.50, 0.64, "Brake Bias", "Share of brake torque on the front wheels", {"minDis":50, "maxDis":64}],
+        ["$brakebias", "range", "", "Brakes", 0.58, 0.50, 0.64, "Brake Bias", "Share of brake torque on the front wheels", {"minDis":50, "maxDis":64}],
         ["$brakestrength", "range", "", "Brakes", 1, 0.6, 1.0, "Brake Force Multiplier", "Scales the overall brake torque for this setup", {"minDis":60, "maxDis":100}],
         ["$ffbstrength", "range", "", "Chassis", 1, 0.5, 1.5, "Setup-Specific Force Feedback Multiplier", "Scales the force feedback strength for this setup", {"minDis":50, "maxDis":150}],
     ],

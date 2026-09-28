@@ -9,7 +9,7 @@ e.g. "Sweep 01 · Front Wing -5° (1/5)", and a description of what it tunes)
 and a thumbnail stamped with the same label; plus plans/sweeps.md, the test
 sheet. Every car is checked like the main configs (solver stability, beam
 strength, wheel clearance). Old sweep files are removed first, so editing
-SWEEPS and re-running keeps the set exact.
+build_sweeps() and re-running keeps the set exact; steps are relative to Baseline.
 
 Each sweep has 5 steps with the baseline value in the middle (3/5): if the
 best-feeling car is 1/5 or 5/5, widen that sweep past it and re-run.
@@ -30,36 +30,47 @@ import f1_setup as fs  # noqa: E402
 
 V = "vehicles/redbull"
 
-# roll balance pairs (front ARB, rear ARB), N/m of wheel rate; 3rd = baseline
-ROLL = [(300000, 90000), (260000, 110000), (220000, 130000), (180000, 150000), (140000, 170000)]
+# Every sweep is relative to Baseline (read from baseline.pc), so the steps
+# follow when the baseline changes. Step 3/5 is always the baseline value.
+ROLL = [(+80000, -40000), (+40000, -20000), (0, 0), (-40000, +20000), (-80000, +40000)]   # front, rear ARB offsets
+ROLL_LABELS = ("more front", "front+", "baseline", "rear+", "more rear")
 HEAVE = [0.0, 0.5, 1.0, 1.5, 2.0]
 
-# key, title, where it is in the tuning menu, [(label, {vars})]
-SWEEPS = [
-    ("wingF", "Front Wing", "Aerodynamics > Front Wing Angle",
-     [("%+d°" % a, {"$wing_angle_F": a}) for a in (-5, -4, -3, -2, -1)]),
-    ("roll", "Roll Balance", "Suspension > Anti-Roll Bar (front and rear)",
-     [(label, {"$arb_spring_F": f, "$arb_spring_R": r}) for label, (f, r) in
-      zip(("more front", "front+", "baseline", "rear+", "more rear"), ROLL)]),
-    ("diffpower", "Diff Power Lock", "Differentials > Power Lock Rate",
-     [("%.2f" % x, {"$lsdlockcoef_R": x}) for x in (0.05, 0.15, 0.25, 0.35, 0.45)]),
-    ("diffcoast", "Diff Coast Lock", "Differentials > Coast Lock Rate",
-     [("%.2f" % x, {"$lsdlockcoefrev_R": x}) for x in (0.0, 0.06, 0.12, 0.18, 0.24)]),
-    ("heave", "Heave Springs", "Suspension > Heave Spring (front and rear)",
-     [("x%.1f" % k, {"$heave_spring_F": round(70000 * k), "$heave_spring_R": round(65000 * k)}) for k in HEAVE]),
-    ("height", "Ride Height", "Suspension > Spring Height (front and rear)",
-     [("%+d mm" % d, {"$springheight_F": d / 1000, "$springheight_R": d / 1000}) for d in (-6, -3, 0, 3, 6)]),
-    ("rake", "Rake", "Suspension > Spring Height (rear only)",
-     [("rear %+d mm" % d, {"$springheight_R": d / 1000}) for d in (-8, -4, 0, 4, 8)]),
-    ("tyres", "Tyre Pressures", "Wheels > Tire Pressure (front and rear)",
-     [("%g/%g psi" % (f, f - 1.5), {"$tirepressure_F": f, "$tirepressure_R": f - 1.5}) for f in (17, 19, 21, 23, 25)]),
-    ("bias", "Brake Bias", "Brakes > Brake Bias",
-     [("%d%% front" % round(b * 100), {"$brakebias": b}) for b in (0.53, 0.55, 0.57, 0.59, 0.61)]),
-]
-# the two balance levers that interact most, as a 3 x 3 grid
-GRID = ("wingxroll", "Wing x Roll", "Front Wing Angle and Anti-Roll Bars",
-        [("wing %+d° / roll %s" % (w, rl), {"$wing_angle_F": w, "$arb_spring_F": ROLL[ri][0], "$arb_spring_R": ROLL[ri][1]})
-         for w in (-5, -3, -1) for rl, ri in (("front", 1), ("base", 2), ("rear", 3))])
+
+def build_sweeps(b):
+    """(key, title, tuning-menu place, [(label, {vars})]) from the baseline vars b."""
+    clip = lambda x: max(0.0, round(x, 3))
+    wf, af, ar = b["$wing_angle_F"], b["$arb_spring_F"], b["$arb_spring_R"]
+    return [
+        ("wingF", "Front Wing", "Aerodynamics > Front Wing Angle",
+         [("%+d°" % (wf + d), {"$wing_angle_F": wf + d}) for d in (-2, -1, 0, 1, 2)]),
+        ("roll", "Roll Balance", "Suspension > Anti-Roll Bar (front and rear)",
+         [(lab, {"$arb_spring_F": af + df, "$arb_spring_R": ar + dr}) for lab, (df, dr) in zip(ROLL_LABELS, ROLL)]),
+        ("diffpower", "Diff Power Lock", "Differentials > Power Lock Rate",
+         [("%.2f" % clip(b["$lsdlockcoef_R"] + d), {"$lsdlockcoef_R": clip(b["$lsdlockcoef_R"] + d)}) for d in (-0.2, -0.1, 0, 0.1, 0.2)]),
+        ("diffcoast", "Diff Coast Lock", "Differentials > Coast Lock Rate",
+         [("%.2f" % clip(b["$lsdlockcoefrev_R"] + d), {"$lsdlockcoefrev_R": clip(b["$lsdlockcoefrev_R"] + d)}) for d in (-0.12, -0.06, 0, 0.06, 0.12)]),
+        ("heave", "Heave Springs", "Suspension > Heave Spring (front and rear)",
+         [("x%.1f" % k, {"$heave_spring_F": round(b["$heave_spring_F"] * k), "$heave_spring_R": round(b["$heave_spring_R"] * k)}) for k in HEAVE]),
+        ("height", "Ride Height", "Suspension > Spring Height (front and rear)",
+         [("%+d mm" % d, {"$springheight_F": round(b["$springheight_F"] + d / 1000, 4), "$springheight_R": round(b["$springheight_R"] + d / 1000, 4)})
+          for d in (-6, -3, 0, 3, 6)]),
+        ("rake", "Rake", "Suspension > Spring Height (rear only)",
+         [("rear %+d mm" % d, {"$springheight_R": round(b["$springheight_R"] + d / 1000, 4)}) for d in (-8, -4, 0, 4, 8)]),
+        ("tyres", "Tyre Pressures", "Wheels > Tire Pressure (front and rear)",
+         [("%g/%g psi" % (b["$tirepressure_F"] + d, b["$tirepressure_R"] + d),
+           {"$tirepressure_F": b["$tirepressure_F"] + d, "$tirepressure_R": b["$tirepressure_R"] + d}) for d in (-4, -2, 0, 2, 4)]),
+        ("bias", "Brake Bias", "Brakes > Brake Bias",
+         [("%d%% front" % round((b["$brakebias"] + d) * 100), {"$brakebias": round(b["$brakebias"] + d, 3)}) for d in (-0.04, -0.02, 0, 0.02, 0.04)]),
+    ]
+
+
+def build_grid(b):
+    """The two balance levers that interact most, as a 3 x 3 grid."""
+    wf, af, ar = b["$wing_angle_F"], b["$arb_spring_F"], b["$arb_spring_R"]
+    return ("wingxroll", "Wing x Roll", "Front Wing Angle and Anti-Roll Bars",
+            [("wing %+d° / roll %s" % (wf + dw, rl), {"$wing_angle_F": wf + dw, "$arb_spring_F": af + ROLL[ri][0], "$arb_spring_R": ar + ROLL[ri][1]})
+             for dw in (-2, 0, 2) for rl, ri in (("front", 1), ("base", 2), ("rear", 3))])
 
 
 def summary(v):
@@ -114,7 +125,9 @@ def main():
              "aero balance at 300 km/h, roll F = front share of roll stiffness, sag =",
              "static ride-height change (+ = lower). The aero numbers use the modelled",
              "ride height, so sweeps 06-07 only show their height change offline.", ""]
-    all_sweeps = [(i + 1, s) for i, s in enumerate(SWEEPS)] + [(len(SWEEPS) + 1, GRID)]
+    bv = {k: float(x) for k, x in base["vars"].items()}
+    sweeps = build_sweeps(bv)
+    all_sweeps = [(i + 1, sw) for i, sw in enumerate(sweeps)] + [(len(sweeps) + 1, build_grid(bv))]
     count = 0
     for num, (key, title, where, levels) in all_sweeps:
         sheet += [f"## Sweep {num:02d} · {title}", "", f"Tuning menu: {where}.", "",
@@ -124,7 +137,7 @@ def main():
             name = f"sweep_{key}_{n}"
             vars_ = dict(base["vars"])
             vars_.update(over)
-            is_base = all(abs(float(base["vars"][k]) - float(x)) < 1e-9 for k, x in over.items())
+            is_base = all(abs(float(base["vars"][k]) - float(x)) < 1e-6 for k, x in over.items())
             ui = f"Sweep {num:02d} · {title} {label} ({n}/{len(levels)}{', baseline' if is_base else ''})"
             pc = {**base, "vars": {k: vars_[k] for k in sorted(vars_)}}
             with open(f"{V}/{name}.pc", "w", newline="\n") as fh:

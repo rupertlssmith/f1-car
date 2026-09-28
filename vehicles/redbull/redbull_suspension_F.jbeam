@@ -99,7 +99,7 @@
           {"disableMeshBreaking":false,"disableTriangleBreaking":false},
           {"beamPrecompression":1.0,"beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
           {"beamDeform":294000,"beamStrength":1200000},
-          {"beamSpring":4500000,"beamDamp":100},
+          {"beamSpring":4500000,"beamDamp":400},
           //front hub
           ["fh4r","fh1r"],
           ["fh4l","fh1l"],
@@ -179,27 +179,27 @@
 
           //attach to wheel
           {"optional":true},
-          {"beamSpring":4500000,"beamDamp":100},
+          {"beamSpring":4500000,"beamDamp":400},
           {"beamDeform":360400,"beamStrength":3200400},
           {"breakGroup":"wheel_FR"},
           ["fh1r","fw1r", {"name":"axle_FR"}],
-          ["fh3r","fw1r", {"beamSpring":4500000,"beamDamp":20}],
+          ["fh3r","fw1r", {"beamSpring":4500000,"beamDamp":400}],
           ["fh4r","fw1r"],
           ["fh5r","fw1r"],
           ["fw2r","fw1r", {"beamSpring":3501000,"beamDamp":50}],
           ["fh1r","fw1rr"],
-          ["fh3r","fw1rr", {"beamSpring":4500000,"beamDamp":20}],
+          ["fh3r","fw1rr", {"beamSpring":4500000,"beamDamp":400}],
           ["fh4r","fw1rr", {"beamDeform":350000}],
           ["fh5r","fw1rr"],
           ["fw2r","fw1rr", {"beamSpring":3501000,"beamDamp":50}],
           {"breakGroup":"wheel_FL"},
           ["fh1l","fw1l", {"name":"axle_FL"}],
-          ["fh3l","fw1l", {"beamSpring":4500000,"beamDamp":20}],
+          ["fh3l","fw1l", {"beamSpring":4500000,"beamDamp":400}],
           ["fh4l","fw1l"],
           ["fh5l","fw1l"],
           ["fw2l","fw1l", {"beamSpring":3501000,"beamDamp":50}],
           ["fh1l","fw1ll"],
-          ["fh3l","fw1ll", {"beamSpring":4500000,"beamDamp":20}],
+          ["fh3l","fw1ll", {"beamSpring":4500000,"beamDamp":400}],
           ["fh4l","fw1ll", {"beamDeform":350000}],
           ["fh5l","fw1ll"],
           ["fw2l","fw1ll", {"beamSpring":3501000,"beamDamp":50}],
@@ -484,9 +484,9 @@
           //IMPORTANT: if precompressionRange is ~= nil then it supersedes beamPrecompression.
           //The case() is for backwards compatibility for old configs containing the "rideheight_F" variable.
           //To change the base ride height, edit the springheight_F offset in the expression.
-          ["fh1r","fs1", {"breakGroup":["lowerarm_FR","upperarm_FR"],"name":"spring_FR", "beamPrecompression":"$=$rideheight_F", "precompressionRange":"$=($springheight_F*(0.6124*$spring_F + $heave_spring_F/0.6124) + 5031.0)/$spring_F",
+          ["fh1r","fs1", {"breakGroup":["lowerarm_FR","upperarm_FR"],"name":"spring_FR", "beamPrecompression":"$=$rideheight_F", "precompressionRange":"$=(($springheight_F + 0.01)*(0.6124*$spring_F + $heave_spring_F/0.6124) + 4968.0)/$spring_F",
               "soundFile":"event:>Vehicle>Suspension>car_modn_med_01>spring_compress_01","colorFactor":0.4,"attackFactor":60,"volumeFactor":1.5,"decayFactor":40,"noiseFactor":0.01,"pitchFactor":1.0,"maxStress":2000}],
-          ["fh1l","fs1", {"breakGroup":["lowerarm_FL","upperarm_FL"],"name":"spring_FL", "beamPrecompression":"$=$rideheight_F", "precompressionRange":"$=($springheight_F*(0.6124*$spring_F + $heave_spring_F/0.6124) + 5031.0)/$spring_F",
+          ["fh1l","fs1", {"breakGroup":["lowerarm_FL","upperarm_FL"],"name":"spring_FL", "beamPrecompression":"$=$rideheight_F", "precompressionRange":"$=(($springheight_F + 0.01)*(0.6124*$spring_F + $heave_spring_F/0.6124) + 4968.0)/$spring_F",
               "soundFile":"event:>Vehicle>Suspension>car_modn_med_01>spring_compress_01","colorFactor":0.4,"attackFactor":60,"volumeFactor":1.5,"decayFactor":40,"noiseFactor":0.01,"pitchFactor":1.0,"maxStress":2000}],
           //damper
           {"beamPrecompression":1, "beamType":"|BOUNDED","beamLongBound":1, "beamShortBound":1},
@@ -540,7 +540,7 @@
     ],
     "variables": [
         ["name", "type", "unit", "category", "default", "min", "max", "title", "description"],
-        ["$arb_spring_F", "range", "N/m", "Suspension", 220000, 0, 400000, "Anti-Roll Bar", "Extra wheel rate in roll from the anti-roll bar", {"stepDis":5000, "subCategory":"Front"}]
+        ["$arb_spring_F", "range", "N/m", "Suspension", 260000, 0, 400000, "Anti-Roll Bar", "Extra wheel rate in roll from the anti-roll bar", {"stepDis":5000, "subCategory":"Front"}]
     ],
     "beams": [
           ["id1:", "id2:"],
@@ -677,8 +677,8 @@
             ["id1:","id2:"],
             {"beamPrecompression":1.0, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
             {"beamSpring":10000000,"beamDamp":25,"beamDeform":"FLT_MAX","beamStrength":277500},
-            ["fh6r","fx3l", {"factor": 0.072,"steeringWheelLock":230, "inRate":1.25,"outRate":1.25}],
-            ["fh6l","fx3r", {"factor":-0.072,"steeringWheelLock":230, "inRate":1.25,"outRate":1.25}],
+            ["fh6r","fx3l", {"factor":0.095,"steeringWheelLock":180, "inRate":4.0,"outRate":4.0}],
+            ["fh6l","fx3r", {"factor":-0.095,"steeringWheelLock":180, "inRate":4.0,"outRate":4.0}],
             {"beamPrecompression":1.0, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
             
     ],

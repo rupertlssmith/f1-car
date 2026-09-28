@@ -1,7 +1,7 @@
 {
   "Config Type": "Custom",
   "Configuration": "Sweep 05 · Heave Springs x0.5 (2/5)",
-  "Description": "Setup sweep 05, step 2 of 5: heave springs x0.5. Everything else is Baseline. Tuning menu: Suspension > Heave Spring (front and rear) (heave_spring_F 35000, heave_spring_R 32500). Offline estimate: ClA 5.00 m², 43% front at 300 km/h, front roll stiffness 58%.",
+  "Description": "Setup sweep 05, step 2 of 5: heave springs x0.5. Everything else is Baseline. Tuning menu: Suspension > Heave Spring (front and rear) (heave_spring_F 35000, heave_spring_R 32500). Offline estimate: ClA 5.00 m², 41% front at 300 km/h, front roll stiffness 62%.",
   "Drivetrain": "RWD",
   "Fuel Type": "Gasoline",
   "Induction Type": "Turbo",

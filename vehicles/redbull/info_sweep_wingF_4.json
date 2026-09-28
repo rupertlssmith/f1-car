@@ -1,7 +1,7 @@
 {
   "Config Type": "Custom",
   "Configuration": "Sweep 01 · Front Wing -2° (4/5)",
-  "Description": "Setup sweep 01, step 4 of 5: front wing -2°. Everything else is Baseline. Tuning menu: Aerodynamics > Front Wing Angle (wing_angle_F -2). Offline estimate: ClA 5.09 m², 44% front at 300 km/h, front roll stiffness 58%.",
+  "Description": "Setup sweep 01, step 4 of 5: front wing -2°. Everything else is Baseline. Tuning menu: Aerodynamics > Front Wing Angle (wing_angle_F -2). Offline estimate: ClA 5.09 m², 42% front at 300 km/h, front roll stiffness 62%.",
   "Drivetrain": "RWD",
   "Fuel Type": "Gasoline",
   "Induction Type": "Turbo",

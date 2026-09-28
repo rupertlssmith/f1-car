@@ -18,8 +18,8 @@
     ],
     "variables": [
         ["name", "type", "unit", "category", "default", "min", "max", "title", "description"],
-        ["$camber_R", "range", "", "Wheel Alignment", 0.9976, 0.97, 1.03, "Camber Adjust", "Adjusts the wheel camber angles", {"subCategory":"Rear"}],
-        ["$toe_R", "range", "", "Wheel Alignment", 0.9946, 0.98, 1.02, "Toe Adjust", "Adjusts the toe angle (lower: more toe-in)", {"subCategory":"Rear"}],
+        ["$camber_R", "range", "", "Wheel Alignment", 0.9979, 0.97, 1.03, "Camber Adjust", "Adjusts the wheel camber angles", {"subCategory":"Rear"}],
+        ["$toe_R", "range", "", "Wheel Alignment", 0.9928, 0.98, 1.02, "Toe Adjust", "Adjusts the toe angle (lower: more toe-in)", {"subCategory":"Rear"}],
     ],
     "flexbodies": [
          ["mesh", "[group]:", "nonFlexMaterials"],
@@ -89,7 +89,7 @@
           //multilink suspension
           {"beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
           {"beamDeform":377500,"beamStrength":1375000},
-          {"beamSpring":4500000,"beamDamp":125},
+          {"beamSpring":4500000,"beamDamp":400},
           //rear hub
           ["rh1r","rh3r"],
           ["rh1r","rh4r"],
@@ -165,7 +165,7 @@
 
           //attach to wheel
           {"optional":true},
-          {"beamSpring":4500000,"beamDamp":125},
+          {"beamSpring":4500000,"beamDamp":400},
           {"beamDeform":450500,"beamStrength":4000500},
           {"breakGroup":"wheel_RR"},
           ["rh1r","rw1r", {"name":"axle_RR"}],
@@ -472,9 +472,9 @@
           {"beamDeform":80000,"beamStrength":800000,"deformLimitExpansion":1.2},
           {"beamSpring":"$spring_R","beamDamp":0},
           //To change the base ride height, edit the springheight_R offset in the expression.
-          ["rh1r","rs1", {"breakGroup":"lowerarm_RR","name":"spring_RR", "beamPrecompression":"$=$rideheight_R","precompressionRange":"$=($springheight_R*(0.5995*$spring_R + $heave_spring_R/0.5995) + 6411.0)/$spring_R",
+          ["rh1r","rs1", {"breakGroup":"lowerarm_RR","name":"spring_RR", "beamPrecompression":"$=$rideheight_R","precompressionRange":"$=(($springheight_R + 0.01)*(0.5995*$spring_R + $heave_spring_R/0.5995) + 6344.0)/$spring_R",
               "soundFile":"event:>Vehicle>Suspension>car_modn_med_01>spring_compress_01","colorFactor":0.4,"attackFactor":60,"volumeFactor":1.6,"decayFactor":40,"noiseFactor":0.01,"pitchFactor":1.0,"maxStress":4300}],
-          ["rh1l","rs1", {"breakGroup":"lowerarm_RL","name":"spring_RL", "beamPrecompression":"$=$rideheight_R","precompressionRange":"$=($springheight_R*(0.5995*$spring_R + $heave_spring_R/0.5995) + 6411.0)/$spring_R",
+          ["rh1l","rs1", {"breakGroup":"lowerarm_RL","name":"spring_RL", "beamPrecompression":"$=$rideheight_R","precompressionRange":"$=(($springheight_R + 0.01)*(0.5995*$spring_R + $heave_spring_R/0.5995) + 6344.0)/$spring_R",
               "soundFile":"event:>Vehicle>Suspension>car_modn_med_01>spring_compress_01","colorFactor":0.4,"attackFactor":60,"volumeFactor":1.6,"decayFactor":40,"noiseFactor":0.01,"pitchFactor":1.0,"maxStress":4300}],
           //damper
           {"beamPrecompression":1, "beamType":"|BOUNDED", "beamLongBound":1, "beamShortBound":1},
@@ -529,7 +529,7 @@
     ],
     "variables": [
         ["name", "type", "unit", "category", "default", "min", "max", "title", "description"],
-        ["$arb_spring_R", "range", "N/m", "Suspension", 130000, 0, 400000, "Anti-Roll Bar", "Extra wheel rate in roll from the anti-roll bar", {"stepDis":5000, "subCategory":"Rear"}]
+        ["$arb_spring_R", "range", "N/m", "Suspension", 110000, 0, 400000, "Anti-Roll Bar", "Extra wheel rate in roll from the anti-roll bar", {"stepDis":5000, "subCategory":"Rear"}]
     ],
     "beams": [
           ["id1:", "id2:"],

@@ -46,7 +46,7 @@
          {"selfCollision":true},
          {"nodeMaterial":"|NM_METAL"},
          {"frictionCoef":0.5},
-         {"nodeWeight":0.25},
+         {"nodeWeight":0.6},
          {"group":"redbull_wing_R"},
          ["rwg1r",-0.4372, 2.3512, "$=(($wing_angle_R*-0.005)+0.85)*0.9364+0.1169"],
          ["rwg1",  0.0, 2.3512, "$=(($wing_angle_R*-0.005)+0.85)*0.9364+0.1169"],
@@ -57,10 +57,10 @@
          ["rwg2l", 0.466, 2.5639, 0.9292],
          
          //--BEAM WING--
-         {"nodeWeight":0.30},
+         {"nodeWeight":0.8},
          {"group":"redbull_wing_B"},
          ["bwg1r",-0.4362, 2.3001, 0.6068],
-         ["bwg1",  0.0, 2.3001, 0.6068,{"nodeWeight":0.4}],
+         ["bwg1",  0.0, 2.3001, 0.6068,{"nodeWeight":0.9}],
          ["bwg1l", 0.4362, 2.3001, 0.6068],
          
          ["bwg2r",-0.4437, 2.4448, "$=(($wing_angle_B*0.005)+0.55)*1.064+0.0429"],
@@ -72,7 +72,7 @@
          {"collision":true},
          {"selfCollision":true},
          {"nodeMaterial":"|NM_METAL"},
-         {"nodeWeight":0.40},
+         {"nodeWeight":0.6},
          {"group":"redbull_endplate_RR"},
          ["rep1r",-0.4644, 2.2065, 0.5536],
          ["rep2r",-0.4722, 2.4277, 0.394],
@@ -92,7 +92,7 @@
           ["id1:", "id2:"],
           //--REAR WING AND BEAM WING--
           {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
-          {"beamSpring":201000,"beamDamp":60},
+          {"beamSpring":603000,"beamDamp":150},
           {"beamDeform":32535,"beamStrength":"FLT_MAX"},
           {"deformLimitExpansion":1.1},
           //rear wing and beam wing main shape
@@ -134,7 +134,7 @@
           ["bwg2r","bwg2l"],
 
           //attach
-          {"beamSpring":500100,"beamDamp":2500},
+          {"beamSpring":1500300,"beamDamp":2500},
           {"beamDeform":"FLT_MAX","beamStrength":10100},
           {"breakGroup":"beam_wing_M"},
           {"dampCutoffHz":50},
@@ -149,7 +149,7 @@
           ["bwg2","rx2l"],
           ["bwg1","rx3r",{"beamSpring":10100}],
           ["bwg1","rx3l",{"beamSpring":10100}],
-          {"beamSpring":301000,"beamDamp":150},
+          {"beamSpring":903000,"beamDamp":150},
           {"breakGroup":"beam_wing_R"},
           ["bwg1r","rx4r"],
           ["bwg1r","rx2r"],
@@ -164,7 +164,7 @@
           {"deformGroup":""}
 
           {"breakGroup":"endplates_BR"},
-          {"beamSpring":200100,"beamDamp":50},
+          {"beamSpring":600300,"beamDamp":150},
           {"beamDeform":"FLT_MAX","beamStrength":7000},
           ["rep1r","bwg1r"],
           ["rep2r","bwg1r"],
@@ -185,7 +185,7 @@
           ["rep4r","bwg2"],
           
           {"breakGroup":"endplates_BL"},
-          {"beamSpring":200100,"beamDamp":50},
+          {"beamSpring":600300,"beamDamp":150},
           {"beamDeform":"FLT_MAX","beamStrength":7000},
           ["rep1l","bwg1l"],
           ["rep2l","bwg1l"],
@@ -206,7 +206,7 @@
           ["rep4l","bwg2"],
           
           {"breakGroup":"endplates_RR"},
-          {"beamSpring":200100,"beamDamp":50},
+          {"beamSpring":600300,"beamDamp":150},
           {"beamDeform":"FLT_MAX","beamStrength":5000},
           ["rep4r","rwg1r"],
           ["rep1r","rwg2r"],
@@ -224,7 +224,7 @@
           ["rep4r","rwg2"],
           
           {"breakGroup":"endplates_RL"},
-          {"beamSpring":150100,"beamDamp":50},
+          {"beamSpring":450300,"beamDamp":150},
           {"beamDeform":"FLT_MAX","beamStrength":5000},
           ["rep4l","rwg1l"],
           ["rep1l","rwg2l"],
@@ -252,7 +252,7 @@
 
           //support
           {"beamType":"|SUPPORT","beamLongBound":8},
-          {"beamSpring":71000,"beamDamp":20},
+          {"beamSpring":213000,"beamDamp":150},
           {"beamDeform":80100,"beamStrength":"FLT_MAX"},
           {"optional":true},
           ["bwg1","cb1r"],
@@ -269,7 +269,7 @@
           //--REAR WING ENDPLATES--
           {"optional":false}
           {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
-          {"beamSpring":201000,"beamDamp":60},
+          {"beamSpring":603000,"beamDamp":150},
           {"beamDeform":32535,"beamStrength":"FLT_MAX"},
           {"deformLimitExpansion":1.1},
           //endplates main shape
@@ -295,36 +295,41 @@
           {"optional":false},
           {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
           {"deformLimitExpansion":1.1},
+          //pylon (f1_setup.py): swan neck from the trailing edge to the crash structure
+          ["rwg2","cb3r", {"beamSpring":1201000, "beamDamp":200, "beamDeform":60000, "beamStrength":150000, "breakGroup":"wing_R_pylon"}],
+          ["rwg2","cb3l", {"beamSpring":1201000, "beamDamp":200, "beamDeform":60000, "beamStrength":150000, "breakGroup":"wing_R_pylon"}],
+          ["rwg2","cb4r", {"beamSpring":1201000, "beamDamp":200, "beamDeform":60000, "beamStrength":150000, "breakGroup":"wing_R_pylon"}],
+          ["rwg2","cb4l", {"beamSpring":1201000, "beamDamp":200, "beamDeform":60000, "beamStrength":150000, "breakGroup":"wing_R_pylon"}],
     ],
     "hydros": [
         ["id1:", "id2:"],
         //DRS: lifts the leading edge (see tools/rb14/f1_setup.py)
-        ["rep1r","rwg1r", {"factor":0.1563, "inputSource":"drs", "inputFactor":1, "inRate":4, "outRate":4, "beamSpring":601000, "beamDamp":80, "beamDeform":"FLT_MAX", "beamStrength":6000, "breakGroup":"endplates_RR"}],
-        ["rep1l","rwg1l", {"factor":0.1563, "inputSource":"drs", "inputFactor":1, "inRate":4, "outRate":4, "beamSpring":601000, "beamDamp":80, "beamDeform":"FLT_MAX", "beamStrength":6000, "breakGroup":"endplates_RL"}],
+        ["rep1r","rwg1r", {"factor":0.1563, "inputSource":"drs", "inputFactor":1, "inRate":4, "outRate":4, "beamSpring":2001000, "beamDamp":200, "beamDeform":"FLT_MAX", "beamStrength":20000, "breakGroup":"endplates_RR"}],
+        ["rep1l","rwg1l", {"factor":0.1563, "inputSource":"drs", "inputFactor":1, "inRate":4, "outRate":4, "beamSpring":2001000, "beamDamp":200, "beamDeform":"FLT_MAX", "beamStrength":20000, "breakGroup":"endplates_RL"}],
     ],
     "triangles": [
             ["id1:","id2:","id3:"],
             //rear wing
             {"groundModel":"metal"},
-            {"dragCoef":1075},
+            {"dragCoef":1132.5},
             {"group":"redbull_wing_F"},
-            ["rwg2","rwg2r","rwg1r",{"liftCoef":253.7, "stallAngle":0.44}],
-            ["rwg2","rwg1r","rwg1", {"liftCoef":253.7, "stallAngle":0.44}],
-            ["rwg2l","rwg2","rwg1l",{"liftCoef":253.7, "stallAngle":0.44}],
-            ["rwg1l","rwg2","rwg1", {"liftCoef":253.7, "stallAngle":0.44}],
+            ["rwg2","rwg2r","rwg1r",{"liftCoef":267.2, "stallAngle":0.44}],
+            ["rwg2","rwg1r","rwg1", {"liftCoef":267.2, "stallAngle":0.44}],
+            ["rwg2l","rwg2","rwg1l",{"liftCoef":267.2, "stallAngle":0.44}],
+            ["rwg1l","rwg2","rwg1", {"liftCoef":267.2, "stallAngle":0.44}],
             
             //beam wing
-            {"dragCoef":559},
+            {"dragCoef":588.9},
             {"group":"redbull_wing_F"},
-            ["bwg2","bwg2r","bwg1r",{"liftCoef":345.1, "stallAngle":0.27}],
-            ["bwg2","bwg1r","bwg1", {"liftCoef":345.1, "stallAngle":0.27}],
-            ["bwg2l","bwg2","bwg1l",{"liftCoef":345.1, "stallAngle":0.27}],
-            ["bwg1l","bwg2","bwg1", {"liftCoef":345.1, "stallAngle":0.27}],
+            ["bwg2","bwg2r","bwg1r",{"liftCoef":363.5, "stallAngle":0.27}],
+            ["bwg2","bwg1r","bwg1", {"liftCoef":363.5, "stallAngle":0.27}],
+            ["bwg2l","bwg2","bwg1l",{"liftCoef":363.5, "stallAngle":0.27}],
+            ["bwg1l","bwg2","bwg1", {"liftCoef":363.5, "stallAngle":0.27}],
             
             
             //rear wing endplates
             {"groundModel":"metal"},
-            {"dragCoef":172},
+            {"dragCoef":181.2},
             {"group":"redbull_wing_R_endplates"},
             ["rep3r","rep4r","rep2r"],
             ["rep3r","rep2r","rep1r"],

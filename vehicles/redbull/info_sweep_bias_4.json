@@ -1,7 +1,7 @@
 {
   "Config Type": "Custom",
-  "Configuration": "Sweep 09 · Brake Bias 59% front (4/5)",
-  "Description": "Setup sweep 09, step 4 of 5: brake bias 59% front. Everything else is Baseline. Tuning menu: Brakes > Brake Bias (brakebias 0.59). Offline estimate: ClA 5.00 m², 43% front at 300 km/h, front roll stiffness 58%.",
+  "Configuration": "Sweep 09 · Brake Bias 60% front (4/5)",
+  "Description": "Setup sweep 09, step 4 of 5: brake bias 60% front. Everything else is Baseline. Tuning menu: Brakes > Brake Bias (brakebias 0.6). Offline estimate: ClA 5.00 m², 41% front at 300 km/h, front roll stiffness 62%.",
   "Drivetrain": "RWD",
   "Fuel Type": "Gasoline",
   "Induction Type": "Turbo",
