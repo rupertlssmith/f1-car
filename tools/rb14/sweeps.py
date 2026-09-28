@@ -90,6 +90,8 @@ def check(v, name):
     st = sr.stability_report(v)
     if st["max"] > fs.MAX_OMEGA_DT:
         raise SystemExit(f"{name}: highest mode omega*dt {st['max']:.2f} > {fs.MAX_OMEGA_DT}")
+    if st["damped"] > fs.MAX_DAMPED:
+        raise SystemExit(f"{name}: highest damped mode {st['damped']:.2f} > {fs.MAX_DAMPED}")
     hits = sr.wheel_clearance(v, fs.WHEEL_CLEARANCE)
     if hits:
         raise SystemExit(f"{name}: nodes near a spinning wheel: {hits[:3]}")
@@ -99,7 +101,7 @@ def check(v, name):
     worst = sr.strength_report(v, mr, aero)[0]
     if worst[0] > fs.STRENGTH_MAX_RATIO:
         raise SystemExit(f"{name}: beam {worst[3]}-{worst[4]} at {worst[0]:.2f} of its deform limit ({worst[1]})")
-    return st["max"], worst[0]
+    return max(st["max"], 0), worst[0]
 
 
 def thumbnail(label, path):

@@ -92,7 +92,7 @@
           ["id1:", "id2:"],
           //--REAR WING AND BEAM WING--
           {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
-          {"beamSpring":603000,"beamDamp":150},
+          {"beamSpring":603000,"beamDamp":60},
           {"beamDeform":130140,"beamStrength":"FLT_MAX"},
           {"deformLimitExpansion":1.1},
           //rear wing and beam wing main shape
@@ -164,7 +164,7 @@
           {"deformGroup":""}
 
           {"breakGroup":"endplates_BR"},
-          {"beamSpring":600300,"beamDamp":150},
+          {"beamSpring":600300,"beamDamp":50},
           {"beamDeform":"FLT_MAX","beamStrength":28000},
           ["rep1r","bwg1r"],
           ["rep2r","bwg1r"],
@@ -185,7 +185,7 @@
           ["rep4r","bwg2"],
           
           {"breakGroup":"endplates_BL"},
-          {"beamSpring":600300,"beamDamp":150},
+          {"beamSpring":600300,"beamDamp":50},
           {"beamDeform":"FLT_MAX","beamStrength":28000},
           ["rep1l","bwg1l"],
           ["rep2l","bwg1l"],
@@ -206,7 +206,7 @@
           ["rep4l","bwg2"],
           
           {"breakGroup":"endplates_RR"},
-          {"beamSpring":600300,"beamDamp":150},
+          {"beamSpring":600300,"beamDamp":50},
           {"beamDeform":"FLT_MAX","beamStrength":20000},
           ["rep4r","rwg1r"],
           ["rep1r","rwg2r"],
@@ -224,7 +224,7 @@
           ["rep4r","rwg2"],
           
           {"breakGroup":"endplates_RL"},
-          {"beamSpring":450300,"beamDamp":150},
+          {"beamSpring":450300,"beamDamp":50},
           {"beamDeform":"FLT_MAX","beamStrength":20000},
           ["rep4l","rwg1l"],
           ["rep1l","rwg2l"],
@@ -252,7 +252,7 @@
 
           //support
           {"beamType":"|SUPPORT","beamLongBound":8},
-          {"beamSpring":213000,"beamDamp":150},
+          {"beamSpring":213000,"beamDamp":20},
           {"beamDeform":320400,"beamStrength":"FLT_MAX"},
           {"optional":true},
           ["bwg1","cb1r"],
@@ -269,7 +269,7 @@
           //--REAR WING ENDPLATES--
           {"optional":false}
           {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
-          {"beamSpring":603000,"beamDamp":150},
+          {"beamSpring":603000,"beamDamp":60},
           {"beamDeform":130140,"beamStrength":"FLT_MAX"},
           {"deformLimitExpansion":1.1},
           //endplates main shape
@@ -296,16 +296,16 @@
           {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
           {"deformLimitExpansion":1.1},
           //pylon (f1_setup.py): swan neck from the trailing edge to the gearbox
-          ["rwg2","rx4r", {"beamSpring":1201000, "beamDamp":200, "beamDeform":60000, "beamStrength":150000, "breakGroup":"wing_R_pylon"}],
-          ["rwg2","rx4l", {"beamSpring":1201000, "beamDamp":200, "beamDeform":60000, "beamStrength":150000, "breakGroup":"wing_R_pylon"}],
-          ["rwg2","rx3r", {"beamSpring":1201000, "beamDamp":200, "beamDeform":60000, "beamStrength":150000, "breakGroup":"wing_R_pylon"}],
-          ["rwg2","rx3l", {"beamSpring":1201000, "beamDamp":200, "beamDeform":60000, "beamStrength":150000, "breakGroup":"wing_R_pylon"}],
+          ["rwg2","rx4r", {"beamSpring":1201000, "beamDamp":40, "beamDeform":60000, "beamStrength":150000, "breakGroup":"wing_R_pylon"}],
+          ["rwg2","rx4l", {"beamSpring":1201000, "beamDamp":40, "beamDeform":60000, "beamStrength":150000, "breakGroup":"wing_R_pylon"}],
+          ["rwg2","rx3r", {"beamSpring":1201000, "beamDamp":40, "beamDeform":60000, "beamStrength":150000, "breakGroup":"wing_R_pylon"}],
+          ["rwg2","rx3l", {"beamSpring":1201000, "beamDamp":40, "beamDeform":60000, "beamStrength":150000, "breakGroup":"wing_R_pylon"}],
     ],
     "hydros": [
         ["id1:", "id2:"],
         //DRS: lifts the leading edge (see tools/rb14/f1_setup.py)
-        ["rep1r","rwg1r", {"factor":0.1563, "inputSource":"drs", "inputFactor":1, "inRate":4, "outRate":4, "beamSpring":2001000, "beamDamp":200, "beamDeform":"FLT_MAX", "beamStrength":20000, "breakGroup":"endplates_RR"}],
-        ["rep1l","rwg1l", {"factor":0.1563, "inputSource":"drs", "inputFactor":1, "inRate":4, "outRate":4, "beamSpring":2001000, "beamDamp":200, "beamDeform":"FLT_MAX", "beamStrength":20000, "breakGroup":"endplates_RL"}],
+        ["rep1r","rwg1r", {"factor":0.1563, "inputSource":"drs", "inputFactor":1, "inRate":4, "outRate":4, "beamSpring":2001000, "beamDamp":40, "beamDeform":"FLT_MAX", "beamStrength":20000, "breakGroup":"endplates_RR"}],
+        ["rep1l","rwg1l", {"factor":0.1563, "inputSource":"drs", "inputFactor":1, "inRate":4, "outRate":4, "beamSpring":2001000, "beamDamp":40, "beamDeform":"FLT_MAX", "beamStrength":20000, "breakGroup":"endplates_RL"}],
     ],
     "triangles": [
             ["id1:","id2:","id3:"],

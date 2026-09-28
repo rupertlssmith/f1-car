@@ -385,6 +385,26 @@ Every config: 1.9 g at low speed, 5-6 g braking from 300 km/h.
 
   All gates pass: highest mode ω·dt 1.65, worst corner beam 0.35 of its
   deform limit, wheel clearance OK, all 54 sweep cars too.
+- **Round 9b (in-game: rear wing shook itself off, tyres burst on spawn):**
+  - *Damping in the stability model.* BeamNG integrates beam damping
+    explicitly too, so a mode stays stable only while
+    (omega*dt)^2 + 2*gamma < 4 (gamma = modal damping * dt / mass).
+    `setup_report.stability_report()` now reports this damped measure
+    (beams, hydros, torsionbars, generated hubs; beams with dampCutoffHz
+    count as undamped, the generated tyres' damping is left out because
+    the approximation puts the F4's own tyres at the limit). The F4 peaks
+    at 1.97. The rear wing's DRS leading edge was at **2.02**: the damping
+    floor of 150 on the wing beams plus 200 on the DRS actuators and pylon,
+    on 0.6 kg nodes. Now the F4's wing damping, 40 on actuators and pylon:
+    1.74 (F4 1.69), still 7 / 6 mm under 6 kN. New gate: damped <= 1.85
+    for every config and sweep car (worst now 1.82). Also back to the
+    F4's: hub damping (40 -> 10) and front wing damping (1.5x -> 1x); crash
+    box nodes 1.15 -> 1.4 kg.
+  - *Tyres burst and dented:* round 9 made the carcass beams 2.5x stiffer
+    but kept their deform / break forces, so they yielded and broke at 40 %
+    of the stretch they used to take. Deform / break forces now scale with
+    the stiffening (tread and periphery 2.5x, sidewall 2x); rim
+    reinforcement 2.5x (was 5x).
 - **Rear tyre clearance:** the rear floor / diffuser edge nodes sat 20-50 mm
   inside the 405 mm rear tyres' inner face; moved ~8 cm inboard (aero
   factors re-solved for the smaller floor).

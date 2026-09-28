@@ -50,8 +50,8 @@ def mass():
         "rx2r": 5, "rx2l": 5, "rx3r": 5, "rx3l": 5, "rx4r": 5, "rx4l": 5})
     weights(f"{V}/redbull_differential_R.jbeam", {"rdiff": DIFF_NODE_WEIGHT})
     # rear crash structure: the F4's 1 kg nodes sit right at the stability limit
-    weights(f"{V}/redbull_crashbox.jbeam", {n: 1.15 for n in ("cb1r", "cb1l")})
-    weights(f"{V}/redbull_crashbox.jbeam", {n: 1.15 for n in ("cb3r", "cb3l")})
+    weights(f"{V}/redbull_crashbox.jbeam", {n: 1.4 for n in ("cb1r", "cb1l")})
+    weights(f"{V}/redbull_crashbox.jbeam", {n: 1.4 for n in ("cb3r", "cb3l")})
     weights(f"{V}/redbull_crashbox.jbeam", {n: 1.0 for n in ("cb4r", "cb4l")})
     # uprights, brakes, wishbone ends: roughly half the F4's corner mass
     weights(f"{V}/redbull_suspension_F.jbeam", {
@@ -124,6 +124,9 @@ def ballast():
 # changes). Chassis and gearbox nodes get mass instead, paid for by the
 # plank ballast (solved in ballast()).
 MAX_OMEGA_DT = float(os.environ.get("RB14_MAX_OMEGA_DT", 1.65))
+# With damping (setup_report: sqrt((omega*dt)^2 + 2*gamma), limit 2): the F4
+# peaks at 1.97 (crash box); round 9's rear wing at 2.01 shook itself off.
+MAX_DAMPED = 1.85
 HUB_SPRING_SCALE = 0.65                      # hub beams vs the F4's (hub nodes 0.35 vs 0.55 kg)
 HUB_NODE_WEIGHT = 0.45                       # kg x 32 per rim (was 0.35; F4 0.55)
 CARRIER_DAMP = 600                           # beamDamp floor on the capped wheel-carrier beams
@@ -186,13 +189,17 @@ def stiffness():
                    '{"hubBeamDeform":%d, "hubBeamStrength":%d}' % (43600 * RIM_STRENGTH_SCALE, 78000 * RIM_STRENGTH_SCALE))
     for axle, tread in (("F", (13000, 17000, 55000, 55000)), ("R", (12000, 16000, 50000, 50000))):
         f = f"{W}/redbull_tires_{axle}_13.jbeam"
+        # x the carcass stiffening (tyre_carcass()), so every tyre beam still
+        # deforms / breaks at the same stretch as before: stiffer beams with
+        # the old limits dented and burst the tyres on spawn (round 9)
         k = TYRE_STRENGTH_SCALE
+        ks, kt, kp = (k * TYRE_SPRINGS[x] for x in ("wheelSideBeamSpringExpansion", "wheelTreadBeamSpring", "wheelPeripheryBeamSpring"))
         je.set_all(f, r'\{"wheelSideBeamDeform":\d+,"wheelSideBeamStrength":\d+\}',
-                   '{"wheelSideBeamDeform":%d,"wheelSideBeamStrength":%d}' % (17000 * k, 22000 * k))
+                   '{"wheelSideBeamDeform":%d,"wheelSideBeamStrength":%d}' % (17000 * ks, 22000 * ks))
         je.set_all(f, r'\{"wheelTreadBeamDeform":\d+,"wheelTreadBeamStrength":\d+\}',
-                   '{"wheelTreadBeamDeform":%d,"wheelTreadBeamStrength":%d}' % (tread[0] * k, tread[1] * k))
+                   '{"wheelTreadBeamDeform":%d,"wheelTreadBeamStrength":%d}' % (tread[0] * kt, tread[1] * kt))
         je.set_all(f, r'\{"wheelPeripheryBeamDeform":\d+,"wheelPeripheryBeamStrength":\d+\}',
-                   '{"wheelPeripheryBeamDeform":%d,"wheelPeripheryBeamStrength":%d}' % (tread[2] * k, tread[3] * k))
+                   '{"wheelPeripheryBeamDeform":%d,"wheelPeripheryBeamStrength":%d}' % (tread[2] * kp, tread[3] * kp))
 
 
 # --------------------------------------------------------- torque paths
@@ -292,9 +299,9 @@ def steering():
 # doesn't move -- to the crash structure, the wing's own beams 3x stiffer
 # and better damped, a stiffer DRS actuator, and ~10 kg of wing assembly.
 WING_R_STIFF = 3.0
-WING_R_DAMP = 150
+WING_R_DAMP = 0                 # F4's damping (round 9: a 150 floor on 0.6 kg nodes shook the wing off)
 WING_R_WEIGHTS = {"wing": 0.6, "beamwing": 0.8, "beamwing_mid": 0.9, "endplate": 0.6}
-PYLON = dict(spring=1201000, damp=200, deform=60000, strength=150000)
+PYLON = dict(spring=1201000, damp=40, deform=60000, strength=150000)
 # The pylon lands on the gearbox, the same rigid structure the beam wing
 # and endplates hang from. (Round 8: mounted on the crumple-zone crash box
 # it moved differently from the endplates on the spawn jolt and snapped
@@ -354,7 +361,11 @@ def check_stability():
         worst = max(worst, st["max"])
         if st["max"] > MAX_OMEGA_DT:
             raise SystemExit(f"{cfg}: highest mode omega*dt {st['max']:.2f} > {MAX_OMEGA_DT}: {st['modes'][0]}")
-    print("stability: highest mode omega*dt %.2f (limit 2, target <= %.2f)" % (worst, MAX_OMEGA_DT))
+        if st["damped"] > MAX_DAMPED:
+            raise SystemExit(f"{cfg}: highest damped mode {st['damped']:.2f} > {MAX_DAMPED}: {st['damped_modes'][:3]}")
+        worst_d = max(locals().get("worst_d", 0.0), st["damped"])
+    print("stability: highest mode omega*dt %.2f (limit 2, target <= %.2f), with damping %.2f (target <= %.2f)"
+          % (worst, MAX_OMEGA_DT, worst_d, MAX_DAMPED))
     for cfg in CONFIGS:
         hits = sr.wheel_clearance(sr.Vehicle("redbull", cfg), WHEEL_CLEARANCE)
         if hits:
@@ -918,7 +929,7 @@ def drs_hydros():
         L0 = np.linalg.norm(b - a)
         L1 = np.linalg.norm(b + np.array([0, 0, DRS_LIFT]) - a)
         rows.append('        ["rep1%s","rwg1%s", {"factor":%.4f, "inputSource":"drs", "inputFactor":1, "inRate":4, "outRate":4, '
-                    '"beamSpring":2001000, "beamDamp":200, "beamDeform":"FLT_MAX", "beamStrength":20000, "breakGroup":"endplates_R%s"}],\r\n'
+                    '"beamSpring":2001000, "beamDamp":40, "beamDeform":"FLT_MAX", "beamStrength":20000, "breakGroup":"endplates_R%s"}],\r\n'
                     % (side, side, (L1 - L0) / L0, side.upper()))
     # every setting inline: option rows would carry on into the steering
     # hydro of a later part
@@ -1103,7 +1114,7 @@ def shift_logic():
 # 13" F1 tyres squirm under 3-4x the load. Tread / periphery ~2.5x, the
 # sidewall-to-rim reinforcement 5x, damping 1.5x.
 TYRE_SPRINGS = {"wheelTreadBeamSpring": 2.5, "wheelTreadReinfBeamSpring": 2.5, "wheelPeripheryBeamSpring": 2.5,
-                "wheelPeripheryReinfBeamSpring": 2.5, "wheelReinfBeamSpring": 5.0, "wheelSideBeamSpringExpansion": 2.0}
+                "wheelPeripheryReinfBeamSpring": 2.5, "wheelReinfBeamSpring": 2.5, "wheelSideBeamSpringExpansion": 2.0}
 TYRE_DAMP = 1.5
 
 
@@ -1126,7 +1137,7 @@ def tyre_carcass():
 
 # 3. Front wing: ~5 kN of downforce at 300 km/h on the F4's wing beams bent
 # it visibly. Stiffer and stronger structure, an ~8 kg wing assembly.
-WING_F_STIFF, WING_F_STRENGTH, WING_F_DAMP = 3.0, 4.0, 1.5
+WING_F_STIFF, WING_F_STRENGTH, WING_F_DAMP = 3.0, 4.0, 1.0   # more damping on the 0.35 kg endplates: over the damped limit
 WING_F_WEIGHTS = {"wing": 0.5, "wing_inner": 0.8, "endplate": 0.35}
 # The nose cone carries it: F4 nose beams bent ~27 mm under that load.
 # 1.5x stiffer on 1.5x heavier nodes (the most the 2 kHz solver takes).
@@ -1224,7 +1235,7 @@ def wheel_beams():
         je.set_all(f, r'\{"beamDeform":\d+,"beamStrength":\d+\}', '{"beamDeform":%d,"beamStrength":%d}' % (78500 * 3, 434000 * 3))
         je.set_all(f, r'\{"beamSpring":\d+,"beamDamp":\d+\}', '{"beamSpring":%d,"beamDamp":%d}' % (1501000 * 2, 100))
         text = je._read(f)
-        text = re.sub(r'("hub(?:Tread|Periphery|Side)BeamDamp":)\d+', r'\g<1>40', text)
+        text = re.sub(r'("hub(?:Tread|Periphery|Side)BeamDamp":)\d+', r'\g<1>10', text)   # F4's: 40 on 0.45 kg hub nodes ate the damped margin
         je._write(f, text)
 
 

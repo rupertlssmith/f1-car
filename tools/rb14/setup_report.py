@@ -210,8 +210,19 @@ def torsion_angle(p1, p2, p3, p4):
     return math.atan2(np.dot(m1, n2), np.dot(n1, n2))
 
 
-def stiffness(v, free, fixed_extra=()):
-    """Assemble the linear stiffness matrix over the free nodes."""
+def beam_damping(v, r):
+    """A beam's (or hydro's) damping as the 2 kHz solver sees it: the larger
+    of bump / rebound; none where dampCutoffHz low-pass filters it (the
+    filter removes it at the solver's frequencies)."""
+    if r.get("dampCutoffHz") not in (None, ""):
+        return 0.0
+    return max(v.val(r.get("beamDamp"), 0), v.val(r.get("beamDampRebound"), 0))
+
+
+def stiffness(v, free, fixed_extra=(), damping=False):
+    """Assemble the linear stiffness matrix over the free nodes (or, with
+    damping=True, the damping matrix of the same beams, hydros and
+    torsionbars)."""
     idx = {n: i for i, n in enumerate(free)}
     K = np.zeros((3 * len(free), 3 * len(free)))
 
@@ -234,7 +245,9 @@ def stiffness(v, free, fixed_extra=()):
         if "SUPPORT" in btype:
             continue            # only pushes back when compressed past its length
         k = v.val(r.get("beamSpring"), 0)
-        if "BOUNDED" in btype and k == 0:
+        if damping:
+            k = beam_damping(v, r)
+        elif "BOUNDED" in btype and k == 0:
             continue            # pure limiters/dampers
         if r.get("optional") and False:
             pass
@@ -250,12 +263,14 @@ def stiffness(v, free, fixed_extra=()):
             continue
         d = v.pos[b] - v.pos[a]
         u = d / np.linalg.norm(d)
-        add([a, b], [-u, u], v.val(r.get("beamSpring"), 0))
+        add([a, b], [-u, u], beam_damping(v, r) if damping else v.val(r.get("beamSpring"), 0))
     for pname, r in v.section("torsionbars"):
         ns = [r.get(f"id{i}:") for i in range(1, 5)]
         if any(n not in v.pos for n in ns) or not any(n in idx for n in ns):
             continue
-        k = v.val(r.get("spring"), 0)
+        k = v.val(r.get("damp" if damping else "spring"), 0)
+        if k == 0:
+            continue
         P = [v.pos[n] for n in ns]
         th0 = torsion_angle(*P)
         grads = []
@@ -337,7 +352,7 @@ def generated_wheels(v):
     (hubPeriphery); two rings of tyre nodes at the radius, +-tireWidth/2,
     tied to the hub (wheelSide, stiff value in extension), across
     (wheelTread / wheelTreadReinf) and around (wheelPeriphery / ...Reinf).
-    Returns ({node: pos}, {node: mass}, [(a, b, k)])."""
+    Returns ({node: pos}, {node: mass}, [(a, b, spring, damp)])."""
     pos, mass, beams = {}, {}, []
     for r in v.wheels():
         n1, n2 = r.get("node1:"), r.get("node2:")
@@ -365,18 +380,20 @@ def generated_wheels(v):
                     ids.append(nid)
                 rings[(kind, side)] = ids
         wide = max(val("wheelSideBeamSpringExpansion", 0), val("wheelSideBeamSpring", 0))
+        wideC = max(val("wheelSideBeamDampExpansion", 0), val("wheelSideBeamDamp", 0))
+        kc = lambda key: (val(key + "BeamSpring"), val(key + "BeamDamp"))
         for i in range(nr):
             j, k2 = (i + 1) % nr, (i + 2) % nr
             h0, h1, t0, t1 = rings[("hub", 0)], rings[("hub", 1)], rings[("tyre", 0)], rings[("tyre", 1)]
             for hn in (h0[i], h1[i]):
-                beams += [(n1, hn, val("hubSideBeamSpring")), (n2, hn, val("hubSideBeamSpring"))]
-            beams += [(h0[i], h1[i], val("hubTreadBeamSpring")), (h0[j], h1[i], val("hubTreadBeamSpring")),
-                      (h0[i], h0[j], val("hubPeripheryBeamSpring")), (h1[i], h1[j], val("hubPeripheryBeamSpring"))]
-            beams += [(h0[i], t0[i], wide), (h1[i], t1[i], wide), (h0[i], t1[i], val("wheelReinfBeamSpring")),
-                      (t0[i], t1[i], val("wheelTreadBeamSpring")), (t0[j], t1[i], val("wheelTreadBeamSpring")),
-                      (t0[i], t1[j], val("wheelTreadReinfBeamSpring")),
-                      (t0[i], t0[j], val("wheelPeripheryBeamSpring")), (t1[i], t1[j], val("wheelPeripheryBeamSpring")),
-                      (t0[i], t0[k2], val("wheelPeripheryReinfBeamSpring")), (t1[i], t1[k2], val("wheelPeripheryReinfBeamSpring"))]
+                beams += [(n1, hn, *kc("hubSide")), (n2, hn, *kc("hubSide"))]
+            beams += [(h0[i], h1[i], *kc("hubTread")), (h0[j], h1[i], *kc("hubTread")),
+                      (h0[i], h0[j], *kc("hubPeriphery")), (h1[i], h1[j], *kc("hubPeriphery"))]
+            beams += [(h0[i], t0[i], wide, wideC), (h1[i], t1[i], wide, wideC), (h0[i], t1[i], *kc("wheelReinf")),
+                      (t0[i], t1[i], *kc("wheelTread")), (t0[j], t1[i], *kc("wheelTread")),
+                      (t0[i], t1[j], *kc("wheelTreadReinf")),
+                      (t0[i], t0[j], *kc("wheelPeriphery")), (t1[i], t1[j], *kc("wheelPeriphery")),
+                      (t0[i], t0[k2], *kc("wheelPeripheryReinf")), (t1[i], t1[k2], *kc("wheelPeripheryReinf"))]
     return pos, mass, beams
 
 
@@ -425,33 +442,49 @@ def wheel_clearance(v, margin=0.025):
 
 
 def stability_report(v, dt=1 / 2000, top=5):
-    """BeamNG's explicit 2 kHz integration is stable while every vibration
-    mode of the node/beam network has omega * dt < 2 (in practice the F4,
-    which is fine in game, peaks at 1.69, and 1.77 visibly shook). Eigenmodes
-    of M^-1 K over all nodes: beams, torsionbars and the generated wheels
-    (approximated, see generated_wheels)."""
+    """BeamNG integrates at 2 kHz, explicitly. A mode of the node/beam network
+    with undamped frequency omega and damping ratio-per-step gamma = c_modal
+    * dt stays stable while (omega*dt)^2 + 2*gamma < 4 (symplectic Euler);
+    damping on light nodes eats into the same margin as stiffness.
+    Eigenmodes of M^-1 K over all nodes (beams, hydros, torsionbars, the
+    generated wheels, approximated in generated_wheels) give omega*dt
+    ("max"); projecting the damping matrix onto them gives the damped
+    measure sqrt((omega*dt)^2 + 2*gamma) ("damped", also < 2). The
+    generated tyres' damping is left out of the damped measure: the tyre
+    approximation puts the F4's own (fine) tyres at the limit with it.
+    Calibration: the F4 peaks at 1.84 undamped / 1.97 damped (crash box);
+    the RB14's rear wing at 2.01 damped shook itself off (round 9)."""
     wpos, wmass, wbeams = generated_wheels(v)
     free = sorted(v.pos) + sorted(wpos)
     K, idx = stiffness(v, free)
+    C, _ = stiffness(v, free, damping=True)
     allpos = {**v.pos, **wpos}
-    for a, b, k in wbeams:
+    for a, b, k, c in wbeams:
         d = allpos[b] - allpos[a]
         u = d / np.linalg.norm(d)
+        tyre = "_tyre" in a or "_tyre" in b
         for n1, g1 in ((a, -u), (b, u)):
             for n2, g2 in ((a, -u), (b, u)):
                 i, j = 3 * idx[n1], 3 * idx[n2]
                 K[i:i + 3, j:j + 3] += k * np.outer(g1, g2)
+                if not tyre:
+                    C[i:i + 3, j:j + 3] += c * np.outer(g1, g2)
     masses = {**v.mass, **wmass}
     m = np.repeat([max(masses[n], 1e-6) for n in free], 3)
     Mi = 1 / np.sqrt(m)
     w, V = np.linalg.eigh(K * Mi[:, None] * Mi[None, :])
     wd = np.sqrt(np.clip(w, 0, None)) * dt
-    modes = []
-    for j in np.argsort(-wd)[:top]:
+    gamma = np.einsum("ij,ij->j", V, (C * Mi[:, None] * Mi[None, :]) @ V) * dt
+    he = np.sqrt(np.clip(wd ** 2 + 2 * gamma, 0, None))
+
+    def describe(j, val):
         vec = V[:, j] ** 2
         nodes = sorted(((vec[3 * i:3 * i + 3].sum(), n) for n, i in idx.items()), reverse=True)[:3]
-        modes.append("%.2f: %s" % (wd[j], ", ".join("%s %.2f kg" % (n, masses[n]) for _, n in nodes)))
-    return dict(max=float(wd.max()), over=int((wd >= 2).sum()), modes=modes)
+        return "%.2f: %s" % (val, ", ".join("%s %.2f kg" % (n, masses[n]) for _, n in nodes))
+    modes = [describe(j, wd[j]) for j in np.argsort(-wd)[:top]]
+    damped_modes = [describe(j, he[j]) for j in np.argsort(-he)[:top]]
+    return dict(max=float(wd.max()), over=int((wd >= 2).sum()), modes=modes,
+                damped=float(he.max()), damped_modes=damped_modes)
 
 
 def strength_report(v, massr, aero, bump=1.5):
@@ -747,6 +780,7 @@ def main():
     st = stability_report(v)
     print(f"stability   highest mode omega*dt {st['max']:.2f} (must stay < 2 at BeamNG's 2 kHz; {st['over']} over)  "
           f"top: {st['modes'][0]}")
+    print(f"            with damping {st['damped']:.2f} (limit 2; F4 1.97)  top: {st['damped_modes'][0]}")
     print(f"mass        {mr['total']:.0f} kg (nodes {mr['nodes']:.0f}, wheels {sum(mr['wheels'].values()):.0f}, fuel {mr['fuel']:.0f})"
           f"  front {mr['front'] * 100:.1f}%  CoG z {mr['cog'][2]:.3f} m  wheelbase {mr['wheelbase']:.3f} m")
     for a in ("F", "R"):

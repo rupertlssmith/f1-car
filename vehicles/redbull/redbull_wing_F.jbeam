@@ -339,7 +339,7 @@
 
           //--FRONT WING--
           {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
-          {"beamSpring":603000,"beamDamp":90},
+          {"beamSpring":603000,"beamDamp":60},
           {"beamDeform":130140,"beamStrength":"FLT_MAX"},
           {"deformLimitExpansion":1.1},
           //front wing main shape
@@ -373,7 +373,7 @@
           ["fwg2ll","fwg2r"],
 
           //rigidifier
-          {"beamSpring":303000,"beamDamp":1500},
+          {"beamSpring":303000,"beamDamp":1000},
           {"beamDeform":20820,"beamStrength":"FLT_MAX"},
           ["fwg3","fwg1r" ,{"dampCutoffHz":50}],
           ["fwg3","fwg1rr",{"dampCutoffHz":50}],
@@ -386,7 +386,7 @@
     
           //attach
           {"optional":true},
-          {"beamSpring":393000,"beamDamp":90},
+          {"beamSpring":393000,"beamDamp":60},
           {"beamDeform":"FLT_MAX","beamStrength":16000},
           {"breakGroup":"front_wing_R"},
           ["fwg1r","nc5r"],
@@ -397,7 +397,7 @@
           ["fwg2r","nc5l"],
           ["fwg2r","nc6r"],
           ["fwg2r","nc6l"],
-          {"beamSpring":273000,"beamDamp":75},
+          {"beamSpring":273000,"beamDamp":50},
           ["fwg1r","nc2r"],
           ["fwg1r","nc2l"],
           ["fwg1r","nc3r"],
@@ -406,13 +406,13 @@
           ["fwg2r","nc2l"],
           ["fwg2r","nc3r"],
           ["fwg2r","nc3l"],
-          {"beamSpring":12100,"beamDamp":30},
+          {"beamSpring":12100,"beamDamp":20},
           ["fwg1l","nc3l"],
           ["fwg2l","nc3l"],
           ["fwg1l","nc2l"],
           ["fwg2l","nc2l"],
           
-          {"beamSpring":393000,"beamDamp":90},
+          {"beamSpring":393000,"beamDamp":60},
           {"beamDeform":"FLT_MAX","beamStrength":16000},
           {"breakGroup":"front_wing_L"},
           ["fwg1l","nc5r"],
@@ -423,7 +423,7 @@
           ["fwg2l","nc5l"],
           ["fwg2l","nc6r"],
           ["fwg2l","nc6l"],
-          {"beamSpring":273000,"beamDamp":75},
+          {"beamSpring":273000,"beamDamp":50},
           ["fwg1l","nc2r"],
           ["fwg1l","nc2l"],
           ["fwg1l","nc3r"],
@@ -432,7 +432,7 @@
           ["fwg2l","nc2l"],
           ["fwg2l","nc3r"],
           ["fwg2l","nc3l"],
-          {"beamSpring":12100,"beamDamp":30},
+          {"beamSpring":12100,"beamDamp":20},
           ["fwg1r","nc3r"],
           ["fwg2r","nc3r"],
           ["fwg1r","nc2r"],
@@ -444,14 +444,14 @@
           
           //damping
           {"beamType":"|SUPPORT","beamLongBound":5},
-          {"beamSpring":0,"beamDamp":300},
+          {"beamSpring":0,"beamDamp":200},
           {"beamDeform":"FLT_MAX","beamStrength":"FLT_MAX"},
           ["fwg2r","nc5r"],
           ["fwg2l","nc5l"],
 
           //support
           {"beamType":"|SUPPORT","beamLongBound":8},
-          {"beamSpring":213000,"beamDamp":30},
+          {"beamSpring":213000,"beamDamp":20},
           {"beamDeform":320400,"beamStrength":"FLT_MAX"},
           ["fwg1r","nc6r"],
           ["fwg1r","nc5r"],
@@ -470,7 +470,7 @@
           
           //--FRONT WING ENDPLATES--
           {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
-          {"beamSpring":603000,"beamDamp":90},
+          {"beamSpring":603000,"beamDamp":60},
           {"beamDeform":130140,"beamStrength":"FLT_MAX"},
           {"deformLimitExpansion":1.1},
           //endplates main shape
@@ -492,7 +492,7 @@
           ["fep2l","fep3l"],
           
           //attach
-          {"beamSpring":273000,"beamDamp":75},
+          {"beamSpring":273000,"beamDamp":50},
           {"beamDeform":"FLT_MAX","beamStrength":16000},
           {"breakGroup":"endplate_FR"},
           ["fep1r","fwg1rr"],
@@ -507,13 +507,13 @@
           ["fep3r","fwg1r"],
           ["fep3r","fwg2rr"],
           ["fep3r","fwg2r"],
-          {"beamSpring":21000,"beamDamp":15},
+          {"beamSpring":21000,"beamDamp":10},
           ["fep4r","fwg1rr"],
           ["fep4r","fwg1r"],
           ["fep4r","fwg2rr"],
           ["fep4r","fwg2r"],
           
-          {"beamSpring":273000,"beamDamp":75},
+          {"beamSpring":273000,"beamDamp":50},
           {"breakGroup":"endplate_FL"},
           ["fep1l","fwg1ll"],
           ["fep1l","fwg1l"],
@@ -527,7 +527,7 @@
           ["fep3l","fwg1l"],
           ["fep3l","fwg2ll"],
           ["fep3l","fwg2l"],
-          {"beamSpring":21000,"beamDamp":15},
+          {"beamSpring":21000,"beamDamp":10},
           ["fep4l","fwg1ll"],
           ["fep4l","fwg1l"],
           ["fep4l","fwg2ll"],

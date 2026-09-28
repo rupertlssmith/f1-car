@@ -34,7 +34,7 @@
             {"wheelSideBeamSpringExpansion":402000,"wheelSideBeamDampExpansion":60},
             {"wheelSideTransitionZone":0.12,"wheelSideBeamPrecompression":0.97},
     
-            {"wheelReinfBeamSpring":10000,"wheelReinfBeamDamp":307},
+            {"wheelReinfBeamSpring":5000,"wheelReinfBeamDamp":307},
             {"wheelReinfBeamDampCutoffHz":500,"wheelReinfBeamPrecompression":0.98},
     
             {"wheelTreadBeamSpring":202500,"wheelTreadBeamDamp":135},
@@ -69,9 +69,9 @@
             {"softnessCoef":1},
     
             //deform values
-            {"wheelSideBeamDeform":68000,"wheelSideBeamStrength":88000},
-            {"wheelTreadBeamDeform":52000,"wheelTreadBeamStrength":68000},
-            {"wheelPeripheryBeamDeform":220000,"wheelPeripheryBeamStrength":220000},
+            {"wheelSideBeamDeform":136000,"wheelSideBeamStrength":176000},
+            {"wheelTreadBeamDeform":130000,"wheelTreadBeamStrength":170000},
+            {"wheelPeripheryBeamDeform":550000,"wheelPeripheryBeamStrength":550000},
         ],
     },
 "tire_F_redbull_wet": {
@@ -109,7 +109,7 @@
         {"wheelSideBeamSpringExpansion":402000,"wheelSideBeamDampExpansion":60},
         {"wheelSideTransitionZone":0.12,"wheelSideBeamPrecompression":0.97},
 
-        {"wheelReinfBeamSpring":10000,"wheelReinfBeamDamp":307},
+        {"wheelReinfBeamSpring":5000,"wheelReinfBeamDamp":307},
         {"wheelReinfBeamDampCutoffHz":500,"wheelReinfBeamPrecompression":0.98},
 
         {"wheelTreadBeamSpring":202500,"wheelTreadBeamDamp":135},
@@ -144,9 +144,9 @@
         {"softnessCoef":0.8},
 
         //deform values
-        {"wheelSideBeamDeform":68000,"wheelSideBeamStrength":88000},
-        {"wheelTreadBeamDeform":52000,"wheelTreadBeamStrength":68000},
-        {"wheelPeripheryBeamDeform":220000,"wheelPeripheryBeamStrength":220000},
+        {"wheelSideBeamDeform":136000,"wheelSideBeamStrength":176000},
+        {"wheelTreadBeamDeform":130000,"wheelTreadBeamStrength":170000},
+        {"wheelPeripheryBeamDeform":550000,"wheelPeripheryBeamStrength":550000},
     ],
 },
 }
