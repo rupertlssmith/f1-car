@@ -318,6 +318,29 @@ Every config: 1.9 g at low speed, 5-6 g braking from 300 km/h.
   - *Underbody scraping:* baseline ride height +10 mm front and rear
     (Spring Height 0 is the new baseline).
   - Sweeps are now relative to Baseline (`build_sweeps()`), so they follow it.
+- **Round 8 (seventh in-game test):**
+  - *Rear wing top broke off on spawn:* its pylon went to the crumple-zone
+    crash box, which moves differently from the gearbox the endplates hang
+    from; the F4-strength (5 kN) endplate-to-wing beams snapped. The pylon
+    now braces from the gearbox top, front and rear; the wing's deform /
+    break forces are 4x the F4's. Under 6 kN + drag: 7 / 6 mm, every wing
+    beam under 8 % of its limit. The stability model now includes hydros
+    (DRS and steering actuators), which it had missed.
+  - *Wheel judder:* suspension beams capped at 6 MN/m (was 4.5), rims 65 %
+    of the F4's stiffness on 0.45 kg nodes, carrier damping 600, heavier
+    uprights and wheel axle nodes (4-5 kg); strengths 5x / 6x (F / R), rims
+    and tyres 4x. Weight distribution 46.5 % front to fit the heavier
+    corners (and help the rear).
+  - *Pulling to one side pulling away:* the drive-torque reaction used a
+    different diagonal pair of engine nodes per wheel; both wheels now use
+    the same symmetric pair. The engine's own torque reaction (644 Nm of
+    chassis roll, loading one rear tyre more) is off: in a longitudinal
+    engine + transaxle it cancels through the gearbox.
+  - *Revs flaring in low gears (wheelspin):* new torque-map controller
+    (`lua/controller/redbullTraction.lua`, key **K**) trims the throttle
+    when the rears slip more than 12 % -- the job 2018 per-gear torque maps
+    did. On by default.
+  - *More grip:* +6.5 % front and rear.
 - **Rear tyre clearance:** the rear floor / diffuser edge nodes sat 20-50 mm
   inside the 405 mm rear tyres' inner face; moved ~8 cm inboard (aero
   factors re-solved for the smaller floor).

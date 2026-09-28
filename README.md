@@ -59,6 +59,7 @@ keys, rebindable under Options > Controls > Bindings > Vehicle Specific:
 |---|---|
 | U | DRS open/close (opens above 72 km/h, closes when you brake) |
 | O | ERS mode: harvest / balanced / overtake |
+| K | Torque map (traction limiter) on/off |
 | T / G | Brake bias forward / back |
 | Y | Pit limiter |
 

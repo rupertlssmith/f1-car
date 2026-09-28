@@ -30,10 +30,10 @@ Tuning menu: Suspension > Anti-Roll Bar (front and rear).
 | Car | Setting | ClA / front | roll F | sag F / R | best? | notes |
 |---|---|---|---|---|---|---|
 | `sweep_roll_1` 1/5 | more front | 5.00 / 41% | 71% | -10.0 / -10.0 mm | | |
-| `sweep_roll_2` 2/5 | front+ | 5.00 / 41% | 67% | -10.0 / -10.0 mm | | |
+| `sweep_roll_2` 2/5 | front+ | 5.00 / 41% | 66% | -10.0 / -10.0 mm | | |
 | `sweep_roll_3` 3/5 (baseline) | baseline | 5.00 / 41% | 62% | -10.0 / -10.0 mm | | |
-| `sweep_roll_4` 4/5 | rear+ | 5.00 / 41% | 58% | -10.0 / -10.0 mm | | |
-| `sweep_roll_5` 5/5 | more rear | 5.00 / 41% | 53% | -10.0 / -10.0 mm | | |
+| `sweep_roll_4` 4/5 | rear+ | 5.00 / 41% | 57% | -10.0 / -10.0 mm | | |
+| `sweep_roll_5` 5/5 | more rear | 5.00 / 41% | 52% | -10.0 / -10.0 mm | | |
 
 ## Sweep 03 · Diff Power Lock
 
@@ -65,11 +65,11 @@ Tuning menu: Suspension > Heave Spring (front and rear).
 
 | Car | Setting | ClA / front | roll F | sag F / R | best? | notes |
 |---|---|---|---|---|---|---|
-| `sweep_heave_1` 1/5 | x0.0 | 5.00 / 41% | 62% | -13.8 / -14.1 mm | | |
-| `sweep_heave_2` 2/5 | x0.5 | 5.00 / 41% | 62% | -11.4 / -11.5 mm | | |
+| `sweep_heave_1` 1/5 | x0.0 | 5.00 / 41% | 62% | -13.5 / -13.5 mm | | |
+| `sweep_heave_2` 2/5 | x0.5 | 5.00 / 41% | 62% | -11.3 / -11.3 mm | | |
 | `sweep_heave_3` 3/5 (baseline) | x1.0 | 5.00 / 41% | 62% | -10.0 / -10.0 mm | | |
-| `sweep_heave_4` 4/5 | x1.5 | 5.00 / 41% | 62% | -9.1 / -9.0 mm | | |
-| `sweep_heave_5` 5/5 | x2.0 | 5.00 / 41% | 62% | -8.5 / -8.3 mm | | |
+| `sweep_heave_4` 4/5 | x1.5 | 5.00 / 41% | 62% | -9.2 / -9.1 mm | | |
+| `sweep_heave_5` 5/5 | x2.0 | 5.00 / 41% | 62% | -8.6 / -8.5 mm | | |
 
 ## Sweep 06 · Ride Height
 
@@ -125,12 +125,12 @@ Tuning menu: Front Wing Angle and Anti-Roll Bars.
 
 | Car | Setting | ClA / front | roll F | sag F / R | best? | notes |
 |---|---|---|---|---|---|---|
-| `sweep_wingxroll_1` 1/9 | wing -5° / roll front | 4.83 / 38% | 67% | -10.0 / -10.0 mm | | |
+| `sweep_wingxroll_1` 1/9 | wing -5° / roll front | 4.83 / 38% | 66% | -10.0 / -10.0 mm | | |
 | `sweep_wingxroll_2` 2/9 | wing -5° / roll base | 4.83 / 38% | 62% | -10.0 / -10.0 mm | | |
-| `sweep_wingxroll_3` 3/9 | wing -5° / roll rear | 4.83 / 38% | 58% | -10.0 / -10.0 mm | | |
-| `sweep_wingxroll_4` 4/9 | wing -3° / roll front | 5.00 / 41% | 67% | -10.0 / -10.0 mm | | |
+| `sweep_wingxroll_3` 3/9 | wing -5° / roll rear | 4.83 / 38% | 57% | -10.0 / -10.0 mm | | |
+| `sweep_wingxroll_4` 4/9 | wing -3° / roll front | 5.00 / 41% | 66% | -10.0 / -10.0 mm | | |
 | `sweep_wingxroll_5` 5/9 (baseline) | wing -3° / roll base | 5.00 / 41% | 62% | -10.0 / -10.0 mm | | |
-| `sweep_wingxroll_6` 6/9 | wing -3° / roll rear | 5.00 / 41% | 58% | -10.0 / -10.0 mm | | |
-| `sweep_wingxroll_7` 7/9 | wing -1° / roll front | 5.17 / 44% | 67% | -10.0 / -10.0 mm | | |
+| `sweep_wingxroll_6` 6/9 | wing -3° / roll rear | 5.00 / 41% | 57% | -10.0 / -10.0 mm | | |
+| `sweep_wingxroll_7` 7/9 | wing -1° / roll front | 5.17 / 44% | 66% | -10.0 / -10.0 mm | | |
 | `sweep_wingxroll_8` 8/9 | wing -1° / roll base | 5.17 / 44% | 62% | -10.0 / -10.0 mm | | |
-| `sweep_wingxroll_9` 9/9 | wing -1° / roll rear | 5.17 / 44% | 58% | -10.0 / -10.0 mm | | |
+| `sweep_wingxroll_9` 9/9 | wing -1° / roll rear | 5.17 / 44% | 57% | -10.0 / -10.0 mm | | |

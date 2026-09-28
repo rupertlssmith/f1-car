@@ -63,15 +63,15 @@
             {"treadCoef":0},
     
             //advanced friction values
-            {"noLoadCoef":2.49},
+            {"noLoadCoef":2.65},
             {"loadSensitivitySlope":0.00025},
-            {"fullLoadCoef":1.0},
+            {"fullLoadCoef":1.07},
             {"softnessCoef":1},
     
             //deform values
-            {"wheelSideBeamDeform":51000,"wheelSideBeamStrength":66000},
-            {"wheelTreadBeamDeform":39000,"wheelTreadBeamStrength":51000},
-            {"wheelPeripheryBeamDeform":165000,"wheelPeripheryBeamStrength":165000},
+            {"wheelSideBeamDeform":68000,"wheelSideBeamStrength":88000},
+            {"wheelTreadBeamDeform":52000,"wheelTreadBeamStrength":68000},
+            {"wheelPeripheryBeamDeform":220000,"wheelPeripheryBeamStrength":220000},
         ],
     },
 "tire_F_redbull_wet": {
@@ -144,9 +144,9 @@
         {"softnessCoef":0.8},
 
         //deform values
-        {"wheelSideBeamDeform":51000,"wheelSideBeamStrength":66000},
-        {"wheelTreadBeamDeform":39000,"wheelTreadBeamStrength":51000},
-        {"wheelPeripheryBeamDeform":165000,"wheelPeripheryBeamStrength":165000},
+        {"wheelSideBeamDeform":68000,"wheelSideBeamStrength":88000},
+        {"wheelTreadBeamDeform":52000,"wheelTreadBeamStrength":68000},
+        {"wheelPeripheryBeamDeform":220000,"wheelPeripheryBeamStrength":220000},
     ],
 },
 }

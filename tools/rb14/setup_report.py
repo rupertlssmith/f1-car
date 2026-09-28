@@ -244,6 +244,13 @@ def stiffness(v, free, fixed_extra=()):
             continue
         u = d / L
         add([a, b], [-u, u], k)
+    for pname, r in v.section("hydros"):        # actuators are springs too (DRS, steering)
+        a, b = r.get("id1:"), r.get("id2:")
+        if a not in v.pos or b not in v.pos or (a not in idx and b not in idx):
+            continue
+        d = v.pos[b] - v.pos[a]
+        u = d / np.linalg.norm(d)
+        add([a, b], [-u, u], v.val(r.get("beamSpring"), 0))
     for pname, r in v.section("torsionbars"):
         ns = [r.get(f"id{i}:") for i in range(1, 5)]
         if any(n not in v.pos for n in ns) or not any(n in idx for n in ns):

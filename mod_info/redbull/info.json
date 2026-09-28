@@ -59,11 +59,11 @@
         ],
         [
             "vehicles/common/redbull_wheels/redbull_tires_F_13.jbeam",
-            "7ab687b2c44c73ef"
+            "2798704f9188c00a"
         ],
         [
             "vehicles/common/redbull_wheels/redbull_tires_R_13.jbeam",
-            "5ef597aacceddf1c"
+            "999fe388bd0e7c6d"
         ],
         [
             "vehicles/common/redbull_wheels/redbull_wheels.dae",
@@ -71,11 +71,11 @@
         ],
         [
             "vehicles/common/redbull_wheels/redbull_wheels_F_13.jbeam",
-            "275d6f42bba6745a"
+            "71f48a2bea36c59d"
         ],
         [
             "vehicles/common/redbull_wheels/redbull_wheels_R_13.jbeam",
-            "1a6bc096b4326857"
+            "71575f747da98752"
         ],
         [
             "vehicles/redbull/aggressive.jpg",
@@ -83,7 +83,7 @@
         ],
         [
             "vehicles/redbull/aggressive.pc",
-            "5224301510bb69de"
+            "3a97fc51320a47ab"
         ],
         [
             "vehicles/redbull/baseline.jpg",
@@ -91,7 +91,7 @@
         ],
         [
             "vehicles/redbull/baseline.pc",
-            "3c9f8d162205dc21"
+            "2205104364fd2e90"
         ],
         [
             "vehicles/redbull/default.jpg",
@@ -103,7 +103,7 @@
         ],
         [
             "vehicles/redbull/highdf.pc",
-            "0db4a493d96cbfca"
+            "4e2281b2630f5dd6"
         ],
         [
             "vehicles/redbull/info.json",
@@ -251,7 +251,7 @@
         ],
         [
             "vehicles/redbull/info_sweep_roll_2.json",
-            "5e31a4aeed07ce17"
+            "1e894b6b99e456f2"
         ],
         [
             "vehicles/redbull/info_sweep_roll_3.json",
@@ -259,11 +259,11 @@
         ],
         [
             "vehicles/redbull/info_sweep_roll_4.json",
-            "b42a6ec096da8007"
+            "8d5c22ea4b62e754"
         ],
         [
             "vehicles/redbull/info_sweep_roll_5.json",
-            "cc3161c634b59928"
+            "500340abf6e1867d"
         ],
         [
             "vehicles/redbull/info_sweep_tyres_1.json",
@@ -307,7 +307,7 @@
         ],
         [
             "vehicles/redbull/info_sweep_wingxroll_1.json",
-            "8de46d38eed4072e"
+            "13de5d9626a1dc29"
         ],
         [
             "vehicles/redbull/info_sweep_wingxroll_2.json",
@@ -315,11 +315,11 @@
         ],
         [
             "vehicles/redbull/info_sweep_wingxroll_3.json",
-            "99fef04ebc019646"
+            "67f15dfcc8ddfb1e"
         ],
         [
             "vehicles/redbull/info_sweep_wingxroll_4.json",
-            "1385883ce065e4d9"
+            "89460121ebbb6b09"
         ],
         [
             "vehicles/redbull/info_sweep_wingxroll_5.json",
@@ -327,11 +327,11 @@
         ],
         [
             "vehicles/redbull/info_sweep_wingxroll_6.json",
-            "8c3207c434b57cce"
+            "4329ceb89262131e"
         ],
         [
             "vehicles/redbull/info_sweep_wingxroll_7.json",
-            "0a5dc07681a7bbe3"
+            "696a39c9f0dfb40b"
         ],
         [
             "vehicles/redbull/info_sweep_wingxroll_8.json",
@@ -339,11 +339,11 @@
         ],
         [
             "vehicles/redbull/info_sweep_wingxroll_9.json",
-            "ae2769756161e9ab"
+            "e71a91b5494ada13"
         ],
         [
             "vehicles/redbull/inputmaps/keyboard.json",
-            "3bee201efe3f7d7f"
+            "0e42d51f95c42125"
         ],
         [
             "vehicles/redbull/lowdf.jpg",
@@ -351,7 +351,7 @@
         ],
         [
             "vehicles/redbull/lowdf.pc",
-            "0a33144c8b70b248"
+            "fdbd15da0ffacac7"
         ],
         [
             "vehicles/redbull/lua/controller/flyBrakeBias.lua",
@@ -368,6 +368,10 @@
         [
             "vehicles/redbull/lua/controller/redbullGroundEffect.lua",
             "cb4e9261e29e4091"
+        ],
+        [
+            "vehicles/redbull/lua/controller/redbullTraction.lua",
+            "2c92dbd066824994"
         ],
         [
             "vehicles/redbull/lua/redbullPitLimiter.lua",
@@ -467,11 +471,11 @@
         ],
         [
             "vehicles/redbull/redbull.interaction.json",
-            "01d914621337ca64"
+            "ee04035590c666fc"
         ],
         [
             "vehicles/redbull/redbull.jbeam",
-            "7433458c0f4e63bf"
+            "a093f8e27e0cc78d"
         ],
         [
             "vehicles/redbull/redbull_accessory.data.dds",
@@ -507,7 +511,7 @@
         ],
         [
             "vehicles/redbull/redbull_crashbox.jbeam",
-            "d5889473be3f874a"
+            "eacf6043c8cebaf1"
         ],
         [
             "vehicles/redbull/redbull_differential_R.jbeam",
@@ -515,7 +519,7 @@
         ],
         [
             "vehicles/redbull/redbull_engine.jbeam",
-            "db5be3727d73fe7d"
+            "fae83fc58ee25cf7"
         ],
         [
             "vehicles/redbull/redbull_engine_ao.data.dds",
@@ -543,7 +547,7 @@
         ],
         [
             "vehicles/redbull/redbull_floor.jbeam",
-            "6dfa140a76abcf2e"
+            "7fb82ae2021cbc59"
         ],
         [
             "vehicles/redbull/redbull_fueltank.jbeam",
@@ -619,11 +623,11 @@
         ],
         [
             "vehicles/redbull/redbull_suspension_F.jbeam",
-            "1dc11f70fa9d8a6c"
+            "5938d0b5b762a498"
         ],
         [
             "vehicles/redbull/redbull_suspension_R.jbeam",
-            "6de4375de010937d"
+            "6659585a4ffecb0a"
         ],
         [
             "vehicles/redbull/redbull_transaxle.jbeam",
@@ -635,7 +639,7 @@
         ],
         [
             "vehicles/redbull/redbull_wing_R.jbeam",
-            "f38a75296543d74e"
+            "1c923e750996572f"
         ],
         [
             "vehicles/redbull/screen/ReloadAlt-Light.ttf",
@@ -663,7 +667,7 @@
         ],
         [
             "vehicles/redbull/sweep_bias_1.pc",
-            "4ddb049fb26ab01f"
+            "d968499acb919435"
         ],
         [
             "vehicles/redbull/sweep_bias_2.jpg",
@@ -671,7 +675,7 @@
         ],
         [
             "vehicles/redbull/sweep_bias_2.pc",
-            "1fd3493f55d6891b"
+            "33cd0d10326464cc"
         ],
         [
             "vehicles/redbull/sweep_bias_3.jpg",
@@ -679,7 +683,7 @@
         ],
         [
             "vehicles/redbull/sweep_bias_3.pc",
-            "3c9f8d162205dc21"
+            "2205104364fd2e90"
         ],
         [
             "vehicles/redbull/sweep_bias_4.jpg",
@@ -687,7 +691,7 @@
         ],
         [
             "vehicles/redbull/sweep_bias_4.pc",
-            "516373cff8db25f5"
+            "97abe01896e577a6"
         ],
         [
             "vehicles/redbull/sweep_bias_5.jpg",
@@ -695,7 +699,7 @@
         ],
         [
             "vehicles/redbull/sweep_bias_5.pc",
-            "86f6465410e11f90"
+            "51f8f99f65b11a68"
         ],
         [
             "vehicles/redbull/sweep_diffcoast_1.jpg",
@@ -703,7 +707,7 @@
         ],
         [
             "vehicles/redbull/sweep_diffcoast_1.pc",
-            "bbb9945ae94d34c9"
+            "f34beca0965d95aa"
         ],
         [
             "vehicles/redbull/sweep_diffcoast_2.jpg",
@@ -711,7 +715,7 @@
         ],
         [
             "vehicles/redbull/sweep_diffcoast_2.pc",
-            "54cce21ee567bcbd"
+            "843386635a17b2ba"
         ],
         [
             "vehicles/redbull/sweep_diffcoast_3.jpg",
@@ -719,7 +723,7 @@
         ],
         [
             "vehicles/redbull/sweep_diffcoast_3.pc",
-            "3c9f8d162205dc21"
+            "2205104364fd2e90"
         ],
         [
             "vehicles/redbull/sweep_diffcoast_4.jpg",
@@ -727,7 +731,7 @@
         ],
         [
             "vehicles/redbull/sweep_diffcoast_4.pc",
-            "f4ea621d4afaf4ae"
+            "4459c7c5d1091cee"
         ],
         [
             "vehicles/redbull/sweep_diffcoast_5.jpg",
@@ -735,7 +739,7 @@
         ],
         [
             "vehicles/redbull/sweep_diffcoast_5.pc",
-            "5ef3020ca31f3cc4"
+            "c8d8f6d72e4f2770"
         ],
         [
             "vehicles/redbull/sweep_diffpower_1.jpg",
@@ -743,7 +747,7 @@
         ],
         [
             "vehicles/redbull/sweep_diffpower_1.pc",
-            "2d70388f81930a32"
+            "3b69109614f307f9"
         ],
         [
             "vehicles/redbull/sweep_diffpower_2.jpg",
@@ -751,7 +755,7 @@
         ],
         [
             "vehicles/redbull/sweep_diffpower_2.pc",
-            "a9e7456a815e4db7"
+            "b02f31c9db92d630"
         ],
         [
             "vehicles/redbull/sweep_diffpower_3.jpg",
@@ -759,7 +763,7 @@
         ],
         [
             "vehicles/redbull/sweep_diffpower_3.pc",
-            "3c9f8d162205dc21"
+            "2205104364fd2e90"
         ],
         [
             "vehicles/redbull/sweep_diffpower_4.jpg",
@@ -767,7 +771,7 @@
         ],
         [
             "vehicles/redbull/sweep_diffpower_4.pc",
-            "d8c53f84b7ae582f"
+            "b35b54af7711e15a"
         ],
         [
             "vehicles/redbull/sweep_diffpower_5.jpg",
@@ -775,7 +779,7 @@
         ],
         [
             "vehicles/redbull/sweep_diffpower_5.pc",
-            "df95d10d1c55c044"
+            "193ba012351b5077"
         ],
         [
             "vehicles/redbull/sweep_heave_1.jpg",
@@ -783,7 +787,7 @@
         ],
         [
             "vehicles/redbull/sweep_heave_1.pc",
-            "f21cfe59577b273c"
+            "443eef5ee48eaf9c"
         ],
         [
             "vehicles/redbull/sweep_heave_2.jpg",
@@ -791,7 +795,7 @@
         ],
         [
             "vehicles/redbull/sweep_heave_2.pc",
-            "34e7f4c66762c136"
+            "4d8d5adaf93dd505"
         ],
         [
             "vehicles/redbull/sweep_heave_3.jpg",
@@ -799,7 +803,7 @@
         ],
         [
             "vehicles/redbull/sweep_heave_3.pc",
-            "3c9f8d162205dc21"
+            "2205104364fd2e90"
         ],
         [
             "vehicles/redbull/sweep_heave_4.jpg",
@@ -807,7 +811,7 @@
         ],
         [
             "vehicles/redbull/sweep_heave_4.pc",
-            "df86713833c55933"
+            "1b513cfca758f8f3"
         ],
         [
             "vehicles/redbull/sweep_heave_5.jpg",
@@ -815,7 +819,7 @@
         ],
         [
             "vehicles/redbull/sweep_heave_5.pc",
-            "6dcfe2cae9a837b2"
+            "7afa778afb867d1a"
         ],
         [
             "vehicles/redbull/sweep_height_1.jpg",
@@ -823,7 +827,7 @@
         ],
         [
             "vehicles/redbull/sweep_height_1.pc",
-            "9458ee88cad4752f"
+            "f3ebc19c6cabe0fb"
         ],
         [
             "vehicles/redbull/sweep_height_2.jpg",
@@ -831,7 +835,7 @@
         ],
         [
             "vehicles/redbull/sweep_height_2.pc",
-            "2e82ed00ddc91396"
+            "a32898a9657c40e3"
         ],
         [
             "vehicles/redbull/sweep_height_3.jpg",
@@ -839,7 +843,7 @@
         ],
         [
             "vehicles/redbull/sweep_height_3.pc",
-            "8aa4feee888bc64e"
+            "815fe760f5653cba"
         ],
         [
             "vehicles/redbull/sweep_height_4.jpg",
@@ -847,7 +851,7 @@
         ],
         [
             "vehicles/redbull/sweep_height_4.pc",
-            "7cb639e26b531927"
+            "260c0cc430f971a7"
         ],
         [
             "vehicles/redbull/sweep_height_5.jpg",
@@ -855,7 +859,7 @@
         ],
         [
             "vehicles/redbull/sweep_height_5.pc",
-            "75e75ca0fe21dd45"
+            "6dcdcee41f92c765"
         ],
         [
             "vehicles/redbull/sweep_rake_1.jpg",
@@ -863,7 +867,7 @@
         ],
         [
             "vehicles/redbull/sweep_rake_1.pc",
-            "d22020147357ec20"
+            "d4f96457bc222f74"
         ],
         [
             "vehicles/redbull/sweep_rake_2.jpg",
@@ -871,7 +875,7 @@
         ],
         [
             "vehicles/redbull/sweep_rake_2.pc",
-            "f125e5e60d385e41"
+            "24732fab5a427cf1"
         ],
         [
             "vehicles/redbull/sweep_rake_3.jpg",
@@ -879,7 +883,7 @@
         ],
         [
             "vehicles/redbull/sweep_rake_3.pc",
-            "7e58b42450588fe7"
+            "ee335a00e2321d6f"
         ],
         [
             "vehicles/redbull/sweep_rake_4.jpg",
@@ -887,7 +891,7 @@
         ],
         [
             "vehicles/redbull/sweep_rake_4.pc",
-            "8405414e153b3266"
+            "e9e4c30182fd58b8"
         ],
         [
             "vehicles/redbull/sweep_rake_5.jpg",
@@ -895,7 +899,7 @@
         ],
         [
             "vehicles/redbull/sweep_rake_5.pc",
-            "2ad471ec78c0d789"
+            "7ffb516f83b81b32"
         ],
         [
             "vehicles/redbull/sweep_roll_1.jpg",
@@ -903,7 +907,7 @@
         ],
         [
             "vehicles/redbull/sweep_roll_1.pc",
-            "c9e5c94ec99e392d"
+            "1e6aafda14ccaa35"
         ],
         [
             "vehicles/redbull/sweep_roll_2.jpg",
@@ -911,7 +915,7 @@
         ],
         [
             "vehicles/redbull/sweep_roll_2.pc",
-            "e6f2a202eaaa1de9"
+            "30d506086ffc5d0d"
         ],
         [
             "vehicles/redbull/sweep_roll_3.jpg",
@@ -919,7 +923,7 @@
         ],
         [
             "vehicles/redbull/sweep_roll_3.pc",
-            "43de1c3e4b250695"
+            "9892e957919ca771"
         ],
         [
             "vehicles/redbull/sweep_roll_4.jpg",
@@ -927,7 +931,7 @@
         ],
         [
             "vehicles/redbull/sweep_roll_4.pc",
-            "9b9543060430fb88"
+            "1418d16e446c21a8"
         ],
         [
             "vehicles/redbull/sweep_roll_5.jpg",
@@ -935,7 +939,7 @@
         ],
         [
             "vehicles/redbull/sweep_roll_5.pc",
-            "6ec2891aa36a3203"
+            "b7a8cb3c55f9f44b"
         ],
         [
             "vehicles/redbull/sweep_tyres_1.jpg",
@@ -943,7 +947,7 @@
         ],
         [
             "vehicles/redbull/sweep_tyres_1.pc",
-            "92ce8ec5ca0ce539"
+            "81827c53c4a27958"
         ],
         [
             "vehicles/redbull/sweep_tyres_2.jpg",
@@ -951,7 +955,7 @@
         ],
         [
             "vehicles/redbull/sweep_tyres_2.pc",
-            "1418ac694096e935"
+            "12838875d2702b60"
         ],
         [
             "vehicles/redbull/sweep_tyres_3.jpg",
@@ -959,7 +963,7 @@
         ],
         [
             "vehicles/redbull/sweep_tyres_3.pc",
-            "4220baea0fb291aa"
+            "5a364028437f337a"
         ],
         [
             "vehicles/redbull/sweep_tyres_4.jpg",
@@ -967,7 +971,7 @@
         ],
         [
             "vehicles/redbull/sweep_tyres_4.pc",
-            "a557b6dec5cc638f"
+            "837b97d809164329"
         ],
         [
             "vehicles/redbull/sweep_tyres_5.jpg",
@@ -975,7 +979,7 @@
         ],
         [
             "vehicles/redbull/sweep_tyres_5.pc",
-            "4e9df268ea43444f"
+            "68d93172d71afc5b"
         ],
         [
             "vehicles/redbull/sweep_wingF_1.jpg",
@@ -983,7 +987,7 @@
         ],
         [
             "vehicles/redbull/sweep_wingF_1.pc",
-            "b8dee5f4a8c3479e"
+            "b82549024a15be9b"
         ],
         [
             "vehicles/redbull/sweep_wingF_2.jpg",
@@ -991,7 +995,7 @@
         ],
         [
             "vehicles/redbull/sweep_wingF_2.pc",
-            "524b98b3c90d8bee"
+            "8a28ab5b53a7e165"
         ],
         [
             "vehicles/redbull/sweep_wingF_3.jpg",
@@ -999,7 +1003,7 @@
         ],
         [
             "vehicles/redbull/sweep_wingF_3.pc",
-            "8b2aa5407e8d930d"
+            "2a3a3f0571a2bb1a"
         ],
         [
             "vehicles/redbull/sweep_wingF_4.jpg",
@@ -1007,7 +1011,7 @@
         ],
         [
             "vehicles/redbull/sweep_wingF_4.pc",
-            "a89804db8f4f9582"
+            "4da65646fc4525df"
         ],
         [
             "vehicles/redbull/sweep_wingF_5.jpg",
@@ -1015,7 +1019,7 @@
         ],
         [
             "vehicles/redbull/sweep_wingF_5.pc",
-            "a8c5ff23aa4d781b"
+            "9d8a7cece2d6f02c"
         ],
         [
             "vehicles/redbull/sweep_wingxroll_1.jpg",
@@ -1023,7 +1027,7 @@
         ],
         [
             "vehicles/redbull/sweep_wingxroll_1.pc",
-            "4c2efabb1e346778"
+            "1e34a64e72092819"
         ],
         [
             "vehicles/redbull/sweep_wingxroll_2.jpg",
@@ -1031,7 +1035,7 @@
         ],
         [
             "vehicles/redbull/sweep_wingxroll_2.pc",
-            "026049a3b9844402"
+            "003036514872a2d8"
         ],
         [
             "vehicles/redbull/sweep_wingxroll_3.jpg",
@@ -1039,7 +1043,7 @@
         ],
         [
             "vehicles/redbull/sweep_wingxroll_3.pc",
-            "87503a2e0e04631e"
+            "394d9953445b78ff"
         ],
         [
             "vehicles/redbull/sweep_wingxroll_4.jpg",
@@ -1047,7 +1051,7 @@
         ],
         [
             "vehicles/redbull/sweep_wingxroll_4.pc",
-            "0eab339ff84a964e"
+            "39e448ebbe2cbb47"
         ],
         [
             "vehicles/redbull/sweep_wingxroll_5.jpg",
@@ -1055,7 +1059,7 @@
         ],
         [
             "vehicles/redbull/sweep_wingxroll_5.pc",
-            "bfdedbf2a8937849"
+            "42fbac8050390354"
         ],
         [
             "vehicles/redbull/sweep_wingxroll_6.jpg",
@@ -1063,7 +1067,7 @@
         ],
         [
             "vehicles/redbull/sweep_wingxroll_6.pc",
-            "f865634102e5b8d3"
+            "d00bd3ed0c95cb11"
         ],
         [
             "vehicles/redbull/sweep_wingxroll_7.jpg",
@@ -1071,7 +1075,7 @@
         ],
         [
             "vehicles/redbull/sweep_wingxroll_7.pc",
-            "646d804a0100c774"
+            "33903a1f7f100cde"
         ],
         [
             "vehicles/redbull/sweep_wingxroll_8.jpg",
@@ -1079,7 +1083,7 @@
         ],
         [
             "vehicles/redbull/sweep_wingxroll_8.pc",
-            "91f6a4ff9717c241"
+            "90995dafe4526ac9"
         ],
         [
             "vehicles/redbull/sweep_wingxroll_9.jpg",
@@ -1087,7 +1091,7 @@
         ],
         [
             "vehicles/redbull/sweep_wingxroll_9.pc",
-            "a79ee1c1171ec45f"
+            "d5ba404d99ab6841"
         ]
     ]
 }

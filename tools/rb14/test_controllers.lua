@@ -146,5 +146,26 @@ drop = -0.03
 run(ge, 1, 0.02)
 check(e.floorGE < 1 and e.floorGEUp > 0, string.format("30 mm higher: g %.2f, up control %.2f", e.floorGE, e.floorGEUp))
 
+-- ------------------------------------------------------------ traction
+print("redbullTraction")
+electrics.values = {}
+e = electrics.values
+local rr, rl = {name = "RR", wheelSpeed = 0}, {name = "RL", wheelSpeed = 0}
+wheels = {wheels = {rr, rl, {name = "FR", wheelSpeed = 0}}}
+local tc = require("redbullTraction")
+tc.init({targetSlip = 0.12, minSlipSpeed = 2.5, gain = 4.0, release = 3.0})
+e.airspeed = 10
+rr.wheelSpeed, rl.wheelSpeed = 10.5, 10.5
+e.throttle = 1
+tc.updateGFX(0.02)
+check(e.throttle == 1 and e.tcActive == 0, "gripping: throttle untouched")
+for _ = 1, 10 do rr.wheelSpeed, rl.wheelSpeed = 20, 20; e.throttle = 1; tc.updateGFX(0.02) end
+check(e.throttle < 0.9 and e.tcActive == 1, string.format("rears spinning at 2x road speed: throttle trimmed to %.2f", e.throttle))
+for _ = 1, 50 do rr.wheelSpeed, rl.wheelSpeed = 10.5, 10.5; e.throttle = 1; tc.updateGFX(0.02) end
+check(e.throttle == 1, "grip back: full throttle restored")
+e.tcMode = 0
+for _ = 1, 5 do rr.wheelSpeed, rl.wheelSpeed = 20, 20; e.throttle = 1; tc.updateGFX(0.02) end
+check(e.throttle == 1, "switched off: no trimming")
+
 print(failures == 0 and "all controller checks passed" or (failures .. " check(s) FAILED"))
 os.exit(failures == 0 and 0 or 1)

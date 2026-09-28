@@ -1,7 +1,7 @@
 {
   "Config Type": "Custom",
   "Configuration": "Sweep 10 · Wing x Roll wing -3° / roll front (4/9)",
-  "Description": "Setup sweep 10, step 4 of 9: wing x roll wing -3° / roll front. Everything else is Baseline. Tuning menu: Front Wing Angle and Anti-Roll Bars (wing_angle_F -3, arb_spring_F 300000, arb_spring_R 90000). Offline estimate: ClA 5.00 m², 41% front at 300 km/h, front roll stiffness 67%.",
+  "Description": "Setup sweep 10, step 4 of 9: wing x roll wing -3° / roll front. Everything else is Baseline. Tuning menu: Front Wing Angle and Anti-Roll Bars (wing_angle_F -3, arb_spring_F 300000, arb_spring_R 90000). Offline estimate: ClA 5.00 m², 41% front at 300 km/h, front roll stiffness 66%.",
   "Drivetrain": "RWD",
   "Fuel Type": "Gasoline",
   "Induction Type": "Turbo",

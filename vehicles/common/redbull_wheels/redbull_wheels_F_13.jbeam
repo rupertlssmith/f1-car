@@ -21,7 +21,7 @@
             {"collision":true},
             {"selfCollision":true},
             //front wheels
-            {"nodeWeight":4.0},
+            {"nodeWeight":4.5},
             {"nodeMaterial":"|NM_METAL"},
             {"chemEnergy":200,"burnRate":0.5,"flashPoint":300,"smokePoint":200,"selfIgnition":0,"specHeat":1},
             {"frictionCoef":0.5},
@@ -59,10 +59,10 @@
             {"numRays":16},
     
             //hub options
-            {"hubTreadBeamSpring":544995, "hubTreadBeamDamp":10},
-            {"hubPeripheryBeamSpring":544995, "hubPeripheryBeamDamp":10},
-            {"hubSideBeamSpring":880550, "hubSideBeamDamp":10},
-            {"hubBeamDeform":130800, "hubBeamStrength":234000},
+            {"hubTreadBeamSpring":644085, "hubTreadBeamDamp":10},
+            {"hubPeripheryBeamSpring":644085, "hubPeripheryBeamDamp":10},
+            {"hubSideBeamSpring":1040650, "hubSideBeamDamp":10},
+            {"hubBeamDeform":174400, "hubBeamStrength":312000},
             {"hubNodeWeight":0.45},
             {"hubNodeMaterial":"|NM_METAL"},
             {"hubFrictionCoef":0.5},
@@ -90,7 +90,7 @@
         {"collision":true},
         {"selfCollision":true},
         //front wheels
-        {"nodeWeight":4.0},
+        {"nodeWeight":4.5},
         {"nodeMaterial":"|NM_METAL"},
         {"chemEnergy":200,"burnRate":0.5,"flashPoint":300,"smokePoint":200,"selfIgnition":0,"specHeat":1},
         {"frictionCoef":0.5},
@@ -128,10 +128,10 @@
         {"numRays":16},
 
         //hub options
-        {"hubTreadBeamSpring":544995, "hubTreadBeamDamp":10},
-        {"hubPeripheryBeamSpring":544995, "hubPeripheryBeamDamp":10},
-        {"hubSideBeamSpring":880550, "hubSideBeamDamp":10},
-        {"hubBeamDeform":130800, "hubBeamStrength":234000},
+        {"hubTreadBeamSpring":644085, "hubTreadBeamDamp":10},
+        {"hubPeripheryBeamSpring":644085, "hubPeripheryBeamDamp":10},
+        {"hubSideBeamSpring":1040650, "hubSideBeamDamp":10},
+        {"hubBeamDeform":174400, "hubBeamStrength":312000},
         {"hubNodeWeight":0.45},
         {"hubNodeMaterial":"|NM_METAL"},
         {"hubFrictionCoef":0.5},

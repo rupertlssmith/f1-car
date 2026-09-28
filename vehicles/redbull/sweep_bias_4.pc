@@ -9,7 +9,7 @@
     "$brakebias": 0.6,
     "$brakestrength": 1,
     "$camber_F": 0.985,
-    "$camber_R": 0.9979,
+    "$camber_R": 0.9974,
     "$caster_F": 1.018,
     "$damp_bump_F": 14000,
     "$damp_bump_R": 19000,

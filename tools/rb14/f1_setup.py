@@ -51,14 +51,14 @@ def mass():
     weights(f"{V}/redbull_differential_R.jbeam", {"rdiff": DIFF_NODE_WEIGHT})
     # rear crash structure: the F4's 1 kg nodes sit right at the stability limit
     weights(f"{V}/redbull_crashbox.jbeam", {n: 1.15 for n in ("cb1r", "cb1l")})
-    # upper crash structure carries the rear-wing pylon
-    weights(f"{V}/redbull_crashbox.jbeam", {n: 2.0 for n in ("cb3r", "cb3l", "cb4r", "cb4l")})
+    weights(f"{V}/redbull_crashbox.jbeam", {n: 1.15 for n in ("cb3r", "cb3l")})
+    weights(f"{V}/redbull_crashbox.jbeam", {n: 1.0 for n in ("cb4r", "cb4l")})
     # uprights, brakes, wishbone ends: roughly half the F4's corner mass
     weights(f"{V}/redbull_suspension_F.jbeam", {
-        "fh1r": 4, "fh1l": 4, "fh2r": 1, "fh2l": 1, "fh3r": 3, "fh3l": 3, "fh4r": 3, "fh4l": 3, "fh5r": 3, "fh5l": 3})
+        "fh1r": 5, "fh1l": 5, "fh2r": 1, "fh2l": 1, "fh3r": 4, "fh3l": 4, "fh4r": 4, "fh4l": 4, "fh5r": 4, "fh5l": 4})
     weights(f"{V}/redbull_suspension_R.jbeam", {
-        "rh1r": 4, "rh1l": 4, "rh3r": 3, "rh3l": 3, "rh4r": 3, "rh4l": 3})
-    weights(f"{V}/redbull_suspension_F.jbeam", {"fh6r": 5, "fh6l": 5})      # steering rack ends (stiff rack: see stiffness())
+        "rh1r": 5, "rh1l": 5, "rh3r": 4, "rh3l": 4, "rh4r": 4, "rh4l": 4})
+    weights(f"{V}/redbull_suspension_F.jbeam", {"fh6r": 6.5, "fh6l": 6.5})  # steering rack ends (stiff rack: see stiffness())
     # chassis nodes that carry very stiff beams keep enough mass for the
     # 2 kHz solver (see stiffness() below)
     weights(f"{V}/redbull_body.jbeam", CHASSIS_MIN_MASS)
@@ -71,7 +71,7 @@ def mass():
 # group of floor nodes are scaled from these shapes.
 BALLAST_F = {"fl1r": 9, "fl1l": 9, "fl2": 14, "fl2r": 6, "fl2l": 6}
 BALLAST_R = {"fl3": 25, "fl3r": 15, "fl3l": 15, "fl4": 20, "fl4r": 7, "fl4l": 7}
-DRY_MASS, FRONT = 733.0, 0.455
+DRY_MASS, FRONT = 733.0, 0.465   # 46.5 % front (round 8: heavier wheel carriers; also calms the rear)
 
 
 def ballast():
@@ -123,17 +123,17 @@ def ballast():
 # changes). Chassis and gearbox nodes get mass instead, paid for by the
 # plank ballast (solved in ballast()).
 MAX_OMEGA_DT = float(os.environ.get("RB14_MAX_OMEGA_DT", 1.65))
-HUB_SPRING_SCALE = 0.55                      # hub beams vs the F4's (hub nodes 0.35 vs 0.55 kg)
+HUB_SPRING_SCALE = 0.65                      # hub beams vs the F4's (hub nodes 0.35 vs 0.55 kg)
 HUB_NODE_WEIGHT = 0.45                       # kg x 32 per rim (was 0.35; F4 0.55)
-CARRIER_DAMP = 400                           # beamDamp floor on the capped wheel-carrier beams
-WHEEL_AXLE_WEIGHT = 4.0                      # kg, wheel axle nodes (F4: 5)
+CARRIER_DAMP = 600                           # beamDamp floor on the capped wheel-carrier beams
+WHEEL_AXLE_WEIGHT = 4.5                      # kg, wheel axle nodes (F4: 5)
 CHASSIS_MIN_MASS = {"rt4r": 4.5, "rt4l": 4.5}
 HUB_TORSION_F = 80000                        # was 200000 (F4)
 SPRING_CAP = {                               # part -> highest beamSpring (N/m)
-    "redbull_suspension_F": 4.5e6,
+    "redbull_suspension_F": 6.0e6,
     "redbull_steering": 10.0e6,          # steering hydros at the F4's 10 MN/m (tie rods 14 -> 10): a softer rack let
                                           # the front wheels sit off-centre after a turn
-    "redbull_suspension_R": 4.5e6,
+    "redbull_suspension_R": 6.0e6,
 }
 SPRING_CAP_FILES = {"redbull_suspension_F": "suspension_F", "redbull_steering": "suspension_F",
                     "redbull_suspension_R": "suspension_R"}
@@ -211,14 +211,17 @@ def stiffness():
 # further apart allow more torque before running into stability issues" --
 # 5 kg gearbox nodes 0.4-0.5 m away made the rear wheels shake and break
 # under first-gear torque (4.8 kNm per wheel).
-DRIVE_REACTION = {"R": ("rdiff", "e2r", "e4l"), "L": ("rdiff", "e2l", "e4r")}
+# Round 8: the car pulled to one side pulling away. Both wheels now use the
+# same, left-right symmetric set (the two lower engine nodes); before, each
+# wheel had its own diagonal pair.
+DRIVE_REACTION = {"R": ("rdiff", "e2r", "e2l"), "L": ("rdiff", "e2l", "e2r")}
 DIFF_NODE_WEIGHT = 10.0         # kg, differential + final drive (was 5)
 BRAKE_ARM_R = {"R": "rh3r", "L": "rh3l"}      # upper upright node, 13 cm lever
 # part -> (file, deform/strength multiple of the F4's). setup_report's
 # strength_report() load cases (aero at 300 km/h, 5 g braking, 4.7 g
 # cornering, traction, each with a 1.5x bump factor) must stay under half
 # of every corner beam's beamDeform (STRENGTH_MAX_RATIO).
-STRENGTH_PARTS = {"redbull_suspension_F": ("suspension_F", 4.0), "redbull_suspension_R": ("suspension_R", 5.0),
+STRENGTH_PARTS = {"redbull_suspension_F": ("suspension_F", 5.0), "redbull_suspension_R": ("suspension_R", 6.0),
                   "redbull_coilover_F": ("suspension_F", 4.0), "redbull_coilover_R": ("suspension_R", 4.0),
                   "redbull_swaybar_F": ("suspension_F", 4.0), "redbull_swaybar_R": ("suspension_R", 4.0),
                   "redbull_steering": ("suspension_F", 3.0),
@@ -226,8 +229,8 @@ STRENGTH_PARTS = {"redbull_suspension_F": ("suspension_F", 4.0), "redbull_suspen
 STRENGTH_MAX_RATIO = 0.5
 TORSION_DEFORM = 40000          # Nm, ARB and heave torsionbars (F4 ARB: 10000)
 # the F4's tyres and rims carried ~1.5 g on a 650 kg car; F1 loads are 3-4x
-TYRE_STRENGTH_SCALE = 3.0
-RIM_STRENGTH_SCALE = 3.0
+TYRE_STRENGTH_SCALE = 4.0
+RIM_STRENGTH_SCALE = 4.0
 
 
 def torque_paths():
@@ -291,6 +294,12 @@ WING_R_STIFF = 3.0
 WING_R_DAMP = 150
 WING_R_WEIGHTS = {"wing": 0.6, "beamwing": 0.8, "beamwing_mid": 0.9, "endplate": 0.6}
 PYLON = dict(spring=1201000, damp=200, deform=60000, strength=150000)
+# The pylon lands on the gearbox, the same rigid structure the beam wing
+# and endplates hang from. (Round 8: mounted on the crumple-zone crash box
+# it moved differently from the endplates on the spawn jolt and snapped
+# the F4-strength endplate-to-wing beams -- the wing top broke off.)
+PYLON_BASE = ("rx4r", "rx4l", "rx3r", "rx3l")   # gearbox top, rear and front: braced fore-aft
+WING_R_STRENGTH = 4.0           # deform / break forces of the wing's beams vs the F4's
 
 
 def rear_wing():
@@ -317,12 +326,20 @@ def rear_wing():
             k, d = int(k * WING_R_STIFF), max(d, WING_R_DAMP)
         return '{"beamSpring":%d,"beamDamp":%d}' % (k, d)
     text = pat.sub(row, text)
+    # deform / break forces with the stiffness (from the F4 originals)
+    pat = re.compile(r'\{"beamDeform":("FLT_MAX"|\d+),"beamStrength":("FLT_MAX"|\d+)\}')
+    src = pat.findall(orig)
+    if len(pat.findall(text)) != len(src):
+        raise ValueError("rear wing: deform/strength rows differ from the F4")
+    it = iter(src)
+    scale = lambda x: x if x.startswith('"') else "%d" % (int(x) * WING_R_STRENGTH)
+    text = pat.sub(lambda m: (lambda d, st: '{"beamDeform":%s,"beamStrength":%s}' % (scale(d), scale(st)))(*next(it)), text)
     # pylon, inline options so nothing carries on into later parts
-    text = re.sub(r'          //pylon \(f1_setup\.py\).*?\r\n(          \["rwg2","cb[34][rl]", \{[^}]*\}\],\r\n)+', "", text, flags=re.S)
+    text = re.sub(r'          //pylon \(f1_setup\.py\).*?\r\n(          \["rwg2","(?:cb|rx)[1-4][rl]", \{[^}]*\}\],\r\n)+', "", text, flags=re.S)
     opts = ('{"beamSpring":%d, "beamDamp":%d, "beamDeform":%d, "beamStrength":%d, "breakGroup":"wing_R_pylon"}'
             % (PYLON["spring"], PYLON["damp"], PYLON["deform"], PYLON["strength"]))
-    block = "          //pylon (f1_setup.py): swan neck from the trailing edge to the crash structure\r\n" + "".join(
-        '          ["rwg2","%s", %s],\r\n' % (n, opts) for n in ("cb3r", "cb3l", "cb4r", "cb4l"))
+    block = "          //pylon (f1_setup.py): swan neck from the trailing edge to the gearbox\r\n" + "".join(
+        '          ["rwg2","%s", %s],\r\n' % (n, opts) for n in PYLON_BASE)
     at = text.index('    ],\r\n    "hydros": [')
     text = text[:at] + block + text[at:]
     je._write(f, text)
@@ -388,7 +405,7 @@ def wheels():
 # with 3x-weight downforce, ~4.5 g).
 # The 405 mm rears get ~5 % more grip than the 305 mm fronts (round 7: the
 # rear let go too easily; wider tyres, same load sensitivity).
-TYRE_GRIP = {"F": (2.49, 1.00), "R": (2.61, 1.05)}      # noLoadCoef, fullLoadCoef
+TYRE_GRIP = {"F": (2.65, 1.07), "R": (2.78, 1.12)}      # noLoadCoef, fullLoadCoef (round 8: +6.5 % all round)
 
 
 def tyres():
@@ -702,6 +719,14 @@ def _set_torque_table(path, rows):
 
 def power_unit():
     f = f"{V}/redbull_engine.jbeam"
+    # No engine-block torque reaction: in a longitudinal engine + transaxle the
+    # crank's roll reaction is cancelled by the gearbox and final drive; BeamNG
+    # applied the full 644 Nm as chassis roll, loading one rear tyre more than
+    # the other -- the car pulled to one side pulling away (round 8).
+    import re
+    text = je._read(f)
+    text = re.sub(r'        "torqueReactionNodes:":\["e1l","e2l","e4r"\],\r\n', '        //"torqueReactionNodes:":["e1l","e2l","e4r"], (off, see tools/rb14/f1_setup.py)\r\n', text)
+    je._write(f, text)
     total = [(r, round(t + ers_torque(r) * (1 if r >= 1000 else 0))) for r, t in ICE_CURVE]
     _set_torque_table(f, total)
     je.set_in_part(f, "redbull_engine_i4", r'"name":"[^"]*"', '"name":"1.6L V6 Turbo Hybrid Power Unit"')
@@ -850,14 +875,15 @@ def hybrid():
     ers = ('["redbullERS", {"order":1000, "deployKW":%g, "maxTorque":%g, "storeMJ":4.0, "mguhKW":40, "harvestKW":120, '
            '"iceTorque":%s}]' % (ERS_KW, ERS_MAX_TQ, ice))
     drs = '["redbullDRS", {"minSpeed":20}]'
+    tc = '["redbullTraction", {"order":1100, "targetSlip":0.12, "minSlipSpeed":2.5, "gain":4.0, "release":3.0}]'
     text = je._read(m)
     import re
-    text = re.sub(r',\r\n        \["redbullERS", \{.*?\}\]', "", text)
-    text = re.sub(r',\r\n        \["redbullDRS", \{.*?\}\]', "", text)
+    for c in ("redbullERS", "redbullDRS", "redbullTraction"):
+        text = re.sub(r',\r\n        \["%s", \{.*?\}\]' % c, "", text)
     i = text.index('        ["flyBrakeBias"')
     j = text.index("\r\n", i)
-    text = text[:j] + ",\r\n        " + ers + ",\r\n        " + drs + text[j:]
-    for action in ("ersMode", "drsToggle"):
+    text = text[:j] + ",\r\n        " + ers + ",\r\n        " + drs + ",\r\n        " + tc + text[j:]
+    for action in ("ersMode", "drsToggle", "tcMode"):
         if '["%s"]' % action not in text:
             k = text.index('        ["biasMinus"],')
             k = text.index("\r\n", k) + 2

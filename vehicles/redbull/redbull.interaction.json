@@ -25,6 +25,12 @@
     "title": "Cycle ERS Mode",
     "desc": "Cycles the energy recovery system: harvest / balanced / overtake"
 },
+"tcMode":{
+    "order":  100.6,
+    "onUp":"electrics.values.tcMode = 1-(electrics.values.tcMode or 1)",
+    "title": "Toggle Torque Map",
+    "desc": "Low-gear torque map / traction limiter on or off"
+},
 "biasMinus":{
     "order":  100.3,
     "onDown":"electrics.values.biasChange = electrics.values.biasChange - 0.01",

@@ -97,7 +97,7 @@
         "maxOverTorqueDamage":1200,
 
         //node beam interface
-        "torqueReactionNodes:":["e1l","e2l","e4r"],
+        //"torqueReactionNodes:":["e1l","e2l","e4r"], (off, see tools/rb14/f1_setup.py)
         "waterDamage": {"[engineGroup]:":["engine_intake"]},
         "radiator": {"[engineGroup]:":["radiator"]},
         "engineBlock": {"[engineGroup]:":["engine_block"]},
