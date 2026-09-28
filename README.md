@@ -62,6 +62,13 @@ keys, rebindable under Options > Controls > Bindings > Vehicle Specific:
 | T / G | Brake bias forward / back |
 | Y | Pit limiter |
 
+The build also carries **setup sweeps**: test cars listed as *Sweep NN · ...*
+that each change one setting from Baseline in five steps (front wing, roll
+balance, diff locking, heave springs, ride height, rake, tyre pressures,
+brake bias, and a wing x roll grid). Drive a sweep back to back and note the
+best step in [`plans/sweeps.md`](plans/sweeps.md). Build without them with
+`python3 tools/build_mod.py --no-sweeps`.
+
 The setup numbers (mass, rates, aero, power, gearing) and how they were
 derived are in [`plans/rb14-model-swap.md`](plans/rb14-model-swap.md)
 (Milestone 4); `python3 tools/rb14/setup_report.py --config baseline` prints

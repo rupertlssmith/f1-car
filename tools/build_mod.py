@@ -90,9 +90,13 @@ def main():
     ap.add_argument("--out", default="dist", help="output directory (default: dist)")
     ap.add_argument("--update-manifest", action="store_true",
                     help="write the regenerated hashes back to mod_info/<mod>/info.json")
+    ap.add_argument("--no-sweeps", action="store_true",
+                    help="leave out the setup-sweep test cars (sweep_*.pc, tools/rb14/sweeps.py)")
     args = ap.parse_args()
 
     files = list_files(mod_dirs(args.mod))
+    if args.no_sweeps:
+        files = [f for f in files if not os.path.basename(f).startswith(("sweep_", "info_sweep_"))]
     manifest_rel = f"mod_info/{args.mod}/info.json"
     info = build_manifest(args.mod, files)
     manifest = json.dumps(info, indent=4, ensure_ascii=False) + "\n"

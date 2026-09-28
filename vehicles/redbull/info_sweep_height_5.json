@@ -1,0 +1,13 @@
+{
+  "Config Type": "Custom",
+  "Configuration": "Sweep 06 · Ride Height +6 mm (5/5)",
+  "Description": "Setup sweep 06, step 5 of 5: ride height +6 mm. Everything else is Baseline. Tuning menu: Suspension > Spring Height (front and rear) (springheight_F 0.006, springheight_R 0.006). Static ride height +6 mm front / +6 mm rear vs Baseline (the aero change from ride height and rake only shows in the game).",
+  "Drivetrain": "RWD",
+  "Fuel Type": "Gasoline",
+  "Induction Type": "Turbo",
+  "Propulsion": "Hybrid",
+  "Transmission": "Sequential",
+  "Off-Road Score": 0,
+  "Population": 0,
+  "Value": 12000000
+}
