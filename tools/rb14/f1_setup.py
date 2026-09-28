@@ -40,14 +40,14 @@ def mass():
         "mt1r": 8, "mt1l": 8, "mt1": 10,                        # tub floor, front
         "rt2r": 3, "rt2l": 3, "rt4r": 3, "rt4l": 3,             # cockpit rim / hoop base
         "mt2r": 5, "mt2l": 5, "mt3": 8, "fs1": 6,
-        "fx1r": 5.5, "fx1l": 5.5, "fx2r": 5.5, "fx2l": 5.5,     # front bulkhead, low
-        "fx3r": 5, "fx3l": 5, "fx4r": 5, "fx4l": 5})
+        "fx1r": 6.0, "fx1l": 6.0, "fx2r": 5.5, "fx2l": 5.5,     # front bulkhead, low
+        "fx3r": 5.5, "fx3l": 5.5, "fx4r": 5.5, "fx4l": 5.5})
     # power unit 145 kg (ICE, turbo, MGU-K/H), CoG ~0.3 m
-    weights(f"{V}/redbull_engine.jbeam", {
-        "e1r": 25, "e1l": 25, "e2r": 25, "e2l": 25, "e3r": 11.25, "e3l": 11.25, "e4r": 11.25, "e4l": 11.25})
+    weights(f"{V}/redbull_engine.jbeam", {      # (e2r/l: + ballast, see ballast())
+        "e1r": 25, "e1l": 25, "e3r": 11.25, "e3l": 11.25, "e4r": 11.25, "e4l": 11.25})
     # gearbox + casing ~40 kg
-    weights(f"{V}/redbull_transaxle.jbeam", {
-        "rx1r": 5, "rx1l": 5, "rx2r": 5, "rx2l": 5, "rx3r": 5, "rx3l": 5, "rx4r": 5, "rx4l": 5})
+    weights(f"{V}/redbull_transaxle.jbeam", {      # (rx1r/l: + ballast)
+        "rx2r": 5, "rx2l": 5, "rx3r": 5, "rx3l": 5, "rx4r": 5, "rx4l": 5})
     weights(f"{V}/redbull_differential_R.jbeam", {"rdiff": DIFF_NODE_WEIGHT})
     # rear crash structure: the F4's 1 kg nodes sit right at the stability limit
     weights(f"{V}/redbull_crashbox.jbeam", {n: 1.15 for n in ("cb1r", "cb1l")})
@@ -65,46 +65,47 @@ def mass():
     ballast()
 
 
-# Plank ballast + ES (battery, ~25 kg) along the centre of the floor. Solved
-# (setup_report) so the car makes 733 kg with the driver and no fuel and
-# 45.5 % front whatever the other node weights are: a front group and a rear
-# group of floor nodes are scaled from these shapes.
-BALLAST_F = {"fl1r": 9, "fl1l": 9, "fl2": 14, "fl2r": 6, "fl2l": 6}
-BALLAST_R = {"fl3": 25, "fl3r": 15, "fl3l": 15, "fl4": 20, "fl4r": 7, "fl4l": 7}
+# Ballast + ES (battery, ~25 kg), solved (setup_report) so the car makes
+# 733 kg with the driver and no fuel and 46.5 % front whatever the other node
+# weights are: a front and a rear group of nodes get extra mass in these
+# proportions. It sits on the tub's floor nodes (heavy, stiffly braced)
+# rather than on the floor, whose beams were never meant to carry it
+# (round 9); the floor nodes are back to the F4's weights.
+BALLAST_F = {"fx2r": 1, "fx2l": 1, "mt1": 1}                 # front of the tub floor
+BALLAST_R = {"e2r": 1, "e2l": 1, "rx1r": 1, "rx1l": 1}       # engine sump and gearbox front
+BALLAST_BASE = {"fx2r": ("body", 5.5), "fx2l": ("body", 5.5), "mt1": ("body", 10),
+                "e2r": ("engine", 25), "e2l": ("engine", 25), "rx1r": ("transaxle", 5), "rx1l": ("transaxle", 5)}   # node: (file, kg before ballast)
+FLOOR_F4 = {"fl1r": 1.8, "fl1l": 1.8, "fl2": 1.8, "fl2r": 1.0, "fl2l": 1.0, "fl3": 1.8, "fl3r": 1.0, "fl3l": 1.0,
+            "fl4": 1.8, "fl4r": 1.0, "fl4l": 1.0}
 DRY_MASS, FRONT = 733.0, 0.465   # 46.5 % front (round 8: heavier wheel carriers; also calms the rear)
 
 
 def ballast():
     import numpy as np
     import setup_report as sr
-    f = f"{V}/redbull_floor.jbeam"
-    weights(f, {**BALLAST_F, **BALLAST_R})
+    weights(f"{V}/redbull_floor.jbeam", FLOOR_F4)
+    def put(table):
+        for n, w in table.items():
+            weights(f"{V}/redbull_{BALLAST_BASE[n][0]}.jbeam", {n: w})
+    put({n: base for n, (_, base) in BALLAST_BASE.items()})
 
-    def state():
-        v = sr.Vehicle("redbull", None)
-        v.variables["$fuel"] = 0
-        v._nodes()
-        mr = sr.mass_report(v)
-        return mr["total"], mr["front"] * mr["total"]
-
-    m0, f0 = state()
-    sF, sR = sum(BALLAST_F.values()), sum(BALLAST_R.values())
-    # front-axle share of each group (lever rule on the node positions)
     v = sr.Vehicle("redbull", None)
+    v.variables["$fuel"] = 0
+    v._nodes()
     mr = sr.mass_report(v)
+    m0, f0 = mr["total"], mr["front"] * mr["total"]
+    # front-axle share of each group (lever rule on the node positions)
     share = lambda g: sum(w * (mr["yr"] - v.pos[n][1]) / (mr["yr"] - mr["yf"]) for n, w in g.items()) / sum(g.values())
     aF, aR = share(BALLAST_F), share(BALLAST_R)
-    # solve for new group totals xF, xR
     A = np.array([[1, 1], [aF, aR]])
-    b = np.array([DRY_MASS - (m0 - sF - sR), FRONT * DRY_MASS - (f0 - aF * sF - aR * sR)])
+    b = np.array([DRY_MASS - m0, FRONT * DRY_MASS - f0])
     xF, xR = np.linalg.solve(A, b)
     if xF < 0 or xR < 0:
         raise ValueError(f"ballast would be negative (front {xF:.1f}, rear {xR:.1f} kg): car too heavy")
-    if min(xF / sF, xR / sR) * min(min(BALLAST_F.values()), min(BALLAST_R.values())) < 1.0:
-        raise ValueError(f"ballast too small (front {xF:.1f}, rear {xR:.1f} kg): floor nodes would drop under 1 kg")
-    new = {n: round(w * xF / sF, 2) for n, w in BALLAST_F.items()}
-    new.update({n: round(w * xR / sR, 2) for n, w in BALLAST_R.items()})
-    weights(f, new)
+    sF, sR = sum(BALLAST_F.values()), sum(BALLAST_R.values())
+    new = {n: round(BALLAST_BASE[n][1] + w * xF / sF, 2) for n, w in BALLAST_F.items()}
+    new.update({n: round(BALLAST_BASE[n][1] + w * xR / sR, 2) for n, w in BALLAST_R.items()})
+    put(new)
     print("ballast: front %.1f kg, rear %.1f kg" % (xF, xR))
 
 
@@ -127,7 +128,7 @@ HUB_SPRING_SCALE = 0.65                      # hub beams vs the F4's (hub nodes 
 HUB_NODE_WEIGHT = 0.45                       # kg x 32 per rim (was 0.35; F4 0.55)
 CARRIER_DAMP = 600                           # beamDamp floor on the capped wheel-carrier beams
 WHEEL_AXLE_WEIGHT = 4.5                      # kg, wheel axle nodes (F4: 5)
-CHASSIS_MIN_MASS = {"rt4r": 4.5, "rt4l": 4.5}
+CHASSIS_MIN_MASS = {"rt4r": 6.0, "rt4l": 6.0, "rt2r": 4.5, "rt2l": 4.5}
 HUB_TORSION_F = 80000                        # was 200000 (F4)
 SPRING_CAP = {                               # part -> highest beamSpring (N/m)
     "redbull_suspension_F": 6.0e6,
@@ -1043,8 +1044,278 @@ def configs():
             fh.write("\n")
 
 
+
+# ------------------------------------------------ F4 -> F1 migrations
+# Values the F4 base still carried after the rounds above (review, round 9).
+# Each scales the F4 original (vehicles/fr04), so re-running is safe.
+def _scale_f4(name, part, scales, start=None, end=None, when=None):
+    """Set every numeric value of the keys in scales (key -> factor) inside
+    one part -- optionally only in its "beams" section between the text
+    markers start and end -- to the F4 original's value times the factor.
+    when(key, f4_value) -> bool can skip values (e.g. weak helper links)."""
+    import re
+    f = f"{V}/redbull_{name}.jbeam"
+    orig = open(f"vehicles/fr04/fr04_{name}.jbeam", encoding="utf-8", newline="").read()
+    text = je._read(f)
+
+    def region(src, p):
+        a, b = _part_block(src, p)
+        if start is not None:
+            a = src.index(start, src.index('"beams"', a))
+        if end is not None:
+            b = src.index(end, a)
+        return a, b
+    a0, b0 = region(orig, part.replace("redbull", "fr04"))
+    a, b = region(text, part)
+    block = text[a:b]
+    for key, k in scales.items():
+        pat = re.compile(r'("%s"\s*:\s*)(\d+(?:\.\d+)?)' % key)
+        src = [float(m.group(2)) for m in pat.finditer(orig[a0:b0])]
+        if len(pat.findall(block)) != len(src):
+            raise ValueError(f"{part}: {key} count differs from the F4 ({len(pat.findall(block))} vs {len(src)})")
+        it = iter(src)
+
+        def sub(m):
+            x = next(it)
+            y = x * k if (when is None or when(key, x)) else x
+            return m.group(1) + ("%d" % round(y) if y >= 10 else "%g" % round(y, 3))
+        block = pat.sub(sub, block)
+    je._write(f, text[:a] + block + text[b:])
+
+
+# 1. Shift table in the engine part (it overrides the transaxle's; the F4's
+# was for a 7,000 rpm four-cylinder): upshift at 12,000 rpm, and each
+# downshift point chosen so the lower gear lands at ~11,500 rpm.
+SHIFT_UP_RPM = 12000
+
+
+def shift_logic():
+    f = f"{V}/redbull_engine.jbeam"
+    g = GEARS["standard"]
+    down = [0, 0, 0] + [int(11500 * g[i] / g[i - 1] // 50 * 50) for i in range(1, len(g))]
+    je.set_all(f, r'"highShiftDownRPM":\[[^\]]*\]', '"highShiftDownRPM":[%s]' % ",".join(map(str, down)))
+    je.set_all(f, r'"highShiftUpRPM":\s*[\d.]+', '"highShiftUpRPM":%d' % SHIFT_UP_RPM)
+    je.set_all(f, r'"clutchLaunchStartRPM":\s*[\d.]+', '"clutchLaunchStartRPM":7000')
+    je.set_all(f, r'"clutchLaunchTargetRPM":\s*[\d.]+', '"clutchLaunchTargetRPM":7500')
+
+
+# 2. Tyre carcass: the F4's (sized for a 650 kg car with ~1.5 g) let the
+# 13" F1 tyres squirm under 3-4x the load. Tread / periphery ~2.5x, the
+# sidewall-to-rim reinforcement 5x, damping 1.5x.
+TYRE_SPRINGS = {"wheelTreadBeamSpring": 2.5, "wheelTreadReinfBeamSpring": 2.5, "wheelPeripheryBeamSpring": 2.5,
+                "wheelPeripheryReinfBeamSpring": 2.5, "wheelReinfBeamSpring": 5.0, "wheelSideBeamSpringExpansion": 2.0}
+TYRE_DAMP = 1.5
+
+
+def tyre_carcass():
+    import re
+    for axle in ("F", "R"):
+        f = f"{W}/redbull_tires_{axle}_13.jbeam"
+        orig = je._read(f"vehicles/common/fr04_wheels/fr04_tires_{axle}_13.jbeam")
+        text = je._read(f)
+        for key, k in TYRE_SPRINGS.items():
+            damp = key.replace("Spring", "Damp")
+            pat = re.compile(r'\{"%s":(\d+),\s*"%s":(\d+)\}' % (key, damp))
+            src = pat.findall(orig)
+            if len(pat.findall(text)) != len(src) or not src:
+                raise ValueError(f"tyres {axle}: {key} rows differ from the F4")
+            it = iter(src)
+            text = pat.sub(lambda m: (lambda s, d: '{"%s":%d,"%s":%d}' % (key, int(s) * k, damp, int(d) * TYRE_DAMP))(*next(it)), text)
+        je._write(f, text)
+
+
+# 3. Front wing: ~5 kN of downforce at 300 km/h on the F4's wing beams bent
+# it visibly. Stiffer and stronger structure, an ~8 kg wing assembly.
+WING_F_STIFF, WING_F_STRENGTH, WING_F_DAMP = 3.0, 4.0, 1.5
+WING_F_WEIGHTS = {"wing": 0.5, "wing_inner": 0.8, "endplate": 0.35}
+# The nose cone carries it: F4 nose beams bent ~27 mm under that load.
+# 1.5x stiffer on 1.5x heavier nodes (the most the 2 kHz solver takes).
+# Tip deflection at 300 km/h (6.3 kN, setup_report FEM): 92 mm on the F4
+# structure -> 46 mm (centre 34 -> 27). The nose-to-tub mounts stay as they
+# were: stiffer, they put the bulkhead nodes over the limit.
+NOSE_STIFF, NOSE_WEIGHT = 1.5, 1.5
+
+
+def front_wing():
+    import re
+    _scale_f4("wing_F", "redbull_wing_F", {"beamSpring": WING_F_STIFF, "beamDamp": WING_F_DAMP},
+              start="//--FRONT WING--", when=lambda key, x: key == "beamDamp" or x >= 50000)
+    _scale_f4("wing_F", "redbull_wing_F", {"beamDeform": WING_F_STRENGTH, "beamStrength": WING_F_STRENGTH},
+              start="//--FRONT WING--")
+    _scale_f4("wing_F", "redbull_wing_F", {"beamSpring": NOSE_STIFF}, start='["id1:"', end="//attach",
+              when=lambda key, x: x >= 50000)
+    f = f"{V}/redbull_wing_F.jbeam"
+    text = je._read(f)
+    orig = je._read("vehicles/fr04/fr04_wing_F.jbeam")
+    span = lambda s: (s.index("//--FRONT NOSECONE--"), s.index("//enticer/rigidifier node"))
+    pat = re.compile(r'("nodeWeight":)([\d.]+)')
+    a0, b0 = span(orig)
+    it = iter(float(m.group(2)) for m in pat.finditer(orig[a0:b0]))
+    a, b = span(text)
+    text = text[:a] + pat.sub(lambda m: m.group(1) + "%.2f" % (next(it) * NOSE_WEIGHT), text[a:b]) + text[b:]
+    text, n1 = re.subn(r'(\{"nodeWeight":)[\d.]+(\},\r\n         \{"group":"redbull_wing_F"\})',
+                       lambda m: m.group(1) + "%g" % WING_F_WEIGHTS["wing"] + m.group(2), text)
+    text, n2 = re.subn(r'(\["fwg[12][rl]",[^\]]*\{"nodeWeight":)[\d.]+', lambda m: m.group(1) + "%g" % WING_F_WEIGHTS["wing_inner"], text)
+    text, n3 = re.subn(r'(\{"nodeWeight":)[\d.]+(\},\r\n         \{"group":"redbull_endplate_FR"\})',
+                       lambda m: m.group(1) + "%g" % WING_F_WEIGHTS["endplate"] + m.group(2), text)
+    if (n1, n2, n3) != (1, 4, 1):
+        raise ValueError(f"front wing node weights: {n1}, {n2}, {n3} matches")
+    je._write(f, text)
+
+
+# 4. Floor: F4 beams (60-1000 kN/m) carried plank ballast they were never
+# sized for; 3x stiffer and stronger. The ballast moved into the tub
+# (see ballast()); the floor nodes are back to the F4's weights.
+FLOOR_STIFF, FLOOR_STRENGTH = 1.5, 3.0
+
+
+def floor():
+    _scale_f4("floor", "redbull_floor", {"beamSpring": FLOOR_STIFF, "beamDeform": FLOOR_STRENGTH, "beamStrength": FLOOR_STRENGTH},
+              start='["id1:"')
+
+
+# 5. Monocoque: the F4 tub measures ~4,700 Nm/deg front bulkhead to seat
+# back (setup_report-style FEM, monocoque_torsion()); a carbon F1 tub is
+# many times that. 2x within the 2 kHz solver's limits.
+TUB_STIFF, TUB_STRENGTH = 2.0, 2.0
+TUB_SOFT = 3.5e6                # only the softer tub beams; the 4-8 MN/m rigids are at the solver's limit
+
+
+def monocoque():
+    # the tub shell and the suspension mounts; not the roll hoop or halo
+    for start, end in (("//--MONOCOQUE--", "//hoop rigids"), ("//suspension mounts rigids", "//halo")):
+        _scale_f4("body", "redbull_body", {"beamSpring": TUB_STIFF, "beamDeform": TUB_STRENGTH}, start=start, end=end,
+                  when=lambda key, x: x > 10000 and (key != "beamSpring" or x <= TUB_SOFT))
+
+
+def monocoque_torsion(v):
+    """Torsional stiffness (Nm/deg) of the tub alone: seat-back nodes held,
+    a couple on the front bulkhead's lower nodes."""
+    import numpy as np
+    body = [r["id"] for p, r in v.section("nodes") if p == "redbull_body"]
+    fixed = [n for n in body if n.startswith("rt")]
+    free = [n for n in body if n not in fixed]
+    idx = {n: i for i, n in enumerate(free)}
+    K = np.zeros((3 * len(free),) * 2)
+    for _, r in v.section("beams"):
+        a, b = r.get("id1:"), r.get("id2:")
+        if a not in body or b not in body or "SUPPORT" in str(r.get("beamType", "")):
+            continue
+        d = v.pos[b] - v.pos[a]
+        u = d / np.linalg.norm(d)
+        k = v.val(r.get("beamSpring"), 0)
+        for x, gx in ((a, -u), (b, u)):
+            for y, gy in ((a, -u), (b, u)):
+                if x in idx and y in idx:
+                    K[3 * idx[x]:3 * idx[x] + 3, 3 * idx[y]:3 * idx[y] + 3] += k * np.outer(gx, gy)
+    K += np.eye(len(K)) * 1e-2
+    f = np.zeros(len(K))
+    f[3 * idx["fx1r"] + 2], f[3 * idx["fx1l"] + 2] = 1000, -1000
+    u = np.linalg.solve(K, f)
+    w = abs(v.pos["fx1r"][0] - v.pos["fx1l"][0])
+    return 1000 * w / math.degrees((u[3 * idx["fx1r"] + 2] - u[3 * idx["fx1l"] + 2]) / w)
+
+
+# 6. Wheel parts' axle beams: F4 values for 2-4x the loads.
+def wheel_beams():
+    import re
+    for a in ("F", "R"):
+        f = f"{W}/redbull_wheels_{a}_13.jbeam"
+        je.set_all(f, r'\{"beamDeform":\d+,"beamStrength":\d+\}', '{"beamDeform":%d,"beamStrength":%d}' % (78500 * 3, 434000 * 3))
+        je.set_all(f, r'\{"beamSpring":\d+,"beamDamp":\d+\}', '{"beamSpring":%d,"beamDamp":%d}' % (1501000 * 2, 100))
+        text = je._read(f)
+        text = re.sub(r'("hub(?:Tread|Periphery|Side)BeamDamp":)\d+', r'\g<1>40', text)
+        je._write(f, text)
+
+
+# 7. Cooling: sidepod radiators of an F1 car (~0.6 m^2 core, ~8 L of
+# coolant), ~10 kg with coolant instead of the F4's 25 kg.
+def cooling():
+    f = f"{V}/redbull_radiator.jbeam"
+    je.set_all(f, r'"radiatorArea":[\d.]+', '"radiatorArea":0.6')
+    je.set_all(f, r'"radiatorEffectiveness":\d+', '"radiatorEffectiveness":14000')
+    je.set_all(f, r'"coolantVolume":[\d.]+', '"coolantVolume":8')
+    import re
+    text, n = re.subn(r'(\{"engineGroup":"radiator"\},\r\n         \{"nodeWeight":)[\d.]+', r'\g<1>1.0', je._read(f))
+    if n != 1:
+        raise ValueError("radiator node weight row not found")
+    je._write(f, text)
+
+
+# 8. Engine damage: thresholds 3x the F4's (~3x the torque and cylinder load).
+# 9. Clutch: BeamNG's frictionClutch sizes its capacity from the engine's
+# torque; clutchFreePlay / lockSpringCoef are pedal feel and lock-up
+# stiffness, not capacity. Left as the F4's (not verifiable offline).
+# 11. Sound: the samples stay (BeamNG ships no V6 turbo hybrid set); the
+# pitch follows a V6's firing order.
+def engine_misc():
+    f = f"{V}/redbull_engine.jbeam"
+    for key, val in (("headGasketDamageThreshold", 4500000), ("pistonRingDamageThreshold", 4500000),
+                     ("connectingRodDamageThreshold", 6000000)):
+        je.set_all(f, r'"%s":\s*\d+' % key, '"%s":%d' % (key, val))
+    je.set_all(f, r'"fundamentalFrequencyCylinderCount":\s*\d+', '"fundamentalFrequencyCylinderCount":6')
+
+
+# 10. Bodywork panels: 2.5x the F4's deform / break forces (F1 speeds and
+# aero loads on the sidepods, engine cover and suspension fairings).
+PANEL_STRENGTH = 2.5
+
+
+def panels():
+    for name, part in (("sidepods", "redbull_sidepod_R"), ("sidepods", "redbull_sidepod_L"),
+                       ("panels", "redbull_enginecover"), ("panels", "redbull_suscover")):
+        _scale_f4(name, part, {"beamDeform": PANEL_STRENGTH, "beamStrength": PANEL_STRENGTH})
+
+
+# 12. Chase camera for a 5.7 m car (F4 ~4.3 m).
+def camera():
+    f = f"{V}/redbull_body.jbeam"
+    je.set_all(f, r'"distance":[\d.]+,', '"distance":6.8,')
+    je.set_all(f, r'"distanceMin":[\d.]+,', '"distanceMin":2.5,')
+
+
+# 13. Hard travel stops (spring-beam travel; wheel travel / motion ratio):
+# ~57 mm bump front, ~64 mm rear, 50 mm droop -- the F4 allowed ~120 mm.
+TRAVEL_STOP = {"F": 0.034, "R": 0.037}
+
+
+def travel_stops():
+    je.set_in_part(f"{V}/redbull_suspension_F.jbeam", "redbull_suspension_F",
+                   r'"longBoundRange":0\.03,"shortBoundRange":[\d.]+', '"longBoundRange":0.03,"shortBoundRange":%s' % TRAVEL_STOP["F"])
+    je.set_in_part(f"{V}/redbull_suspension_R.jbeam", "redbull_suspension_R",
+                   r'"longBoundRange":0\.03,"shortBoundRange":[\d.]+', '"longBoundRange":0.03,"shortBoundRange":%s' % TRAVEL_STOP["R"])
+
+
+# 14. Brakes: carbon pads bite harder (brakeSpring); the rear parking
+# torque holds the heavier, higher-torque car on a slope. ABS targets stay
+# (2018 F1 had no ABS; the F4's are only used when the player enables it).
+def brake_misc():
+    f = f"{V}/redbull_brakes.jbeam"
+    je.set_all(f, r'\{"brakeSpring":\d+\}', '{"brakeSpring":300}')
+    je.set_all(f, r'\{"parkingTorque":1600\}|\{"parkingTorque":3000\}', '{"parkingTorque":3000}')
+
+
+# 15. scaledragCoef 1.6 (main part) stays: it scales BeamNG's per-triangle
+# drag and the aero factors above (setup_report) were solved with it.
+
+
+def migrations():
+    shift_logic()
+    tyre_carcass()
+    front_wing()
+    floor()
+    monocoque()
+    wheel_beams()
+    cooling()
+    engine_misc()
+    panels()
+    camera()
+    travel_stops()
+    brake_misc()
+
 if __name__ == "__main__":
     os.chdir(REPO)
+    migrations()
     stiffness()
     torque_paths()
     wheels()

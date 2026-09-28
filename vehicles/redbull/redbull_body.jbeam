@@ -90,16 +90,16 @@
         ["rt3r", "rt1r", "rt3l", "rt4r", "fx1l", "fx1r"],
     ],
     "cameraChase":{
-        "distance":5.5,
+        "distance":6.8,
         "offset":{"x":0.24, "y":0.0, "z":1.2},
-        "distanceMin":2,
+        "distanceMin":2.5,
         "defaultRotation":{"x":0,"y":-12,"z":0},
         "fov":65,
     },
     "cameraExternal":{
-        "distance":5.5,
+        "distance":6.8,
         "offset":{"x":0.36, "y":-0.1, "z":0.6},
-        "distanceMin":2,
+        "distanceMin":2.5,
         "fov":65,
     },
     "camerasInternal":[
@@ -184,18 +184,18 @@
          {"group":["redbull_body"]},
          ["rt1r",-0.3996, 0.5968, 0.1369, {"group":["redbull_body","redbull_radduct_R"], "nodeWeight":12}],
          ["rt1l", 0.3996, 0.5968, 0.1369, {"group":["redbull_body","redbull_radduct_L"], "nodeWeight":12}],
-         ["rt2r",-0.3996, 0.5968, 0.7045, {"group":["redbull_body","redbull_rollhoop","redbull_radduct_R"], "nodeWeight":3}],
-         ["rt2l", 0.3996, 0.5968, 0.7045, {"group":["redbull_body","redbull_rollhoop","redbull_radduct_L"], "nodeWeight":3}],
+         ["rt2r",-0.3996, 0.5968, 0.7045, {"group":["redbull_body","redbull_rollhoop","redbull_radduct_R"], "nodeWeight":4.5}],
+         ["rt2l", 0.3996, 0.5968, 0.7045, {"group":["redbull_body","redbull_rollhoop","redbull_radduct_L"], "nodeWeight":4.5}],
 
          ["rt3r",-0.3996, 0.0569, 0.1233, {"group":["redbull_body","redbull_radduct_R"], "nodeWeight":12}],
          ["rt3l", 0.3996, 0.0569, 0.1233, {"group":["redbull_body","redbull_radduct_L"], "nodeWeight":12}],
-         ["rt4r",-0.3996, 0.0569, 0.71, {"group":["redbull_body","redbull_radduct_R"], "nodeWeight":4.5}],
-         ["rt4l", 0.3996, 0.0569, 0.71, {"group":["redbull_body","redbull_radduct_L"], "nodeWeight":4.5}],
+         ["rt4r",-0.3996, 0.0569, 0.71, {"group":["redbull_body","redbull_radduct_R"], "nodeWeight":6.0}],
+         ["rt4l", 0.3996, 0.0569, 0.71, {"group":["redbull_body","redbull_radduct_L"], "nodeWeight":6.0}],
          
          //mid tub
          {"nodeWeight":4.5},
          ["mt1r",-0.33, -0.3504, 0.216, {"group":["redbull_body","redbull_radduct_R"], "nodeWeight":8}],
-         ["mt1",  0.0, -0.3504, 0.1122, {"nodeWeight":10}],
+         ["mt1",  0.0, -0.3504, 0.1122, {"nodeWeight":10.5}],
          ["mt1l", 0.33, -0.3504, 0.216, {"group":["redbull_body","redbull_radduct_L"], "nodeWeight":8}],
 
          {"nodeWeight":5.0},
@@ -210,17 +210,17 @@
          {"nodeWeight":5.5},
          //lower
          {"group":["redbull_body","redbull_lowermounts_F"]},
-         ["fx1r",-0.2324, -1.5942, 0.2553, {"nodeWeight":5.5}],
-         ["fx1l", 0.2324, -1.5942, 0.2553, {"nodeWeight":5.5}],
-         ["fx2r",-0.2568, -1.0482, 0.2636, {"nodeWeight":5.5}],
-         ["fx2l", 0.2568, -1.0482, 0.2636, {"nodeWeight":5.5}],
+         ["fx1r",-0.2324, -1.5942, 0.2553, {"nodeWeight":6.0}],
+         ["fx1l", 0.2324, -1.5942, 0.2553, {"nodeWeight":6.0}],
+         ["fx2r",-0.2568, -1.0482, 0.2636, {"nodeWeight":6.0}],
+         ["fx2l", 0.2568, -1.0482, 0.2636, {"nodeWeight":6.0}],
          //upper
          {"nodeWeight":5.5},
          {"group":["redbull_body","redbull_uppermounts_F"]},
-         ["fx3r",-0.2659, -1.638, 0.4597, {"nodeWeight":5}],
-         ["fx3l", 0.2659, -1.638, 0.4597, {"nodeWeight":5}],
-         ["fx4r",-0.2568, -1.0482, 0.4776, {"nodeWeight":5}],
-         ["fx4l", 0.2568, -1.0482, 0.4776, {"nodeWeight":5}],
+         ["fx3r",-0.2659, -1.638, 0.4597, {"nodeWeight":5.5}],
+         ["fx3l", 0.2659, -1.638, 0.4597, {"nodeWeight":5.5}],
+         ["fx4r",-0.2568, -1.0482, 0.4776, {"nodeWeight":5.5}],
+         ["fx4l", 0.2568, -1.0482, 0.4776, {"nodeWeight":5.5}],
 
 
          //shock
@@ -334,8 +334,8 @@
           {"deformGroup":""},
           {"breakGroup":""},
           {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
-          {"beamSpring":3001000,"beamDamp":250},
-          {"beamDeform":110000,"beamStrength":"FLT_MAX"},
+          {"beamSpring":6002000,"beamDamp":250},
+          {"beamDeform":220000,"beamStrength":"FLT_MAX"},
           {"deformLimitExpansion":1.5},
           //monocoque
           //main shape
@@ -359,7 +359,7 @@
           ["halorr","haloll"],
 
           //lengthwise
-          {"beamDeform":60000,"beamStrength":"FLT_MAX"},
+          {"beamDeform":120000,"beamStrength":"FLT_MAX"},
           ["fx1r","fx2r"],
           ["fx1l","fx2l"],
           ["fx3r","fx4r"],
@@ -390,7 +390,7 @@
           ["rt3l","rt1l"],
 
           //vertical
-          {"beamDeform":300000,"beamStrength":"FLT_MAX"},
+          {"beamDeform":600000,"beamStrength":"FLT_MAX"},
           ["fx1r","fx3r"],
           ["fx1l","fx3l"],
           ["fx2r","fx4r"],
@@ -415,16 +415,16 @@
           ["rt1l","haloll"],
           ["rt3l","haloll"],
 
-          {"beamSpring":3001000},
+          {"beamSpring":6002000},
           ["hoop","halorr"],
           ["hoop","haloll"],
           ["hoop","rt2r"],
           ["hoop","rt2l"],
 
           //surficial crossing
-          {"beamDeform":50000,"beamStrength":"FLT_MAX"},
+          {"beamDeform":100000,"beamStrength":"FLT_MAX"},
           {"deformLimitExpansion":""},
-          {"beamSpring":2501000},
+          {"beamSpring":5002000},
           ["rt2r","rt1l"],
           ["rt1r","rt2l"],
 
@@ -472,7 +472,7 @@
           ["haloll","rt4r"],
 
           //monocoque rigids
-          {"beamDeform":200000,"beamStrength":"FLT_MAX"},
+          {"beamDeform":400000,"beamStrength":"FLT_MAX"},
           {"beamSpring":8001000},
           ["rt4r","mt1l"],
           ["rt4l","mt1r"],
@@ -497,7 +497,7 @@
           ["hoop","rt3l"],
 
           //suspension mounts rigids
-          {"beamDeform":300000,"beamStrength":"FLT_MAX"},
+          {"beamDeform":600000,"beamStrength":"FLT_MAX"},
           {"beamSpring":7001000, "beamDamp":300},
           ["fx4r","fx2l"],
           ["fx4l","fx2r"],

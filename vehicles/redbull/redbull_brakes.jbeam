@@ -27,7 +27,7 @@
         {"brakeInputSplit":1},
         {"brakeSplitCoef":1},
         {"parkingTorque":0},
-        {"brakeSpring":150},
+        {"brakeSpring":300},
 
         //brake thermals
         {"enableBrakeThermals":true},
@@ -68,8 +68,8 @@
         {"brakeTorque":"$=$brakestrength*5000*(1-$brakebias)"},
         {"brakeInputSplit":0.5},
         {"brakeSplitCoef":0.5},
-        {"parkingTorque":1600},
-        {"brakeSpring":150},
+        {"parkingTorque":3000},
+        {"brakeSpring":300},
 
         //brake thermals
         {"enableBrakeThermals":true},

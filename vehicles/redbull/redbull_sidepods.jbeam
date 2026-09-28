@@ -44,7 +44,7 @@
           //--RIGHT SIDEPOD--
           {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
           {"beamSpring":401000,"beamDamp":25},
-          {"beamDeform":20000,"beamStrength":40000},
+          {"beamDeform":50000,"beamStrength":100000},
           {"deformLimitExpansion":1.2},
           //sidepod main shape
           ["sp4r","sp5r"],
@@ -69,7 +69,7 @@
 
           //surficial crossing
           {"deformLimitExpansion":""},
-          {"beamDeform":10000,"beamStrength":35000},
+          {"beamDeform":25000,"beamStrength":87500},
           ["sp6r","sp1r"],
           ["sp6r","sp2r"],
           ["sp6r","sp3r"],
@@ -90,7 +90,7 @@
 
           //rigids
           {"beamSpring":201000,"beamDamp":20},
-          {"beamDeform":3500,"beamStrength":6000},
+          {"beamDeform":8750,"beamStrength":15000},
           ["sp1r","sp3r"],
           ["sp4r","sp3r"],
 
@@ -104,10 +104,10 @@
           {"optional":true},
           {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
           {"beamSpring":100100,"beamDamp":45},
-          {"beamDeform":9000},
+          {"beamDeform":22500},
           {"breakGroupType":0},
           {"breakGroup":"sidepod_FR_top"},
-          {"beamStrength":4000},
+          {"beamStrength":10000},
           ["sp4r","mt1r"],
           ["sp4r","mt2r"],
           ["sp4r","rt3r"],
@@ -118,7 +118,7 @@
           ["sp6r","rt4r"],
           
           {"breakGroup":"sidepod_FR_bottom"},
-          {"beamStrength":2000},
+          {"beamStrength":5000},
           ["sp1r","mt1r"],
           ["sp1r","mt2r"],
           ["sp1r","rt3r"],
@@ -129,7 +129,7 @@
           ["sp6r","rt4r"],
           
           {"breakGroup":"sidepod_FR_floor"},
-          {"beamStrength":4000},
+          {"beamStrength":10000},
           ["sp1r","fl2"],
           ["sp1r","fl1r"],
           ["sp1r","fl1rr"],
@@ -139,7 +139,7 @@
           ["sp2r","fl1rr"],
           
           {"breakGroup":"sidepod_RR_front"},
-          {"beamStrength":4000},
+          {"beamStrength":10000},
           ["sp3r", "sp7r"],
           ["sp4r","sp12r"],
           ["sp5r","sp10r"],
@@ -148,7 +148,7 @@
           ["sp6r","sp10r"],
           
           {"breakGroup":"sidepod_RR_monocoque"},
-          {"beamStrength":3500},
+          {"beamStrength":8750},
           ["sp12r", "mt2r"],
           ["sp12r", "mt2l"],
           ["sp12r", "rt3r"],
@@ -163,11 +163,11 @@
           ["sp13r", "rt3l"],
           ["sp13r", "rt4r"],
           ["sp13r", "rt4l"],
-          ["sp10r","rt3r",{"beamSpring":2000,"beamDeform":300}],
-          ["sp11r","rt1r",{"beamSpring":2000,"beamDeform":300}],
+          ["sp10r","rt3r",{"beamSpring":2000,"beamDeform":750}],
+          ["sp11r","rt1r",{"beamSpring":2000,"beamDeform":750}],
           
           {"breakGroup":"sidepod_RR_floor"},
-          {"beamStrength":4000},
+          {"beamStrength":10000},
           ["sp7r","fl2r"],
           ["sp7r","fl2rr"],
           ["sp7r","fl1rr"],
@@ -184,7 +184,7 @@
           //support
           {"beamType":"|SUPPORT", "beamLongBound":12},
           {"beamSpring":301000,"beamDamp":45},
-          {"beamDeform":5000,"beamStrength":1250000},
+          {"beamDeform":12500,"beamStrength":3125000},
           //self
           ["sp3r", "sp7r"],
           ["sp4r","sp12r"],
@@ -286,7 +286,7 @@
           //--LEFT SIDEPOD--
           {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
           {"beamSpring":401000,"beamDamp":25},
-          {"beamDeform":20000,"beamStrength":40000},
+          {"beamDeform":50000,"beamStrength":100000},
           {"deformLimitExpansion":1.2},
           //sidepod main shape
           ["sp4l","sp5l"],
@@ -311,7 +311,7 @@
 
           //surficial crossing
           {"deformLimitExpansion":""},
-          {"beamDeform":10000,"beamStrength":35000},
+          {"beamDeform":25000,"beamStrength":87500},
           ["sp6l","sp1l"],
           ["sp6l","sp2l"],
           ["sp6l","sp3l"],
@@ -332,7 +332,7 @@
 
           //rigids
           {"beamSpring":201000,"beamDamp":20},
-          {"beamDeform":3500,"beamStrength":6000},
+          {"beamDeform":8750,"beamStrength":15000},
           ["sp1l","sp3l"],
           ["sp4l","sp3l"],
 
@@ -346,10 +346,10 @@
           {"optional":true},
           {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
           {"beamSpring":100100,"beamDamp":45},
-          {"beamDeform":9000},
+          {"beamDeform":22500},
           {"breakGroupType":0},
           {"breakGroup":"sidepod_FL_top"},
-          {"beamStrength":4000},
+          {"beamStrength":10000},
           ["sp4l","mt1l"],
           ["sp4l","mt2l"],
           ["sp4l","rt3l"],
@@ -360,7 +360,7 @@
           ["sp6l","rt4l"],
           
           {"breakGroup":"sidepod_FL_bottom"},
-          {"beamStrength":2000},
+          {"beamStrength":5000},
           ["sp1l","mt1l"],
           ["sp1l","mt2l"],
           ["sp1l","rt3l"],
@@ -371,7 +371,7 @@
           ["sp6l","rt4l"],
           
           {"breakGroup":"sidepod_FL_floor"},
-          {"beamStrength":4000},
+          {"beamStrength":10000},
           ["sp1l","fl2"],
           ["sp1l","fl1l"],
           ["sp1l","fl1ll"],
@@ -381,7 +381,7 @@
           ["sp2l","fl1ll"],
           
           {"breakGroup":"sidepod_RL_front"},
-          {"beamStrength":4000},
+          {"beamStrength":10000},
           ["sp3l", "sp7l"],
           ["sp4l","sp12l"],
           ["sp5l","sp10l"],
@@ -390,7 +390,7 @@
           ["sp6l","sp10l"],
           
           {"breakGroup":"sidepod_RL_monocoque"},
-          {"beamStrength":3500},
+          {"beamStrength":8750},
           ["sp12l", "mt2l"],
           ["sp12l", "mt2r"],
           ["sp12l", "rt3l"],
@@ -405,11 +405,11 @@
           ["sp13l", "rt3r"],
           ["sp13l", "rt4l"],
           ["sp13l", "rt4r"],
-          ["sp10l","rt3l",{"beamSpring":2000,"beamDeform":300}],
-          ["sp11l","rt1l",{"beamSpring":2000,"beamDeform":300}],
+          ["sp10l","rt3l",{"beamSpring":2000,"beamDeform":750}],
+          ["sp11l","rt1l",{"beamSpring":2000,"beamDeform":750}],
           
           {"breakGroup":"sidepod_RL_floor"},
-          {"beamStrength":4000},
+          {"beamStrength":10000},
           ["sp7l","fl2l"],
           ["sp7l","fl2ll"],
           ["sp7l","fl1ll"],
@@ -426,7 +426,7 @@
           //support
           {"beamType":"|SUPPORT", "beamLongBound":12},
           {"beamSpring":301000,"beamDamp":45},
-          {"beamDeform":5000,"beamStrength":1250000},
+          {"beamDeform":12500,"beamStrength":3125000},
           //self
           ["sp3l", "sp7l"],
           ["sp4l","sp12l"],

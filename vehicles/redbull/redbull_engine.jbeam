@@ -90,9 +90,9 @@
 
         //engine durability
         "cylinderWallTemperatureDamageThreshold":130,
-        "headGasketDamageThreshold":1500000,
-        "pistonRingDamageThreshold":1500000,
-        "connectingRodDamageThreshold":2000000,
+        "headGasketDamageThreshold":4500000,
+        "pistonRingDamageThreshold":4500000,
+        "connectingRodDamageThreshold":6000000,
         "maxTorqueRating":800,
         "maxOverTorqueDamage":1200,
 
@@ -148,7 +148,7 @@
         "eqHighFreq": 2500,
         "eqHighWidth": 0.2,
 
-        "fundamentalFrequencyCylinderCount":4,
+        "fundamentalFrequencyCylinderCount":6,
         "eqFundamentalGain": -1,
     },
     "soundConfigExhaust": {
@@ -175,16 +175,16 @@
         "eqHighFreq": 600,
         "eqHighWidth": 0.2,
 
-        "fundamentalFrequencyCylinderCount":4,
+        "fundamentalFrequencyCylinderCount":6,
         "eqFundamentalGain": -5,
     },
     "vehicleController": {
-        "clutchLaunchStartRPM":2200,
-        "clutchLaunchTargetRPM":3900,
+        "clutchLaunchStartRPM":7000,
+        "clutchLaunchTargetRPM":7500,
         //**highShiftDown can be overwritten by automatic transmissions**
-        "highShiftDownRPM":[0,0,0,2700,3350,3600,3800,3800],
+        "highShiftDownRPM":[0,0,0,8850,9400,9650,9900,10000,9950,10050],
         //**highShiftUp can be overwritten by intake modifications**
-        "highShiftUpRPM":7000,
+        "highShiftUpRPM":12000,
     },
     "flexbodies": [
          ["mesh", "[group]:", "nonFlexMaterials"],
@@ -204,8 +204,8 @@
          {"chemEnergy":500,"burnRate":0.39,"flashPoint":800,"specHeat": 0.2,"selfIgnitionCoef":false,"smokePoint":650,"baseTemp":"thermals","conductionRadius":0.12},
          ["e1r",-0.33, 0.6558, 0.1383,{"chemEnergy":2000,"burnRate":0.39,"flashPoint":800,"specHeat": 0.1,"selfIgnitionCoef":false,"smokePoint":650,"baseTemp":"thermals","conductionRadius":0.07, "nodeWeight":25}],
          ["e1l", 0.33, 0.6558, 0.1383,{"isExhaust":"mainEngine","chemEnergy":2000,"burnRate":0.39,"flashPoint":800,"specHeat": 0.1,"selfIgnitionCoef":false,"smokePoint":650,"baseTemp":"thermals","conductionRadius":0.07, "nodeWeight":25}],
-         ["e2r",-0.33, 1.3337, 0.1711,{"chemEnergy":2000,"burnRate":0.39,"flashPoint":800,"specHeat": 0.1,"selfIgnitionCoef":false,"smokePoint":650,"baseTemp":"thermals","conductionRadius":0.07, "nodeWeight":25}],
-         ["e2l", 0.33, 1.3337, 0.1711,{"chemEnergy":2000,"burnRate":0.39,"flashPoint":800,"specHeat": 0.1,"selfIgnitionCoef":false,"smokePoint":650,"baseTemp":"thermals","conductionRadius":0.07, "nodeWeight":25}],
+         ["e2r",-0.33, 1.3337, 0.1711,{"chemEnergy":2000,"burnRate":0.39,"flashPoint":800,"specHeat": 0.1,"selfIgnitionCoef":false,"smokePoint":650,"baseTemp":"thermals","conductionRadius":0.07, "nodeWeight":32.39}],
+         ["e2l", 0.33, 1.3337, 0.1711,{"chemEnergy":2000,"burnRate":0.39,"flashPoint":800,"specHeat": 0.1,"selfIgnitionCoef":false,"smokePoint":650,"baseTemp":"thermals","conductionRadius":0.07, "nodeWeight":32.39}],
          {"engineGroup":["engine_block","engine_intake"]},
          {"selfCollision":true},
          {"group":["redbull_engine","redbull_airbox"]},

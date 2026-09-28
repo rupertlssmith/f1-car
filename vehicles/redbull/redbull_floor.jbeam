@@ -46,25 +46,25 @@
          {"nodeWeight":1.0},
          {"group":"redbull_floor"},
          ["fl1rr",-0.8058, -0.2707, 0.1246],
-         ["fl1r", -0.2149, -0.6737, 0.0746, {"nodeWeight":3.85}],
-         ["fl1l",  0.2149, -0.6737, 0.0746, {"nodeWeight":3.85}],
+         ["fl1r", -0.2149, -0.6737, 0.0746, {"nodeWeight":1.8}],
+         ["fl1l",  0.2149, -0.6737, 0.0746, {"nodeWeight":1.8}],
          ["fl1ll", 0.8058, -0.2707, 0.1246],
          
          ["fl2rr",-0.8058, 0.0569, 0.1332],
-         ["fl2r", -0.3996, 0.0569, 0.0838, {"nodeWeight":2.57}],
-         ["fl2",   0.0, 0.0569, 0.0838, {"nodeWeight":5.99}],
-         ["fl2l",  0.3996, 0.0569, 0.0838, {"nodeWeight":2.57}],
+         ["fl2r", -0.3996, 0.0569, 0.0838, {"nodeWeight":1.0}],
+         ["fl2",   0.0, 0.0569, 0.0838, {"nodeWeight":1.8}],
+         ["fl2l",  0.3996, 0.0569, 0.0838, {"nodeWeight":1.0}],
          ["fl2ll", 0.8058, 0.0569, 0.1332],
          
          ["fl3rr",-0.8058, 0.5968, 0.1461],
-         ["fl3r", -0.3996, 0.5968, 0.0999, {"nodeWeight":5.09}],
-         ["fl3",   0.0, 0.5968, 0.0999, {"nodeWeight":8.49}],
-         ["fl3l",  0.3996, 0.5968, 0.0999, {"nodeWeight":5.09}],
+         ["fl3r", -0.3996, 0.5968, 0.0999, {"nodeWeight":1.0}],
+         ["fl3",   0.0, 0.5968, 0.0999, {"nodeWeight":1.8}],
+         ["fl3l",  0.3996, 0.5968, 0.0999, {"nodeWeight":1.0}],
          ["fl3ll", 0.8058, 0.5968, 0.1461],
          
-         ["fl4r", -0.52, 1.378, 0.164, {"nodeWeight":2.38}],
-         ["fl4",   0.0, 1.3779, 0.1218, {"nodeWeight":6.79}],
-         ["fl4l",  0.52, 1.378, 0.164, {"nodeWeight":2.38}],
+         ["fl4r", -0.52, 1.378, 0.164, {"nodeWeight":1.0}],
+         ["fl4",   0.0, 1.3779, 0.1218, {"nodeWeight":1.8}],
+         ["fl4l",  0.52, 1.378, 0.164, {"nodeWeight":1.0}],
          
          ["fl5r",-0.46, 2.045, 0.201],
          ["fl5",  0.0, 2.0449, 0.2014],
@@ -85,47 +85,47 @@
           //--FLOOR--
 
           //floor main shape
-          {"beamSpring":701000,"beamDamp":80},
-          {"beamDeform":15000,"beamStrength":"FLT_MAX"},
+          {"beamSpring":1051500,"beamDamp":80},
+          {"beamDeform":45000,"beamStrength":"FLT_MAX"},
           //lengthwise
           {"deformLimitExpansion":1.2},
           ["fl1r","fl2r"],
           ["fl1l","fl2l"],
           ["fl1r","fl2"],
           ["fl1l","fl2"],
-          ["fl1rr","fl2rr",{"beamStrength":16510}],
-          ["fl1ll","fl2ll",{"beamStrength":16510}],
+          ["fl1rr","fl2rr",{"beamStrength":49530}],
+          ["fl1ll","fl2ll",{"beamStrength":49530}],
           
           ["fl2","fl3"],
           ["fl2r","fl3r"],
           ["fl2l","fl3l"],
-          ["fl2rr","fl3rr",{"beamStrength":16510}],
-          ["fl2ll","fl3ll",{"beamStrength":16510}],
+          ["fl2rr","fl3rr",{"beamStrength":49530}],
+          ["fl2ll","fl3ll",{"beamStrength":49530}],
           
           ["fl3","fl4"],
           ["fl3r","fl4r"],
           ["fl3l","fl4l"],
-          ["fl3rr","fl4r",{"beamStrength":16510}],
-          ["fl3ll","fl4l",{"beamStrength":16510}],
+          ["fl3rr","fl4r",{"beamStrength":49530}],
+          ["fl3ll","fl4l",{"beamStrength":49530}],
           
           ["fl4","fl5"],
           ["fl4r","fl5r"],
           ["fl4l","fl5l"],
           
           //widthwise
-          ["fl1rr","fl1r",{"beamStrength":16510}],
+          ["fl1rr","fl1r",{"beamStrength":49530}],
           ["fl1r", "fl1l"],
-          ["fl1ll","fl1l",{"beamStrength":16510}],
+          ["fl1ll","fl1l",{"beamStrength":49530}],
           
-          ["fl2rr","fl2r",{"beamStrength":16510}],
+          ["fl2rr","fl2r",{"beamStrength":49530}],
           ["fl2r", "fl2"],
           ["fl2l", "fl2"],
-          ["fl2ll","fl2l",{"beamStrength":16510}],
+          ["fl2ll","fl2l",{"beamStrength":49530}],
           
-          ["fl3rr","fl3r",{"beamStrength":16510}],
+          ["fl3rr","fl3r",{"beamStrength":49530}],
           ["fl3r", "fl3"],
           ["fl3l", "fl3"],
-          ["fl3ll","fl3l",{"beamStrength":16510}],
+          ["fl3ll","fl3l",{"beamStrength":49530}],
           
           ["fl4r","fl4"],
           ["fl4l","fl4"],
@@ -135,15 +135,15 @@
 
           //surficial crossing
           {"deformLimitExpansion":""},
-          ["fl1rr","fl2r",{"beamStrength":16510}],
-          ["fl2rr","fl1r",{"beamStrength":16510}],
-          ["fl1ll","fl2l",{"beamStrength":16510}],
-          ["fl2ll","fl1l",{"beamStrength":16510}],
+          ["fl1rr","fl2r",{"beamStrength":49530}],
+          ["fl2rr","fl1r",{"beamStrength":49530}],
+          ["fl1ll","fl2l",{"beamStrength":49530}],
+          ["fl2ll","fl1l",{"beamStrength":49530}],
           
-          ["fl2rr","fl3r",{"beamStrength":16510}],
-          ["fl3rr","fl2r",{"beamStrength":16510}],
-          ["fl2ll","fl3l",{"beamStrength":16510}],
-          ["fl3ll","fl2l",{"beamStrength":16510}],
+          ["fl2rr","fl3r",{"beamStrength":49530}],
+          ["fl3rr","fl2r",{"beamStrength":49530}],
+          ["fl2ll","fl3l",{"beamStrength":49530}],
+          ["fl3ll","fl2l",{"beamStrength":49530}],
           ["fl2","fl3r"],
           ["fl3","fl2r"],
           ["fl2","fl3l"],
@@ -160,33 +160,33 @@
           ["fl5","fl4l"],
           
           //rigids
-          {"beamDeform":3000,"beamStrength":"FLT_MAX"},
-          ["fl1rr","fl3rr",{"beamStrength":16510}],
-          ["fl1ll","fl3ll",{"beamStrength":16510}],
+          {"beamDeform":9000,"beamStrength":"FLT_MAX"},
+          ["fl1rr","fl3rr",{"beamStrength":49530}],
+          ["fl1ll","fl3ll",{"beamStrength":49530}],
           ["fl1r","fl3r"],
           ["fl1l","fl3l"],
           
-          ["fl2rr","fl4r",{"beamStrength":16510}],
-          ["fl2ll","fl4l",{"beamStrength":16510}],
+          ["fl2rr","fl4r",{"beamStrength":49530}],
+          ["fl2ll","fl4l",{"beamStrength":49530}],
           ["fl2","fl4"],
           ["fl2r","fl4r"],
           ["fl2l","fl4l"],
           
-          ["fl3rr","fl5r",{"beamStrength":16510}],
-          ["fl3ll","fl5l",{"beamStrength":16510}],
+          ["fl3rr","fl5r",{"beamStrength":49530}],
+          ["fl3ll","fl5l",{"beamStrength":49530}],
           ["fl3","fl5"],
           ["fl3r","fl5r"],
           ["fl3l","fl5l"],
 
-          ["fl1rr","fl1l",{"beamStrength":16510}],
-          ["fl1ll","fl1r",{"beamStrength":16510}],
+          ["fl1rr","fl1l",{"beamStrength":49530}],
+          ["fl1ll","fl1r",{"beamStrength":49530}],
           
-          ["fl2rr","fl2",{"beamStrength":16510}],
-          ["fl2ll","fl2",{"beamStrength":16510}],
+          ["fl2rr","fl2",{"beamStrength":49530}],
+          ["fl2ll","fl2",{"beamStrength":49530}],
           ["fl2r","fl2l"],
           
-          ["fl3rr","fl3",{"beamStrength":16510}],
-          ["fl3ll","fl3",{"beamStrength":16510}],
+          ["fl3rr","fl3",{"beamStrength":49530}],
+          ["fl3ll","fl3",{"beamStrength":49530}],
           ["fl3r","fl3l"],
           
           ["fl4r","fl4l"],
@@ -194,8 +194,8 @@
           
           
           //rigidifiers
-          {"beamSpring":701000,"beamDamp":80},
-          {"beamDeform":8000,"beamStrength":"FLT_MAX"},
+          {"beamSpring":1051500,"beamDamp":80},
+          {"beamDeform":24000,"beamStrength":"FLT_MAX"},
           ["fl6","fl7"],
 
           ["fl6","fl1r"],
@@ -217,7 +217,7 @@
           ["fl7","fl5"],
           ["fl7","fl5l"],
           //break
-          {"beamDeform":8000,"beamStrength":30100},
+          {"beamDeform":24000,"beamStrength":90300},
           ["fl7","fl3rr"],
           ["fl7","fl3ll"],
           ["fl6","fl3rr"],
@@ -229,8 +229,8 @@
 
           
           //attach
-          {"beamSpring":1001000,"beamDamp":500},
-          {"beamDeform":15500,"beamStrength":40000},
+          {"beamSpring":1501500,"beamDamp":500},
+          {"beamDeform":46500,"beamStrength":120000},
           {"breakGroup":"floor_monocoque_F"},
           ["fl1r","mt1r"],
           ["fl1l","mt1r"],
@@ -245,15 +245,15 @@
           ["fl3r", "rt2r"],
           ["fl3r", "rt1r"],
           ["fl3r", "rt4r"],
-          ["fl3rr","rt2r",{"breakGroupType":1,"beamSpring":60100,"beamDeform":5200}],
+          ["fl3rr","rt2r",{"breakGroupType":1,"beamSpring":90150,"beamDeform":15600}],
           
           {"breakGroup":"floor_monocoque_ML"},
           ["fl3l", "rt2l"],
           ["fl3l", "rt1l"],
           ["fl3l", "rt4l"],
-          ["fl3ll","rt2l",{"breakGroupType":1,"beamSpring":60100,"beamDeform":5200}],
+          ["fl3ll","rt2l",{"breakGroupType":1,"beamSpring":90150,"beamDeform":15600}],
 
-          {"beamStrength":10000},
+          {"beamStrength":30000},
           {"breakGroup":"floor_transaxle_M"},
           ["fl4","rx3r"],
           ["fl4","rx3l"],
@@ -263,27 +263,27 @@
           {"breakGroup":"floor_transaxle_R"},
           ["fl5","rx4r"],
           ["fl5","rx4l"],
-          ["fl5r","rx4r",{"beamSpring":60100,"beamDeform":5200}],
-          ["fl5l","rx4l",{"beamSpring":60100,"beamDeform":5200}],
+          ["fl5r","rx4r",{"beamSpring":90150,"beamDeform":15600}],
+          ["fl5l","rx4l",{"beamSpring":90150,"beamDeform":15600}],
 
           {"breakGroup":"floor_transaxle_RR"},
-          ["fl4r","rx3r",{"beamSpring":60100,"beamDeform":5200}],
+          ["fl4r","rx3r",{"beamSpring":90150,"beamDeform":15600}],
 
           {"breakGroup":"floor_transaxle_RL"},
-          ["fl4l","rx3l",{"beamSpring":60100,"beamDeform":5200}],
+          ["fl4l","rx3l",{"beamSpring":90150,"beamDeform":15600}],
 
 
           {"breakGroup":""},
           //support beams
           {"beamType":"|SUPPORT","beamLongBound":8},
-          {"beamSpring":801000,"beamDamp":500},
-          {"beamDeform":12000,"beamStrength":20000},
+          {"beamSpring":1201500,"beamDamp":500},
+          {"beamDeform":36000,"beamStrength":60000},
           ["fl1r","mt2r"],
           ["fl1l","mt2l"],
           ["fl1r","mt2l"],
           ["fl1l","mt2r"],
 
-          {"beamSpring":801000,"beamDamp":50},
+          {"beamSpring":1201500,"beamDamp":50},
           ["fl2","rt4r"],
           ["fl2","rt4l"],
           ["fl2r","rt4r"],

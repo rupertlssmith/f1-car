@@ -341,6 +341,50 @@ Every config: 1.9 g at low speed, 5-6 g braking from 300 km/h.
     when the rears slip more than 12 % -- the job 2018 per-gear torque maps
     did. On by default.
   - *More grip:* +6.5 % front and rear.
+- **Round 9 (F4 -> F1 review, all 15 items; `migrations()` in
+  `tools/rb14/f1_setup.py`, each scaled from the F4 original):**
+  1. *Shift points:* the engine part's shift table (which overrides the
+     transaxle's) was the F4's 7,000 rpm four-cylinder one. Upshift at
+     12,000 rpm; each downshift lands the lower gear at ~11,500 rpm
+     (8,850 ... 10,050 rpm); launch 7,000 / 7,500 rpm as the transaxle.
+  2. *Tyre carcass:* tread / periphery beams 2.5x, rim reinforcement 5x,
+     sidewall in extension 2x, damping 1.5x.
+  3. *Front wing:* wing beams 3x stiffer, 4x stronger; nose beams 1.5x on
+     1.5x heavier nose nodes; ~8 kg wing assembly. Tip deflection under
+     6.3 kN (300 km/h) 92 -> 46 mm, centre 34 -> 27 mm. Stiffer still puts
+     the nose / bulkhead nodes over the solver limit.
+  4. *Floor:* beams 1.5x stiffer (3x broke the solver limit on the F4's 1 kg
+     floor nodes), 3x stronger; floor nodes back to the F4's weights. The
+     ballast moved to the front of the tub floor (fx2, mt1) and to the
+     engine sump / gearbox front (e2, rx1). CoG 0.361 -> 0.369 m.
+  5. *Monocoque:* torsion (seat back held, couple on the front bulkhead,
+     `monocoque_torsion()`) 4.7 -> 5.1 kNm/deg: the tub's beams up to
+     3.5 MN/m are 2x stiffer and stronger, cockpit-rim and bulkhead nodes
+     a little heavier. Doubling the 4 MN/m beams too would reach
+     7.2 kNm/deg but needs ~6 kg more on the nose bulkhead, more than the
+     front ballast has. A real tub is far stiffer; the 2 kHz solver is the
+     limit here.
+  6. *Wheel axle beams:* 2x stiffer, 3x stronger, damping 25 -> 100; hub
+     damping 10 -> 40.
+  7. *Cooling:* radiator 0.6 m^2, effectiveness 14,000, 8 L coolant,
+     10 kg (was 25).
+  8. *Engine damage thresholds* 3x (head gasket, piston rings, rods).
+  9. *Clutch:* left as it was. BeamNG sizes the friction clutch's capacity
+     from the engine torque; clutchFreePlay / lockSpringCoef are pedal feel
+     and lock-up stiffness (no public documentation to check against).
+  10. *Bodywork* (sidepods, engine cover, suspension fairings): deform /
+      break forces 2.5x.
+  11. *Sound:* pitch as a six-cylinder (the samples stay: BeamNG ships no
+      V6 turbo-hybrid set).
+  12. *Chase camera:* 6.8 m (min 2.5) for the 5.7 m car.
+  13. *Hard travel stops:* ~57 mm bump front / ~64 mm rear (F4 ~120 / 90);
+      the packers still act first.
+  14. *Brakes:* brakeSpring 300, rear parking torque 3,000 Nm. ABS targets
+      unchanged (only used if the player turns ABS on).
+  15. *scaledragCoef 1.6* stays: the aero factors were solved with it.
+
+  All gates pass: highest mode ω·dt 1.65, worst corner beam 0.35 of its
+  deform limit, wheel clearance OK, all 54 sweep cars too.
 - **Rear tyre clearance:** the rear floor / diffuser edge nodes sat 20-50 mm
   inside the 405 mm rear tyres' inner face; moved ~8 cm inboard (aero
   factors re-solved for the smaller floor).

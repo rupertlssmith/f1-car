@@ -26,9 +26,9 @@
     ],
     "mainEngine":{
         //beamng has no support for radiators without fans? what??
-        "radiatorArea":0.3, //m²
-        "radiatorEffectiveness":9000,
-        "coolantVolume":6,
+        "radiatorArea":0.6, //m²
+        "radiatorEffectiveness":14000,
+        "coolantVolume":8,
         "radiatorFanType":"electric", //has to be electric BECAUSE NO SUPPORT FOR RADIATORS WITHOUT FANS!!!!
         "radiatorFanTemperature":49620,
         "radiatorFanMaxAirSpeed":0.0,
@@ -47,7 +47,7 @@
          {"selfCollision":true},
          {"collision":true},
          {"engineGroup":"radiator"},
-         {"nodeWeight":2.5},
+         {"nodeWeight":1.0},
          {"chemEnergy":200,"burnRate":0.4,"flashPoint":250,"specHeat":0.8,"smokePoint":150,"selfIgnitionCoef":false},
 
          {"group":"redbull_radiator_R"},

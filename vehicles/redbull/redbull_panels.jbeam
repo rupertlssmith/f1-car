@@ -38,7 +38,7 @@
           //--ENGINE COVER--
           {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
           {"beamSpring":401000,"beamDamp":25},
-          {"beamDeform":20000,"beamStrength":40000},
+          {"beamDeform":50000,"beamStrength":100000},
           {"deformLimitExpansion":1.2},
           //engine cover main shape
           ["eg1r","eg2r"],
@@ -57,7 +57,7 @@
 
           //surficial crossing
           {"deformLimitExpansion":""},
-          {"beamDeform":10000,"beamStrength":35000},
+          {"beamDeform":25000,"beamStrength":87500},
           ["eg5","eg1r"],
           ["eg5","eg1l"],
           ["eg5","eg3r"],
@@ -69,7 +69,7 @@
 
           //rigids
           {"beamSpring":201000,"beamDamp":20},
-          {"beamDeform":3500,"beamStrength":6000},
+          {"beamDeform":8750,"beamStrength":15000},
           ["eg1r","eg1l"],
           ["eg2r","eg2l"],
           
@@ -77,10 +77,10 @@
           {"optional":true},
           {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
           {"beamSpring":100100,"beamDamp":45},
-          {"beamDeform":9000},
+          {"beamDeform":22500},
           {"breakGroupType":0},
           {"breakGroup":"enginecover_monocoque_R"},
-          {"beamStrength":3000},
+          {"beamStrength":7500},
           ["eg4","hoop"],
           ["eg4","halorr"],
           ["eg4","haloll"],
@@ -93,7 +93,7 @@
           ["eg1r","rt2l"],
           
           {"breakGroup":"enginecover_monocoque_L"},
-          {"beamStrength":3000},
+          {"beamStrength":7500},
           ["eg4","hoop"],
           ["eg4","halorr"],
           ["eg4","haloll"],
@@ -108,7 +108,7 @@
           
           {"breakGroup":"enginecover_sidepod_R"},
           {"optional":true},
-          {"beamStrength":3000},
+          {"beamStrength":7500},
           ["eg1r","sp13r"],
           ["eg2r","sp14r"],
           ["eg2r","sp13r"],
@@ -118,7 +118,7 @@
           ["eg5","sp14r",{"beamSpring":3000}],
           
           {"breakGroup":"enginecover_sidepod_L"},
-          {"beamStrength":3000},
+          {"beamStrength":7500},
           ["eg1l","sp13l"],
           ["eg2l","sp14l"],
           ["eg2l","sp13l"],
@@ -128,7 +128,7 @@
           ["eg5","sp14l",{"beamSpring":3000}],
           
           {"breakGroup":"enginecover_transaxle"},
-          {"beamStrength":2500},
+          {"beamStrength":6250},
           ["eg3r","rx1r"],
           ["eg3r","rx2r"],
           ["eg3r","rx1l"],
@@ -146,7 +146,7 @@
           //support
           {"beamType":"|SUPPORT", "beamLongBound":12},
           {"beamSpring":301000,"beamDamp":45},
-          {"beamDeform":5000,"beamStrength":1250000},
+          {"beamDeform":12500,"beamStrength":3125000},
           //monocoque
           ["eg1r","rt2r"],
           ["eg1l","rt2l"],
@@ -238,7 +238,7 @@
           //--SUSPENSION COVER--
           {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
           {"beamSpring":401000,"beamDamp":25},
-          {"beamDeform":20000,"beamStrength":40000},
+          {"beamDeform":50000,"beamStrength":100000},
           {"deformLimitExpansion":1.2},
           //suspension cover main shape
           ["sc1r","sc2r"],
@@ -252,13 +252,13 @@
 
           //surficial crossing
           {"deformLimitExpansion":""},
-          {"beamDeform":10000,"beamStrength":35000},
+          {"beamDeform":25000,"beamStrength":87500},
           ["sc2r","sc3l"],
           ["sc2l","sc3r"],
 
           //rigids
           {"beamSpring":201000,"beamDamp":20},
-          {"beamDeform":3500,"beamStrength":6000},
+          {"beamDeform":8750,"beamStrength":15000},
           ["sc1r","sc1l"],
           ["sc1r","sc2l"],
           ["sc1l","sc2r"],
@@ -266,10 +266,10 @@
           //attach
           {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
           {"beamSpring":100100,"beamDamp":45},
-          {"beamDeform":9000},
+          {"beamDeform":22500},
           {"breakGroupType":0},
           {"breakGroup":"suscover_R"},
-          {"beamStrength":2500},
+          {"beamStrength":6250},
           ["sc1r","fx1r"],
           ["sc1r","fx2r"],
           ["sc1r","fx1l"],
@@ -281,7 +281,7 @@
           ["sc2r","fx3l",{"beamSpring":3000}],
           
           {"breakGroup":"suscover_L"},
-          {"beamStrength":2500},
+          {"beamStrength":6250},
           ["sc1l","fx1r"],
           ["sc1l","fx2r"],
           ["sc1l","fx1l"],
@@ -298,7 +298,7 @@
           //support
           {"beamType":"|SUPPORT", "beamLongBound":12},
           {"beamSpring":301000,"beamDamp":45},
-          {"beamDeform":5000,"beamStrength":1250000},
+          {"beamDeform":12500,"beamStrength":3125000},
           //monocoque
           ["sc1r","fx3r"],
           ["sc1r","fx4r"],

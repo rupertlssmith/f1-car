@@ -40,8 +40,8 @@
             ["id1:", "id2:"],
             {"beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
             {"breakGroup":""},
-            {"beamDeform":78500,"beamStrength":434000},
-            {"beamSpring":1501000,"beamDamp":25},
+            {"beamDeform":235500,"beamStrength":1302000},
+            {"beamSpring":3002000,"beamDamp":100},
             //front wheel
             ["fw1r","fw1rr"],
             ["fw1l","fw1ll"],
@@ -59,9 +59,9 @@
             {"numRays":16},
     
             //hub options
-            {"hubTreadBeamSpring":644085, "hubTreadBeamDamp":10},
-            {"hubPeripheryBeamSpring":644085, "hubPeripheryBeamDamp":10},
-            {"hubSideBeamSpring":1040650, "hubSideBeamDamp":10},
+            {"hubTreadBeamSpring":644085, "hubTreadBeamDamp":40},
+            {"hubPeripheryBeamSpring":644085, "hubPeripheryBeamDamp":40},
+            {"hubSideBeamSpring":1040650, "hubSideBeamDamp":40},
             {"hubBeamDeform":174400, "hubBeamStrength":312000},
             {"hubNodeWeight":0.45},
             {"hubNodeMaterial":"|NM_METAL"},
@@ -109,8 +109,8 @@
         ["id1:", "id2:"],
         {"beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
         {"breakGroup":""},
-        {"beamDeform":78500,"beamStrength":434000},
-        {"beamSpring":1501000,"beamDamp":25},
+        {"beamDeform":235500,"beamStrength":1302000},
+        {"beamSpring":3002000,"beamDamp":100},
         //front wheel
         ["fw1r","fw1rr"],
         ["fw1l","fw1ll"],
@@ -128,9 +128,9 @@
         {"numRays":16},
 
         //hub options
-        {"hubTreadBeamSpring":644085, "hubTreadBeamDamp":10},
-        {"hubPeripheryBeamSpring":644085, "hubPeripheryBeamDamp":10},
-        {"hubSideBeamSpring":1040650, "hubSideBeamDamp":10},
+        {"hubTreadBeamSpring":644085, "hubTreadBeamDamp":40},
+        {"hubPeripheryBeamSpring":644085, "hubPeripheryBeamDamp":40},
+        {"hubSideBeamSpring":1040650, "hubSideBeamDamp":40},
         {"hubBeamDeform":174400, "hubBeamStrength":312000},
         {"hubNodeWeight":0.45},
         {"hubNodeMaterial":"|NM_METAL"},

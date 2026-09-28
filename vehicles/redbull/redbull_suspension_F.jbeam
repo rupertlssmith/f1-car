@@ -258,8 +258,8 @@
           {"beamPrecompression":1.0, "beamType":"|BOUNDED", "beamLongBound":1, "beamShortBound":1},
           {"beamSpring":0,"beamDamp":0,"beamDeform":75000,"beamStrength":300000},
           {"beamLimitSpring":1201000,"beamLimitDamp":2000},
-          ["fh1r","fs1", {"breakGroup":["lowerarm_FR","upperarm_FR"],"longBoundRange":0.03,"shortBoundRange":0.07,"boundZone":0.016,"beamLimitDampRebound":0,"dampCutoffHz":500}],
-          ["fh1l","fs1", {"breakGroup":["lowerarm_FL","upperarm_FL"],"longBoundRange":0.03,"shortBoundRange":0.07,"boundZone":0.016,"beamLimitDampRebound":0,"dampCutoffHz":500}],
+          ["fh1r","fs1", {"breakGroup":["lowerarm_FR","upperarm_FR"],"longBoundRange":0.03,"shortBoundRange":0.034,"boundZone":0.016,"beamLimitDampRebound":0,"dampCutoffHz":500}],
+          ["fh1l","fs1", {"breakGroup":["lowerarm_FL","upperarm_FL"],"longBoundRange":0.03,"shortBoundRange":0.034,"boundZone":0.016,"beamLimitDampRebound":0,"dampCutoffHz":500}],
           
           //rocker travel limit
           {"beamPrecompression":1.0, "beamType":"|BOUNDED", "beamLongBound":1, "beamShortBound":1},
