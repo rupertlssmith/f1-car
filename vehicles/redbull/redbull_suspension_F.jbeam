@@ -436,7 +436,7 @@
     "torsionbars": [
         ["id1:", "id2:", "id3:", "id4:"],
         //heave (third) spring: lengthwise axis on the centreline, hubs as arms
-        {"spring":"$=$heave_spring_F*0.6009", "damp":"$=$heave_spring_F*0.6009*0.03", "deform":40000, "strength":9999999},
+        {"spring":"$=$heave_spring_F*0.6008", "damp":"$=$heave_spring_F*0.6008*0.03", "deform":40000, "strength":9999999},
         ["fh1r", "fs1", "mt3", "fh1l"],
     ],
     "beams": [
@@ -484,9 +484,9 @@
           //IMPORTANT: if precompressionRange is ~= nil then it supersedes beamPrecompression.
           //The case() is for backwards compatibility for old configs containing the "rideheight_F" variable.
           //To change the base ride height, edit the springheight_F offset in the expression.
-          ["fh1r","fs1", {"breakGroup":["lowerarm_FR","upperarm_FR"],"name":"spring_FR", "beamPrecompression":"$=$rideheight_F", "precompressionRange":"$=($springheight_F*(0.6126*$spring_F + $heave_spring_F/0.6126) + 5032.0)/$spring_F",
+          ["fh1r","fs1", {"breakGroup":["lowerarm_FR","upperarm_FR"],"name":"spring_FR", "beamPrecompression":"$=$rideheight_F", "precompressionRange":"$=($springheight_F*(0.6124*$spring_F + $heave_spring_F/0.6124) + 5031.0)/$spring_F",
               "soundFile":"event:>Vehicle>Suspension>car_modn_med_01>spring_compress_01","colorFactor":0.4,"attackFactor":60,"volumeFactor":1.5,"decayFactor":40,"noiseFactor":0.01,"pitchFactor":1.0,"maxStress":2000}],
-          ["fh1l","fs1", {"breakGroup":["lowerarm_FL","upperarm_FL"],"name":"spring_FL", "beamPrecompression":"$=$rideheight_F", "precompressionRange":"$=($springheight_F*(0.6126*$spring_F + $heave_spring_F/0.6126) + 5032.0)/$spring_F",
+          ["fh1l","fs1", {"breakGroup":["lowerarm_FL","upperarm_FL"],"name":"spring_FL", "beamPrecompression":"$=$rideheight_F", "precompressionRange":"$=($springheight_F*(0.6124*$spring_F + $heave_spring_F/0.6124) + 5031.0)/$spring_F",
               "soundFile":"event:>Vehicle>Suspension>car_modn_med_01>spring_compress_01","colorFactor":0.4,"attackFactor":60,"volumeFactor":1.5,"decayFactor":40,"noiseFactor":0.01,"pitchFactor":1.0,"maxStress":2000}],
           //damper
           {"beamPrecompression":1, "beamType":"|BOUNDED","beamLongBound":1, "beamShortBound":1},
@@ -497,8 +497,8 @@
           //hard bump stop
           {"beamSpring":0,"beamDamp":0},
           {"beamLimitSpring":501000,"beamLimitDamp":2000},
-          ["fh1r","fs1", {"breakGroup":["lowerarm_FR","upperarm_FR"],"longBoundRange":0.04,"shortBoundRange":"$=$packer_F*0.6126","boundZone":0.012,"beamLimitDampRebound":0,"dampCutoffHz":500}],
-          ["fh1l","fs1", {"breakGroup":["lowerarm_FL","upperarm_FL"],"longBoundRange":0.04,"shortBoundRange":"$=$packer_F*0.6126","boundZone":0.012,"beamLimitDampRebound":0,"dampCutoffHz":500}],
+          ["fh1r","fs1", {"breakGroup":["lowerarm_FR","upperarm_FR"],"longBoundRange":0.04,"shortBoundRange":"$=$packer_F*0.6124","boundZone":0.012,"beamLimitDampRebound":0,"dampCutoffHz":500}],
+          ["fh1l","fs1", {"breakGroup":["lowerarm_FL","upperarm_FL"],"longBoundRange":0.04,"shortBoundRange":"$=$packer_F*0.6124","boundZone":0.012,"beamLimitDampRebound":0,"dampCutoffHz":500}],
           //fake shock stopper
           {"beamSpring":0,"beamDamp":0},
           {"beamLimitSpring":501000,"beamLimitDamp":2000},
@@ -641,18 +641,18 @@
          {"frictionCoef":0.5},
          {"group":"redbull_tierod_inner"},
          {"nodeWeight":5},
-         ["fh6r",-0.2202, -1.638, 0.4597, {"nodeWeight":3}],
-         ["fh6l", 0.2202, -1.638, 0.4597, {"nodeWeight":3}],
+         ["fh6r",-0.2202, -1.638, 0.4597, {"nodeWeight":5}],
+         ["fh6l", 0.2202, -1.638, 0.4597, {"nodeWeight":5}],
          {"group":""},
     ],
     "beams": [
             ["id1:","id2:"],
             {"beamPrecompression":1.0, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
-            {"beamSpring":4500000,"beamDamp":150,"beamDeform":148500,"beamStrength":157500},
+            {"beamSpring":8001000,"beamDamp":150,"beamDeform":148500,"beamStrength":157500},
             {"disableMeshBreaking":false},
             ["fh6r","fh6l"],
             //also sets camber, tierods
-            {"beamSpring":4500000,"beamDamp":150},
+            {"beamSpring":10000000,"beamDamp":150},
             ["fh3r","fh6r", {"beamPrecompression":"$=$camber_F*$toe_F","beamPrecompressionTime":0.5,"deformGroup":"tierod_R","deformationTriggerRatio":0.01}],
             ["fh3l","fh6l", {"beamPrecompression":"$=$camber_F*$toe_F","beamPrecompressionTime":0.5,"deformGroup":"tierod_L","deformationTriggerRatio":0.01}],
             //steering damper
@@ -676,7 +676,7 @@
     "hydros": [
             ["id1:","id2:"],
             {"beamPrecompression":1.0, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
-            {"beamSpring":4500000,"beamDamp":25,"beamDeform":"FLT_MAX","beamStrength":277500},
+            {"beamSpring":10000000,"beamDamp":25,"beamDeform":"FLT_MAX","beamStrength":277500},
             ["fh6r","fx3l", {"factor": 0.072,"steeringWheelLock":230, "inRate":1.25,"outRate":1.25}],
             ["fh6l","fx3r", {"factor":-0.072,"steeringWheelLock":230, "inRate":1.25,"outRate":1.25}],
             {"beamPrecompression":1.0, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},

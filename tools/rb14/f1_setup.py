@@ -56,7 +56,7 @@ def mass():
         "fh1r": 4, "fh1l": 4, "fh2r": 1, "fh2l": 1, "fh3r": 3, "fh3l": 3, "fh4r": 3, "fh4l": 3, "fh5r": 3, "fh5l": 3})
     weights(f"{V}/redbull_suspension_R.jbeam", {
         "rh1r": 4, "rh1l": 4, "rh3r": 3, "rh3l": 3, "rh4r": 3, "rh4l": 3})
-    weights(f"{V}/redbull_suspension_F.jbeam", {"fh6r": 3, "fh6l": 3})      # steering rack ends
+    weights(f"{V}/redbull_suspension_F.jbeam", {"fh6r": 5, "fh6l": 5})      # steering rack ends (stiff rack: see stiffness())
     # chassis nodes that carry very stiff beams keep enough mass for the
     # 2 kHz solver (see stiffness() below)
     weights(f"{V}/redbull_body.jbeam", CHASSIS_MIN_MASS)
@@ -125,7 +125,8 @@ CHASSIS_MIN_MASS = {"rt4r": 4.5, "rt4l": 4.5}
 HUB_TORSION_F = 80000                        # was 200000 (F4)
 SPRING_CAP = {                               # part -> highest beamSpring (N/m)
     "redbull_suspension_F": 4.5e6,
-    "redbull_steering": 4.5e6,
+    "redbull_steering": 10.0e6,          # steering hydros at the F4's 10 MN/m (tie rods 14 -> 10): a softer rack let
+                                          # the front wheels sit off-centre after a turn
     "redbull_suspension_R": 4.5e6,
 }
 SPRING_CAP_FILES = {"redbull_suspension_F": "suspension_F", "redbull_steering": "suspension_F",
