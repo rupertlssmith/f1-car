@@ -372,6 +372,7 @@ def check_stability():
             raise SystemExit("%s: nodes inside / within %d mm of a spinning wheel: %s" % (
                 cfg, WHEEL_CLEARANCE * 1000, ", ".join("%s %s %+.0f mm" % (w, n, g * 1000) for g, w, n in hits[:6])))
     print("wheel clearance: nothing within %d mm of a spinning wheel" % (WHEEL_CLEARANCE * 1000))
+    check_tyres()
     worst = None
     for cfg in CONFIGS:
         v = sr.Vehicle("redbull", cfg)
@@ -387,6 +388,27 @@ def check_stability():
     if ratio > STRENGTH_MAX_RATIO:
         raise SystemExit(msg + " > %.2f" % STRENGTH_MAX_RATIO)
     print(msg)
+
+
+def check_tyres():
+    """Every generated-tyre spring, per kg of tyre node, at most
+    TYRE_MAX_K_PER_KG x the F4's (see tyre_carcass())."""
+    import setup_report as sr
+    keys = [k.replace("Spring", "") for k in TYRE_SPRINGS] + ["wheelSideBeam"]
+    ref = {r["name"][0]: r for r in sr.Vehicle("fr04", None).wheels()}
+    worst = (0, "")
+    for cfg in CONFIGS:
+        v = sr.Vehicle("redbull", cfg)
+        for r in v.wheels():
+            f4 = ref[r["name"][0]]
+            for key in keys:
+                sk = key.replace("Expansion", "") + "Spring" + ("Expansion" if "Expansion" in key else "")
+                ratio = (v.val(r.get(sk), 0) / v.val(r.get("nodeWeight"), 1)) / max(v.val(f4.get(sk), 0) / v.val(f4.get("nodeWeight"), 1), 1e-9)
+                if ratio > worst[0]:
+                    worst = (ratio, f"{cfg} {r['name']} {sk}")
+    if worst[0] > TYRE_MAX_K_PER_KG + 1e-6:
+        raise SystemExit("tyres: %s at %.2f x the F4's stiffness per kg (limit %.2f)" % (worst[1], worst[0], TYRE_MAX_K_PER_KG))
+    print("tyres: stiffest spring per kg of tyre node %.2f x the F4's (%s)" % worst)
 
 
 # Rim ring width. The pressure wheel's rim ring spins with the wheel; the
@@ -1110,12 +1132,16 @@ def shift_logic():
     je.set_all(f, r'"clutchLaunchTargetRPM":\s*[\d.]+', '"clutchLaunchTargetRPM":7500')
 
 
-# 2. Tyre carcass: the F4's (sized for a 650 kg car with ~1.5 g) let the
-# 13" F1 tyres squirm under 3-4x the load. Tread / periphery ~2.5x, the
-# sidewall-to-rim reinforcement 5x, damping 1.5x.
-TYRE_SPRINGS = {"wheelTreadBeamSpring": 2.5, "wheelTreadReinfBeamSpring": 2.5, "wheelPeripheryBeamSpring": 2.5,
-                "wheelPeripheryReinfBeamSpring": 2.5, "wheelReinfBeamSpring": 2.5, "wheelSideBeamSpringExpansion": 2.0}
-TYRE_DAMP = 1.5
+# 2. Tyre carcass: tried 2.5x stiffer in round 9 -- in game the tyres
+# vibrated, turned inside out and tore off at spawn (round 9b). The game's
+# generated tyre is not something setup_report can model (it rated the
+# stiffer tyres the same as the F4's), so the carcass stays at the F4's
+# springs and damping, and check_stability() holds every tyre spring to
+# the F4's stiffness per kg of tyre node (TYRE_MAX_K_PER_KG).
+TYRE_SPRINGS = {"wheelTreadBeamSpring": 1.0, "wheelTreadReinfBeamSpring": 1.0, "wheelPeripheryBeamSpring": 1.0,
+                "wheelPeripheryReinfBeamSpring": 1.0, "wheelReinfBeamSpring": 1.0, "wheelSideBeamSpringExpansion": 1.0}
+TYRE_MAX_K_PER_KG = 1.0         # x the F4's spring / tyre node weight
+TYRE_DAMP = 1.0
 
 
 def tyre_carcass():

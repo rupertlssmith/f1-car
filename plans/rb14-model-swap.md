@@ -348,7 +348,7 @@ Every config: 1.9 g at low speed, 5-6 g braking from 300 km/h.
      12,000 rpm; each downshift lands the lower gear at ~11,500 rpm
      (8,850 ... 10,050 rpm); launch 7,000 / 7,500 rpm as the transaxle.
   2. *Tyre carcass:* tread / periphery beams 2.5x, rim reinforcement 5x,
-     sidewall in extension 2x, damping 1.5x.
+     sidewall in extension 2x, damping 1.5x. (Undone in round 9c: unstable.)
   3. *Front wing:* wing beams 3x stiffer, 4x stronger; nose beams 1.5x on
      1.5x heavier nose nodes; ~8 kg wing assembly. Tip deflection under
      6.3 kN (300 km/h) 92 -> 46 mm, centre 34 -> 27 mm. Stiffer still puts
@@ -405,6 +405,16 @@ Every config: 1.9 g at low speed, 5-6 g braking from 300 km/h.
     of the stretch they used to take. Deform / break forces now scale with
     the stiffening (tread and periphery 2.5x, sidewall 2x); rim
     reinforcement 2.5x (was 5x).
+- **Round 9c (in-game: the rear wing stays on; the tyres shook violently at
+  spawn, the fronts turned inside out and tore off; without tyres nothing
+  moved):** the round-9 carcass stiffening (item 2, 2.5x) is undone -- the
+  tyres are exactly round 8's (F4 springs and damping). With round 9's old
+  deform limits the stiffer tyres burst first; with 9b's scaled limits
+  nothing gave way and the instability showed. Our tyre nodes are 0.30 /
+  0.34 kg against the F4's 0.16, so 2.5x the springs was 1.33x the F4's
+  stiffness per kg, and the generated-tyre approximation in setup_report
+  cannot see it (it rated both the same). New gate, `check_tyres()`: every
+  tyre spring per kg of tyre node <= the F4's (now 0.53x at most).
 - **Rear tyre clearance:** the rear floor / diffuser edge nodes sat 20-50 mm
   inside the 405 mm rear tyres' inner face; moved ~8 cm inboard (aero
   factors re-solved for the smaller floor).
