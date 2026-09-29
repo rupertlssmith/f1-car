@@ -1,0 +1,13 @@
+{
+  "Config Type": "Custom",
+  "Configuration": "Front Fix 5 · Much stiffer tyres + upright damping",
+  "Description": "Front-wheel fix test car 5: carcass 1.6x and front upright damping 800 (round 11 broke at 900) -- RISKIEST: over the wheel-corner damping limit. Everything else is Baseline (tyre_carcass_F 1.6, carrier_damp_F 800). Over an offline limit (wheel-corner damping 1.81 > 1.78): may break at spawn.",
+  "Drivetrain": "RWD",
+  "Fuel Type": "Gasoline",
+  "Induction Type": "Turbo",
+  "Propulsion": "Hybrid",
+  "Transmission": "Sequential",
+  "Off-Road Score": 0,
+  "Population": 0,
+  "Value": 12000000
+}

@@ -32,6 +32,12 @@ def weights(path, table):
 # >= 145 kg; ~80 kg driver sitting low; light unsprung corners; ballast in
 # the plank to reach the minimum and set ~45.5 % front. The F4 carried its
 # driver as 5 kg nodes from floor to roll hoop; move that mass down.
+# front upright nodes fh3 / fh5 (4 kg each) take $upright_mass_F kg per
+# corner from the front rim's 32 hub nodes (wheels()): same corner mass,
+# placed where the limiting wheel-corner mode sits (round 12 variants)
+UPRIGHT_F = "$=4+$upright_mass_F/2"
+
+
 def mass():
     # tub + driver (~150 kg): heavy low nodes (seat, floor of the tub), light
     # high ones (cockpit rim, halo, hoop)
@@ -55,7 +61,7 @@ def mass():
     weights(f"{V}/redbull_crashbox.jbeam", {n: 1.0 for n in ("cb4r", "cb4l")})
     # uprights, brakes, wishbone ends: roughly half the F4's corner mass
     weights(f"{V}/redbull_suspension_F.jbeam", {
-        "fh1r": 5, "fh1l": 5, "fh2r": 1, "fh2l": 1, "fh3r": 4, "fh3l": 4, "fh4r": 4, "fh4l": 4, "fh5r": 4, "fh5l": 4})
+        "fh1r": 5, "fh1l": 5, "fh2r": 1, "fh2l": 1, "fh3r": UPRIGHT_F, "fh3l": UPRIGHT_F, "fh4r": 4, "fh4l": 4, "fh5r": UPRIGHT_F, "fh5l": UPRIGHT_F})
     weights(f"{V}/redbull_suspension_R.jbeam", {
         "rh1r": 5, "rh1l": 5, "rh3r": 4, "rh3l": 4, "rh4r": 4, "rh4l": 4})
     weights(f"{V}/redbull_suspension_F.jbeam", {"fh6r": 6.5, "fh6l": 6.5})  # steering rack ends (stiff rack: see stiffness())
@@ -156,7 +162,7 @@ def stiffness():
         a0, b0 = _part_block(orig, part.replace("redbull", "fr04"))
         text = je._read(f)
         a, b = _part_block(text, part)
-        pat = re.compile(r'("beamSpring"\s*:\s*)(\d+(?:\.\d+)?)(\s*,\s*"beamDamp"\s*:\s*\d+(?:\.\d+)?)?')
+        pat = re.compile(r'("beamSpring"\s*:\s*)(\d+(?:\.\d+)?)(\s*,\s*"beamDamp"\s*:\s*(?:\d+(?:\.\d+)?|"[^"]*"))?')
         src = [(float(m.group(2)), m.group(3)) for m in pat.finditer(orig[a0:b0])]
         block = text[a:b]
         if len(pat.findall(block)) != len(src):
@@ -168,6 +174,11 @@ def stiffness():
             out = m.group(1) + "%d" % min(k, cap)
             if damp:
                 d = float(re.search(r'([\d.]+)$', damp).group(1))
+                if k > cap and part == "redbull_suspension_F" and d <= CARRIER_DAMP:
+                    # capped carrier beams: damp the wheel judder (front: tuning
+                    # variable $carrier_damp_F, default CARRIER_DAMP)
+                    out += re.sub(r'[\d.]+$', '"$=$carrier_damp_F"', damp)
+                    return out
                 if k > cap and part != "redbull_steering":
                     d = max(d, CARRIER_DAMP)      # capped carrier beams: damp the wheel judder
                 out += re.sub(r'[\d.]+$', "%d" % d, damp)
@@ -198,12 +209,15 @@ def stiffness():
         # the old limits dented and burst the tyres on spawn (round 9)
         k = TYRE_STRENGTH_SCALE
         ks, kt, kp = (k * TYRE_SPRINGS[x] for x in ("wheelSideBeamSpringExpansion", "wheelTreadBeamSpring", "wheelPeripheryBeamSpring"))
-        je.set_all(f, r'\{"wheelSideBeamDeform":\d+,"wheelSideBeamStrength":\d+\}',
-                   '{"wheelSideBeamDeform":%d,"wheelSideBeamStrength":%d}' % (17000 * ks, 22000 * ks))
-        je.set_all(f, r'\{"wheelTreadBeamDeform":\d+,"wheelTreadBeamStrength":\d+\}',
-                   '{"wheelTreadBeamDeform":%d,"wheelTreadBeamStrength":%d}' % (tread[0] * kt, tread[1] * kt))
-        je.set_all(f, r'\{"wheelPeripheryBeamDeform":\d+,"wheelPeripheryBeamStrength":\d+\}',
-                   '{"wheelPeripheryBeamDeform":%d,"wheelPeripheryBeamStrength":%d}' % (tread[2] * kp, tread[3] * kp))
+        # front: x $tyre_carcass_F as well, so the limits follow the stiffness
+        x = (lambda n: '"$=%d*$tyre_carcass_F"' % n) if axle == "F" else (lambda n: "%d" % n)
+        num = r'(?:\d+|"[^"]*")'
+        je.set_all(f, r'\{"wheelSideBeamDeform":%s,"wheelSideBeamStrength":%s\}' % (num, num),
+                   '{"wheelSideBeamDeform":%s,"wheelSideBeamStrength":%s}' % (x(17000 * ks), x(22000 * ks)))
+        je.set_all(f, r'\{"wheelTreadBeamDeform":%s,"wheelTreadBeamStrength":%s\}' % (num, num),
+                   '{"wheelTreadBeamDeform":%s,"wheelTreadBeamStrength":%s}' % (x(tread[0] * kt), x(tread[1] * kt)))
+        je.set_all(f, r'\{"wheelPeripheryBeamDeform":%s,"wheelPeripheryBeamStrength":%s\}' % (num, num),
+                   '{"wheelPeripheryBeamDeform":%s,"wheelPeripheryBeamStrength":%s}' % (x(tread[2] * kp), x(tread[3] * kp)))
 
 
 # --------------------------------------------------------- torque paths
@@ -449,7 +463,8 @@ def wheels():
     for f in (f"{W}/redbull_wheels_F_13.jbeam", f"{W}/redbull_wheels_R_13.jbeam"):
         je.set_all(f, r'\{"nodeWeight":[\d.]+\}', '{"nodeWeight":%s}' % WHEEL_AXLE_WEIGHT)
         # rims + hubs + discs: 32 hub nodes x 0.35 kg = 11 kg per wheel (were 0.55)
-        je.set_all(f, r'\{"hubNodeWeight":[\d.]+\}', '{"hubNodeWeight":%s}' % HUB_NODE_WEIGHT)
+        w = '"$=%s-$upright_mass_F/32"' % HUB_NODE_WEIGHT if "_F_" in f else HUB_NODE_WEIGHT
+        je.set_all(f, r'\{"hubNodeWeight":(?:[\d.]+|"[^"]*")\}', '{"hubNodeWeight":%s}' % w)
 
 
 # --------------------------------------------------------------- tyres
@@ -1178,12 +1193,14 @@ def tyre_carcass():
         text = je._read(f)
         for key, k in TYRE_SPRINGS.items():
             damp = key.replace("Spring", "Damp")
-            pat = re.compile(r'\{"%s":(\d+),\s*"%s":(\d+)\}' % (key, damp))
+            pat = re.compile(r'\{"%s":(\d+|"[^"]*"),\s*"%s":(\d+)\}' % (key, damp))
             src = pat.findall(orig)
             if len(pat.findall(text)) != len(src) or not src:
                 raise ValueError(f"tyres {axle}: {key} rows differ from the F4")
             it = iter(src)
-            text = pat.sub(lambda m: (lambda s, d: '{"%s":%d,"%s":%d}' % (key, int(s) * k, damp, int(d) * TYRE_DAMP))(*next(it)), text)
+            # front: x the tuning variable $tyre_carcass_F (default 1)
+            fmt = (lambda s: '"$=%d*$tyre_carcass_F"' % (int(s) * k)) if axle == "F" else (lambda s: "%d" % (int(s) * k))
+            text = pat.sub(lambda m: (lambda s, d: '{"%s":%s,"%s":%d}' % (key, fmt(s), damp, int(d) * TYRE_DAMP))(*next(it)), text)
         je._write(f, text)
 
 
@@ -1389,6 +1406,32 @@ def brake_misc():
 # drag and the aero factors above (setup_report) were solved with it.
 
 
+# Round 12: front-wheel fix variables (tuning menu, Front Suspension /
+# Wheels); the defaults are the round-10 car, the fix_*.pc variants
+# (tools/rb14/variants.py) set them.
+FRONT_FIX_VARS = [
+    '["$tyre_carcass_F", "range", "x", "Wheels", 1.0, 1.0, 1.8, "Front Tire Carcass Stiffness", '
+    '"Tread and sidewall stiffness of the front tires, x the base tire", {"stepDis":0.05, "subCategory":"Front"}]',
+    '["$carrier_damp_F", "range", "N/m/s", "Suspension", %d, 300, 1500, "Front Upright Damping", '
+    '"Damping of the front wheel carriers (wheel judder)", {"stepDis":50, "subCategory":"Front"}]' % CARRIER_DAMP,
+    '["$upright_mass_F", "range", "kg", "Suspension", 0, 0, 5, "Front Upright Mass Shift", '
+    '"Mass moved from each front rim to its upright (same corner weight)", {"stepDis":0.5, "subCategory":"Front"}]',
+]
+
+
+def front_fix_vars():
+    import re
+    f = f"{V}/redbull_suspension_F.jbeam"
+    text = je._read(f)
+    a, b = _part_block(text, "redbull_suspension_F")
+    block = text[a:b]
+    block = re.sub(r'        \["\$(?:tyre_carcass_F|carrier_damp_F|upright_mass_F)".*\r\n', "", block)
+    i = block.index('        ["$toe_F"')
+    i = block.index("\r\n", i) + 2
+    block = block[:i] + "".join("        %s,\r\n" % r for r in FRONT_FIX_VARS) + block[i:]
+    je._write(f, text[:a] + block + text[b:])
+
+
 def migrations():
     shift_logic()
     tyre_carcass()
@@ -1403,6 +1446,7 @@ def migrations():
     camera()
     travel_stops()
     brake_misc()
+    front_fix_vars()
 
 if __name__ == "__main__":
     os.chdir(REPO)

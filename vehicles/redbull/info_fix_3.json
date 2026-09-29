@@ -1,0 +1,13 @@
+{
+  "Config Type": "Custom",
+  "Configuration": "Front Fix 3 · Stiff tyres + wheel-hop dampers",
+  "Description": "Front-wheel fix test car 3: carcass 1.3x and the front dampers 40 % firmer (bump / rebound), to hold the wheel against hop; the dampers are low-pass filtered, which the offline check can't see. Everything else is Baseline (tyre_carcass_F 1.3, damp_bump_F 19600, damp_rebound_F 33600). Passes every offline check.",
+  "Drivetrain": "RWD",
+  "Fuel Type": "Gasoline",
+  "Induction Type": "Turbo",
+  "Propulsion": "Hybrid",
+  "Transmission": "Sequential",
+  "Off-Road Score": 0,
+  "Population": 0,
+  "Value": 12000000
+}

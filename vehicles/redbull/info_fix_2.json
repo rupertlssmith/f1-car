@@ -1,0 +1,13 @@
+{
+  "Config Type": "Custom",
+  "Configuration": "Front Fix 2 · Much stiffer tyres",
+  "Description": "Front-wheel fix test car 2: front tire carcass 1.6x (0.85x the F4's stiffness per kg); inside every limit. Everything else is Baseline (tyre_carcass_F 1.6). Passes every offline check.",
+  "Drivetrain": "RWD",
+  "Fuel Type": "Gasoline",
+  "Induction Type": "Turbo",
+  "Propulsion": "Hybrid",
+  "Transmission": "Sequential",
+  "Off-Road Score": 0,
+  "Population": 0,
+  "Value": 12000000
+}

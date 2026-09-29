@@ -467,6 +467,17 @@ Every config: 1.9 g at low speed, 5-6 g braking from 300 km/h.
   not. New gate: wheel-corner damped modes <= 1.78. The generated tyres
   stay a blind spot, so the 1.6x carcass is undone too rather than tested
   separately at spawn.
+- **Round 12 (front-fix variants; setup sweeps removed):** the 54 sweep
+  cars and `sweeps.py` are gone. Three new tuning variables (defaults = the
+  round-10 car): `$tyre_carcass_F` (front tyre springs and their deform /
+  break forces), `$carrier_damp_F` (front wheel-carrier damping) and
+  `$upright_mass_F` (kg per front corner moved from the rim's hub nodes to
+  the upright nodes fh3 / fh5). `tools/rb14/variants.py` writes five test
+  cars, `fix_1` ... `fix_5`, safest first -- test sheet
+  `plans/front-fixes.md`. Offline: stiffer tyres (1.3x, 1.6x) pass every
+  check; any carrier damping above 600 goes over the wheel-corner limit
+  (800: 1.81); moving mass off the rim makes the rim's own mode the limit
+  (+2 kg: 1.67, +4 kg: 1.75), so those two variants are flagged as risky.
 - **Rear tyre clearance:** the rear floor / diffuser edge nodes sat 20-50 mm
   inside the 405 mm rear tyres' inner face; moved ~8 cm inboard (aero
   factors re-solved for the smaller floor).

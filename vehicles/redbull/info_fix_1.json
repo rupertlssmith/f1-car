@@ -1,0 +1,13 @@
+{
+  "Config Type": "Custom",
+  "Configuration": "Front Fix 1 · Stiffer tyres",
+  "Description": "Front-wheel fix test car 1: front tire carcass 1.3x -- less tyre squirm; inside every limit. Everything else is Baseline (tyre_carcass_F 1.3). Passes every offline check.",
+  "Drivetrain": "RWD",
+  "Fuel Type": "Gasoline",
+  "Induction Type": "Turbo",
+  "Propulsion": "Hybrid",
+  "Transmission": "Sequential",
+  "Off-Road Score": 0,
+  "Population": 0,
+  "Value": 12000000
+}
