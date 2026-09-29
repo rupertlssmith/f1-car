@@ -433,6 +433,32 @@ Every config: 1.9 g at low speed, 5-6 g braking from 300 km/h.
     nor damping explains an offset that stays. New readout, key **J**
     (`lua/controller/redbullSteerCheck.lua`): steering input and each front
     wheel's measured steer angle, to tell a steering offset from a pull.
+- **Round 11 (in-game: steering and front wheels read straight but the car
+  pulls, changing after each corner; front wheels judder in hard corners,
+  shaking the front wing; match speed to the real car):**
+  - *Front judder:* tyre carcass 1.6x the F4's with deform / break forces
+    to match -- 0.85x the F4's stiffness per kg of tyre node, inside the
+    round-9c gate (round 9's 2.5x was 1.33x and shook the tyres apart).
+    Wheel-carrier damping 600 -> 900 (1200 goes over the damped limit at
+    the front axles). Stiffer rims (0.8x the F4's) put the axles at 1.73
+    undamped, so they stay at 0.65x.
+  - *Tyre-wing contact ruled out:* a dynamic clearance check (full lock +
+    40 mm bump; 250-300 km/h with the wing drooping under its load and the
+    car on its packers) finds no wing node within 100 mm of a front tyre.
+    Static front-wing loads stay under 25 % of any beam's deform force
+    (300 km/h + a 3 g kerb), so a wing only takes a set if the judder
+    shakes it well past that.
+  - *Pull:* the J readout adds rear wheel angles, chassis roll against the
+    wheel plane, each front-wing tip's height change since spawn and the
+    rear left-right wheel-speed difference: after a corner, whichever
+    changes is the cause (rear toe / a roll that doesn't settle / a bent
+    wing / a tyre radius difference).
+  - *Speed:* fact check -- the RB14 was fastest through the 2018 Baku speed
+    trap at 341.8 km/h (212 mph), low-downforce trim with DRS and a tow.
+    Offline the Low Downforce car reaches 340 km/h (348 with DRS), Baseline
+    323 (346); 0-100 / 0-200 2.4 / 4.5 s against ~2.6 / ~4.8 s for 2018
+    cars. New always-on timer (`lua/controller/redbullPerf.lua`) posts
+    0-100 / 0-200 / 0-300 and top speed in game, to calibrate against.
 - **Rear tyre clearance:** the rear floor / diffuser edge nodes sat 20-50 mm
   inside the 405 mm rear tyres' inner face; moved ~8 cm inboard (aero
   factors re-solved for the smaller floor).

@@ -23,7 +23,8 @@
         ["redbullERS", {"order":1000, "deployKW":120, "maxTorque":180, "storeMJ":4.0, "mguhKW":40, "harvestKW":120, "iceTorque":[[0, 0], [1000, 150], [2000, 230], [3000, 300], [4000, 360], [5000, 410], [6000, 450], [7000, 480], [8000, 500], [9000, 505], [10000, 505], [10500, 505], [11000, 485], [11500, 462], [12000, 440], [12500, 405], [13000, 360], [13500, 300], [14000, 240]]}],
         ["redbullDRS", {"minSpeed":20}],
         ["redbullTraction", {"order":1100, "targetSlip":0.12, "minSlipSpeed":2.5, "gain":4.0, "release":3.0}],
-        ["redbullSteerCheck", {}]
+        ["redbullSteerCheck", {}],
+        ["redbullPerf", {}]
     ],
     "variables": [
         ["name", "type", "unit", "category", "default", "min", "max", "title", "description"],

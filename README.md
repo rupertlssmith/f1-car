@@ -62,7 +62,10 @@ keys, rebindable under Options > Controls > Bindings > Vehicle Specific:
 | K | Torque map (traction limiter) on/off |
 | T / G | Brake bias forward / back |
 | Y | Pit limiter |
-| J | Steering check: shows steering input vs the front wheels' measured angles |
+| J | Steering check: steering input vs front wheel angles; rear toe, roll, front-wing tips, rear wheel-speed difference |
+
+An always-on timer posts 0-100 / 0-200 / 0-300 km/h times from a standstill
+and your top speed (km/h and mph) after each run.
 
 The build also carries **setup sweeps**: test cars listed as *Sweep NN · ...*
 that each change one setting from Baseline in five steps (front wing, roll

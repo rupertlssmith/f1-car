@@ -127,9 +127,9 @@ MAX_OMEGA_DT = float(os.environ.get("RB14_MAX_OMEGA_DT", 1.65))
 # With damping (setup_report: sqrt((omega*dt)^2 + 2*gamma), limit 2): the F4
 # peaks at 1.97 (crash box); round 9's rear wing at 2.01 shook itself off.
 MAX_DAMPED = 1.85
-HUB_SPRING_SCALE = 0.65                      # hub beams vs the F4's (hub nodes 0.35 vs 0.55 kg)
+HUB_SPRING_SCALE = 0.65                      # hub beams vs the F4's (hub nodes 0.45 vs 0.55 kg; 0.8 put the wheel axles at 1.73, round 11)
 HUB_NODE_WEIGHT = 0.45                       # kg x 32 per rim (was 0.35; F4 0.55)
-CARRIER_DAMP = 600                           # beamDamp floor on the capped wheel-carrier beams
+CARRIER_DAMP = 900                           # beamDamp floor on the capped wheel-carrier beams
 WHEEL_AXLE_WEIGHT = 4.5                      # kg, wheel axle nodes (F4: 5)
 CHASSIS_MIN_MASS = {"rt4r": 6.0, "rt4l": 6.0, "rt2r": 4.5, "rt2l": 4.5}
 HUB_TORSION_F = 80000                        # was 200000 (F4)
@@ -924,8 +924,8 @@ def hybrid():
     tc = '["redbullTraction", {"order":1100, "targetSlip":0.12, "minSlipSpeed":2.5, "gain":4.0, "release":3.0}]'
     text = je._read(m)
     import re
-    sc = '["redbullSteerCheck", {}]'
-    for c in ("redbullERS", "redbullDRS", "redbullTraction", "redbullSteerCheck"):
+    sc = '["redbullSteerCheck", {}],\r\n        ["redbullPerf", {}]'
+    for c in ("redbullERS", "redbullDRS", "redbullTraction", "redbullSteerCheck", "redbullPerf"):
         text = re.sub(r',\r\n        \["%s", \{.*?\}\]' % c, "", text)
     i = text.index('        ["flyBrakeBias"')
     j = text.index("\r\n", i)
@@ -1151,8 +1151,12 @@ def shift_logic():
 # stiffer tyres the same as the F4's), so the carcass stays at the F4's
 # springs and damping, and check_stability() holds every tyre spring to
 # the F4's stiffness per kg of tyre node (TYRE_MAX_K_PER_KG).
-TYRE_SPRINGS = {"wheelTreadBeamSpring": 1.0, "wheelTreadReinfBeamSpring": 1.0, "wheelPeripheryBeamSpring": 1.0,
-                "wheelPeripheryReinfBeamSpring": 1.0, "wheelReinfBeamSpring": 1.0, "wheelSideBeamSpringExpansion": 1.0}
+# Round 11: front judder in hard corners -> 1.6x, i.e. 0.85x the F4's
+# stiffness per kg of tyre node (our tyre nodes are ~2x the F4's), with
+# the deform / break forces scaled to match (stiffness()).
+TYRE_CARCASS = 1.6
+TYRE_SPRINGS = {k: TYRE_CARCASS for k in ("wheelTreadBeamSpring", "wheelTreadReinfBeamSpring", "wheelPeripheryBeamSpring",
+                                         "wheelPeripheryReinfBeamSpring", "wheelReinfBeamSpring", "wheelSideBeamSpringExpansion")}
 TYRE_MAX_K_PER_KG = 1.0         # x the F4's spring / tyre node weight
 TYRE_DAMP = 1.0
 

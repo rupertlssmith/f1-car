@@ -174,7 +174,10 @@ e = electrics.values
 local sn = {   -- x left, y rear, z up
   fx1r = vec3(-0.23, -1.59, 0.26), fx1l = vec3(0.23, -1.59, 0.26), fx2r = vec3(-0.26, -1.05, 0.26), fx2l = vec3(0.26, -1.05, 0.26),
   fw1l = vec3(0.33, -1.85, 0.34), fw1ll = vec3(0.60, -1.85, 0.34), fw1r = vec3(-0.33, -1.85, 0.34), fw1rr = vec3(-0.60, -1.85, 0.34),
+  rw1l = vec3(0.33, 1.70, 0.34), rw1ll = vec3(0.60, 1.70, 0.34), rw1r = vec3(-0.33, 1.70, 0.34), rw1rr = vec3(-0.60, 1.70, 0.34),
+  fep1l = vec3(0.90, -2.46, 0.08), fep1r = vec3(-0.90, -2.46, 0.08),
 }
+wheels = {wheels = {{name = "RL", wheelSpeed = 50}, {name = "RR", wheelSpeed = 49}}}
 local snames = {}
 local si = 0
 v = {data = {nodes = {}}}
@@ -184,6 +187,12 @@ local sc = require("redbullSteerCheck")
 sc.init({})
 sc.updateGFX(0.02)
 check(math.abs(e.steerAngleFL) < 1e-6 and math.abs(e.steerAngleFR) < 1e-6, "straight wheels read 0 deg")
+check(math.abs(e.steerAngleRL) < 1e-6 and math.abs(e.chassisRoll) < 1e-6 and math.abs(e.wingTipL) < 1e-9,
+      "rear wheels, roll and wing tips read 0 at spawn")
+check(math.abs(e.rearSpeedDiff - 2.02) < 0.01, string.format("rear wheel speed difference %.2f %%", e.rearSpeedDiff))
+sn.fep1l = sn.fep1l + vec3(0, 0, -0.012)
+sc.updateGFX(0.02)
+check(math.abs(e.wingTipL + 12) < 0.5 and math.abs(e.wingTipR) < 1e-6, string.format("left wing tip 12 mm down reads %.1f mm", e.wingTipL))
 -- steer both wheels 5 deg left (forward is -y, left +x): the axles' outer ends swing rearward
 local d = math.rad(-5)
 local function rot(c, p) local r = p - c; return c + vec3(r.x * math.cos(d) + r.y * math.sin(d), -r.x * math.sin(d) + r.y * math.cos(d), r.z) end
@@ -193,6 +202,24 @@ e.steerCheck = 1
 sc.updateGFX(0.02)
 check(math.abs(e.steerAngleFL - 5) < 0.01 and math.abs(e.steerAngleFR - 5) < 0.01,
       string.format("5 deg left lock reads L %+.2f R %+.2f", e.steerAngleFL, e.steerAngleFR))
+
+-- ------------------------------------------------------------ performance timer
+print("redbullPerf")
+electrics.values = {}
+e = electrics.values
+local pf = require("redbullPerf")
+pf.init({})
+local msgs = {}
+guihooks = {message = function(m) table.insert(msgs, m.txt) end}
+e.airspeed = 0
+pf.updateGFX(0.01)
+for i = 1, 300 do e.airspeed = i * 0.01 * 10; pf.updateGFX(0.01) end    -- 10 m/s^2: 100 km/h at ~2.78 s
+check(msgs[1] and msgs[1]:find("0%-100 km/h: 2%.7") ~= nil, "0-100 timed: " .. tostring(msgs[1]))
+e.airspeed = 300 / 3.6
+pf.updateGFX(0.01)
+e.airspeed = 280 / 3.6
+pf.updateGFX(0.01)
+check(msgs[#msgs]:find("Top speed: 300 km/h %(186 mph%)") ~= nil, "top speed reported: " .. msgs[#msgs])
 
 print(failures == 0 and "all controller checks passed" or (failures .. " check(s) FAILED"))
 os.exit(failures == 0 and 0 or 1)

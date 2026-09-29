@@ -59,11 +59,11 @@
         ],
         [
             "vehicles/common/redbull_wheels/redbull_tires_F_13.jbeam",
-            "2798704f9188c00a"
+            "dc7eba8ccefaf757"
         ],
         [
             "vehicles/common/redbull_wheels/redbull_tires_R_13.jbeam",
-            "999fe388bd0e7c6d"
+            "87f02d6db801a8e8"
         ],
         [
             "vehicles/common/redbull_wheels/redbull_wheels.dae",
@@ -370,8 +370,12 @@
             "cb4e9261e29e4091"
         ],
         [
+            "vehicles/redbull/lua/controller/redbullPerf.lua",
+            "47b9cf34961d939c"
+        ],
+        [
             "vehicles/redbull/lua/controller/redbullSteerCheck.lua",
-            "42c1a8cd4544462e"
+            "56d2b4716be99e09"
         ],
         [
             "vehicles/redbull/lua/controller/redbullTraction.lua",
@@ -479,7 +483,7 @@
         ],
         [
             "vehicles/redbull/redbull.jbeam",
-            "18dcc7774c1969e8"
+            "6bb0dedd8b2d10db"
         ],
         [
             "vehicles/redbull/redbull_accessory.data.dds",
@@ -627,11 +631,11 @@
         ],
         [
             "vehicles/redbull/redbull_suspension_F.jbeam",
-            "53e8d41398a37e3f"
+            "8b46ced3f3b683e4"
         ],
         [
             "vehicles/redbull/redbull_suspension_R.jbeam",
-            "fc2a6dd9cd419dd1"
+            "9667fab573d0f0c8"
         ],
         [
             "vehicles/redbull/redbull_transaxle.jbeam",
