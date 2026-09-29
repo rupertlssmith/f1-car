@@ -89,7 +89,7 @@
           //multilink suspension
           {"beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
           {"beamDeform":453000,"beamStrength":1650000},
-          {"beamSpring":6000000,"beamDamp":900},
+          {"beamSpring":6000000,"beamDamp":600},
           //rear hub
           ["rh1r","rh3r"],
           ["rh1r","rh4r"],
@@ -165,7 +165,7 @@
 
           //attach to wheel
           {"optional":true},
-          {"beamSpring":6000000,"beamDamp":900},
+          {"beamSpring":6000000,"beamDamp":600},
           {"beamDeform":540600,"beamStrength":4800600},
           {"breakGroup":"wheel_RR"},
           ["rh1r","rw1r", {"name":"axle_RR"}],

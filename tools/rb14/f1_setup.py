@@ -127,9 +127,13 @@ MAX_OMEGA_DT = float(os.environ.get("RB14_MAX_OMEGA_DT", 1.65))
 # With damping (setup_report: sqrt((omega*dt)^2 + 2*gamma), limit 2): the F4
 # peaks at 1.97 (crash box); round 9's rear wing at 2.01 shook itself off.
 MAX_DAMPED = 1.85
+# Wheel-corner modes (axle, upright, hub, tyre nodes) with damping: round 10
+# (1.78) was fine, round 11's 1.83 broke the front suspension at spawn.
+MAX_DAMPED_CORNER = 1.78
+CORNER_NODES = ("fw1", "rw1", "fh", "rh", "_hub", "_tyre")
 HUB_SPRING_SCALE = 0.65                      # hub beams vs the F4's (hub nodes 0.45 vs 0.55 kg; 0.8 put the wheel axles at 1.73, round 11)
 HUB_NODE_WEIGHT = 0.45                       # kg x 32 per rim (was 0.35; F4 0.55)
-CARRIER_DAMP = 900                           # beamDamp floor on the capped wheel-carrier beams
+CARRIER_DAMP = 600                           # beamDamp floor on the capped wheel-carrier beams (round 11's 900 broke the front suspension at spawn)
 WHEEL_AXLE_WEIGHT = 4.5                      # kg, wheel axle nodes (F4: 5)
 CHASSIS_MIN_MASS = {"rt4r": 6.0, "rt4l": 6.0, "rt2r": 4.5, "rt2l": 4.5}
 HUB_TORSION_F = 80000                        # was 200000 (F4)
@@ -369,15 +373,20 @@ def check_stability():
     import setup_report as sr
     worst = 0.0
     for cfg in CONFIGS:
-        st = sr.stability_report(sr.Vehicle("redbull", cfg))
+        st = sr.stability_report(sr.Vehicle("redbull", cfg), top=400)
+        corner = max((float(m.split(":")[0]) for m in st["damped_modes"]
+                      if any(k in m.split(":")[1].split(",")[0] for k in CORNER_NODES)), default=0.0)
+        if corner > MAX_DAMPED_CORNER + 1e-9:
+            raise SystemExit(f"{cfg}: wheel-corner damped mode {corner:.2f} > {MAX_DAMPED_CORNER}")
+        worst_c = max(locals().get("worst_c", 0.0), corner)
         worst = max(worst, st["max"])
         if st["max"] > MAX_OMEGA_DT:
             raise SystemExit(f"{cfg}: highest mode omega*dt {st['max']:.2f} > {MAX_OMEGA_DT}: {st['modes'][0]}")
         if st["damped"] > MAX_DAMPED:
             raise SystemExit(f"{cfg}: highest damped mode {st['damped']:.2f} > {MAX_DAMPED}: {st['damped_modes'][:3]}")
         worst_d = max(locals().get("worst_d", 0.0), st["damped"])
-    print("stability: highest mode omega*dt %.2f (limit 2, target <= %.2f), with damping %.2f (target <= %.2f)"
-          % (worst, MAX_OMEGA_DT, worst_d, MAX_DAMPED))
+    print("stability: highest mode omega*dt %.2f (limit 2, target <= %.2f), with damping %.2f (target <= %.2f), "
+          "wheel corners %.2f (target <= %.2f)" % (worst, MAX_OMEGA_DT, worst_d, MAX_DAMPED, worst_c, MAX_DAMPED_CORNER))
     for cfg in CONFIGS:
         hits = sr.wheel_clearance(sr.Vehicle("redbull", cfg), WHEEL_CLEARANCE)
         if hits:
@@ -1151,10 +1160,10 @@ def shift_logic():
 # stiffer tyres the same as the F4's), so the carcass stays at the F4's
 # springs and damping, and check_stability() holds every tyre spring to
 # the F4's stiffness per kg of tyre node (TYRE_MAX_K_PER_KG).
-# Round 11: front judder in hard corners -> 1.6x, i.e. 0.85x the F4's
-# stiffness per kg of tyre node (our tyre nodes are ~2x the F4's), with
-# the deform / break forces scaled to match (stiffness()).
-TYRE_CARCASS = 1.6
+# Round 11 tried 1.6x (0.85x the F4's stiffness per kg) with carrier
+# damping 900 for the front judder: the front suspension broke and the
+# wheels fell off at spawn. Both back to round 10's (1.0x / 600).
+TYRE_CARCASS = 1.0
 TYRE_SPRINGS = {k: TYRE_CARCASS for k in ("wheelTreadBeamSpring", "wheelTreadReinfBeamSpring", "wheelPeripheryBeamSpring",
                                          "wheelPeripheryReinfBeamSpring", "wheelReinfBeamSpring", "wheelSideBeamSpringExpansion")}
 TYRE_MAX_K_PER_KG = 1.0         # x the F4's spring / tyre node weight

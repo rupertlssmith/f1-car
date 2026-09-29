@@ -436,7 +436,7 @@ Every config: 1.9 g at low speed, 5-6 g braking from 300 km/h.
 - **Round 11 (in-game: steering and front wheels read straight but the car
   pulls, changing after each corner; front wheels judder in hard corners,
   shaking the front wing; match speed to the real car):**
-  - *Front judder:* tyre carcass 1.6x the F4's with deform / break forces
+  - *Front judder (undone in 11b: broke the front suspension at spawn):* tyre carcass 1.6x the F4's with deform / break forces
     to match -- 0.85x the F4's stiffness per kg of tyre node, inside the
     round-9c gate (round 9's 2.5x was 1.33x and shook the tyres apart).
     Wheel-carrier damping 600 -> 900 (1200 goes over the damped limit at
@@ -459,6 +459,14 @@ Every config: 1.9 g at low speed, 5-6 g braking from 300 km/h.
     323 (346); 0-100 / 0-200 2.4 / 4.5 s against ~2.6 / ~4.8 s for 2018
     cars. New always-on timer (`lua/controller/redbullPerf.lua`) posts
     0-100 / 0-200 / 0-300 and top speed in game, to calibrate against.
+- **Round 11b (in-game: front suspension broke, wheels fell off at spawn):**
+  round 11's physics changes undone -- the jbeam is round 10's again (tyre
+  carcass 1.0x, carrier damping 600); the J readout and the timer stay.
+  The model puts the front wheel-corner mode (axle + upright nodes) at
+  1.78 damped with 600 and 1.83 with 900; round 10 was fine, round 11 was
+  not. New gate: wheel-corner damped modes <= 1.78. The generated tyres
+  stay a blind spot, so the 1.6x carcass is undone too rather than tested
+  separately at spawn.
 - **Rear tyre clearance:** the rear floor / diffuser edge nodes sat 20-50 mm
   inside the 405 mm rear tyres' inner face; moved ~8 cm inboard (aero
   factors re-solved for the smaller floor).
