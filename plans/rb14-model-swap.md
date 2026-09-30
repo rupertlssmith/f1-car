@@ -47,7 +47,7 @@ the renders, which use headless Blender.
 | `tools/rb14/f1_setup.py` | Milestone 4: turns the re-fitted F4 physics into the 2018 F1 setup (mass, tyres, suspension, alignment, power unit, gearbox, diff, brakes, aero, ERS/DRS, ride-height floor, the four configs). Sets absolute values, calibrating against `setup_report.py`, so it is safe to re-run |
 | `tools/rb14/setup_report.py` | Offline setup sheet read from the jbeam the way the game merges it: mass and balance, a linear spring-network model of each axle (wheel/heave/roll rates, ride frequency, static sag), flat-plate aero by part (and with DRS open), torque/power, gearing, a straight-line launch sim, tyre-limited lateral and braking g. `--config <name>` for a `.pc` |
 | `tools/rb14/jbeam_edit.py` | Format-preserving (CRLF, comments) jbeam text edits used by `f1_setup.py` |
-| `tools/rb14/sweeps.py` | Setup-sweep test cars: one change from Baseline each, 5 steps per sweep (baseline in the middle), named "Sweep NN · ..." in the game, with labelled thumbnails; the test sheet is `plans/sweeps.md`. `build_mod.py --no-sweeps` leaves them out |
+| `tools/rb14/variants.py` | Front-fix test cars (`fix_*.pc`, "Front Fix N · ..." in the game), safest first, each run through the offline checks; test sheet `plans/front-fixes.md`. `build_mod.py --test` packs only Baseline + these; `--no-variants` leaves them out. (The earlier setup sweeps are recorded in `plans/sweeps-archive.md`.) |
 | `tools/rb14/test_controllers.lua` | Runs the ERS, DRS and ground-effect Lua controllers against stubbed BeamNG globals (`luajit tools/rb14/test_controllers.lua`) |
 
 Rebuild after changing any of these:
@@ -60,7 +60,7 @@ python3 tools/rb14/f1_setup.py      # F1 physics and configs on top (idempotent)
 python3 tools/check_mod.py --fit    # must report 0 errors
 python3 tools/rb14/setup_report.py --config baseline   # numbers vs the targets
 luajit tools/rb14/test_controllers.lua                 # Lua controllers
-python3 tools/rb14/sweeps.py        # setup-sweep test cars + plans/sweeps.md
+python3 tools/rb14/variants.py      # front-fix test cars + plans/front-fixes.md
 python3 tools/build_mod.py          # dist/redbull_<timestamp>.zip
 ```
 
@@ -478,6 +478,11 @@ Every config: 1.9 g at low speed, 5-6 g braking from 300 km/h.
   check; any carrier damping above 600 goes over the wheel-corner limit
   (800: 1.81); moving mass off the rim makes the rim's own mode the limit
   (+2 kg: 1.67, +4 kg: 1.75), so those two variants are flagged as risky.
+- **Build naming (round 12b):** builds are now always `dist/redbull.zip`,
+  so a new install replaces the old one (timestamped zips piled up in the
+  mods folder and all loaded -- the likely reason the removed sweep cars
+  still showed in the game). `--test`: Baseline + the Front Fix cars only.
+  The removed sweeps are recorded in `plans/sweeps-archive.md`.
 - **Rear tyre clearance:** the rear floor / diffuser edge nodes sat 20-50 mm
   inside the 405 mm rear tyres' inner face; moved ~8 cm inboard (aero
   factors re-solved for the smaller floor).

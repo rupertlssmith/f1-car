@@ -8,15 +8,21 @@ BeamNG.drive mods folder:
     vehicles/common/<mod>_*/...         shared parts it owns (e.g. wheels)
     mod_info/<mod>/...                  the manifest (info.json, icon, images)
 
-The zip is named <mod>_YYYYMMDD-HHMMSS.zip (local time of the build) so
-successive builds can be told apart. Keep only one of them in the game's mods
-folder at a time: each is a full copy of the same vehicle.
+The zip is always named <mod>.zip, so installing a new build replaces the
+old one in the game's mods folder. (Until round 12 builds were named
+<mod>_YYYYMMDD-HHMMSS.zip; several of those left side by side in the mods
+folder all load, and the game shows the configurations of every one --
+delete them.) --stamp adds the timestamp back for keeping archive copies.
+
+--test packs a test build: only Baseline and the front-fix test cars
+(fix_*), without the other setups (Low / High Downforce, Aggressive).
 
 The manifest's "hashes" list (xxHash64 of every file under vehicles/) is
 regenerated for the files actually packed, so it never goes stale.
 
 Usage:
-    python3 tools/build_mod.py                  # builds dist/redbull_<timestamp>.zip
+    python3 tools/build_mod.py                  # builds dist/redbull.zip
+    python3 tools/build_mod.py --test           # Baseline + Front Fix cars only
     python3 tools/build_mod.py --mod redbull --out dist
     python3 tools/build_mod.py --update-manifest   # also rewrite the hashes
                                                    # in mod_info/<mod>/info.json
@@ -92,11 +98,28 @@ def main():
                     help="write the regenerated hashes back to mod_info/<mod>/info.json")
     ap.add_argument("--no-variants", action="store_true",
                     help="leave out the front-fix test cars (fix_*.pc, tools/rb14/variants.py)")
+    ap.add_argument("--test", action="store_true",
+                    help="test build: only Baseline and the front-fix test cars (fix_*)")
+    ap.add_argument("--stamp", action="store_true",
+                    help="name the zip <mod>_YYYYMMDD-HHMMSS.zip instead of <mod>.zip")
     args = ap.parse_args()
 
     files = list_files(mod_dirs(args.mod))
     if args.no_variants:
         files = [f for f in files if not os.path.basename(f).startswith(("fix_", "info_fix_"))]
+    if args.test:
+        # a configuration is <name>.pc + <name>.jpg/.png + info_<name>.json
+        vdir = f"vehicles/{args.mod}/"
+        configs = {os.path.basename(f)[:-3] for f in files if f.startswith(vdir) and f.endswith(".pc")}
+        keep = {c for c in configs if c == "baseline" or c.startswith("fix_")}
+
+        def config_of(f):
+            if not f.startswith(vdir) or "/" in f[len(vdir):]:
+                return None
+            stem = os.path.splitext(os.path.basename(f))[0]
+            stem = stem[len("info_"):] if stem.startswith("info_") else stem
+            return stem if stem in configs else None
+        files = [f for f in files if config_of(f) is None or config_of(f) in keep]
     manifest_rel = f"mod_info/{args.mod}/info.json"
     info = build_manifest(args.mod, files)
     manifest = json.dumps(info, indent=4, ensure_ascii=False) + "\n"
@@ -104,7 +127,7 @@ def main():
     out_dir = os.path.join(REPO, args.out)
     os.makedirs(out_dir, exist_ok=True)
     stamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-    zip_path = os.path.join(out_dir, f"{args.mod}_{stamp}.zip")
+    zip_path = os.path.join(out_dir, f"{args.mod}_{stamp}.zip" if args.stamp else f"{args.mod}.zip")
     tmp_path = zip_path + ".tmp"
     with zipfile.ZipFile(tmp_path, "w", zipfile.ZIP_DEFLATED, compresslevel=6) as zf:
         for rel in files:
@@ -119,8 +142,9 @@ def main():
             fh.write(manifest)
 
     size_mb = os.path.getsize(zip_path) / 1e6
+    configs = sorted(os.path.basename(f)[:-3] for f in files if f.startswith(f"vehicles/{args.mod}/") and f.endswith(".pc"))
     print(f"built {os.path.relpath(zip_path, REPO)}: {len(files)} files, "
-          f"{size_mb:.1f} MB")
+          f"{size_mb:.1f} MB; configurations: {', '.join(configs)}")
 
 
 if __name__ == "__main__":

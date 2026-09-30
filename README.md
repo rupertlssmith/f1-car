@@ -7,9 +7,15 @@ kept for reference in `vehicles/fr04/`.
 
 ## Building the mod
 
-The build script needs Python 3 and the `xxhash` package. Each build
-writes a new timestamped zip, `dist/redbull_YYYYMMDD-HHMMSS.zip`, so successive
-builds can be told apart.
+The build script needs Python 3 and the `xxhash` package. Every build
+writes `dist/redbull.zip` (the same name each time, so installing a new
+build replaces the old one; `--stamp` adds a timestamp for archive copies).
+`--test` packs a test build with only Baseline and the *Front Fix* cars.
+
+**Installing:** keep exactly one RB14 zip in BeamNG's `mods` folder. Builds
+before round 12 were named `redbull_YYYYMMDD-HHMMSS.zip`; delete any of
+those left there -- the game loads every copy, and their configurations
+(e.g. the old *Sweep* test cars) keep showing up in the vehicle list.
 
 **Linux (Debian / Ubuntu)** — system-wide `pip install` is blocked there
 (PEP 668), so use the distro package:
