@@ -46,10 +46,17 @@ py tools\build_mod.py
 ./docker/dev.sh python tools/build_mod.py
 ```
 
-Copy the zip into your BeamNG mods folder
+Copy the zip, **as a zip**, into your BeamNG mods folder
 (`%LocalAppData%\BeamNG.drive\<version>\mods\` on Windows) and it appears in the
-vehicle selector. Keep only one build there at a time — each is a full copy of
+vehicle selector -- the game reads zipped mods directly, there is no need to
+unpack it. Keep only one build there at a time — each is a full copy of
 the same vehicle, so remove the previous one first.
+
+If you have been unpacking builds (e.g. into `mods\unpacked\...`), delete
+that unpacked folder before installing: extracting a new build over an old
+one overwrites the files both have but leaves behind every file the new build
+dropped (such as the old *Sweep* test cars), and an unpacked copy next to the
+zip loads as a second copy of the vehicle.
 
 Options: `--out <dir>` writes the zip somewhere else (e.g. straight into the
 mods folder); `--update-manifest` also writes the regenerated file hashes back
