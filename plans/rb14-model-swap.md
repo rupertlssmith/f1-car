@@ -531,6 +531,34 @@ Every config: 1.9 g at low speed, 5-6 g braking from 300 km/h.
   gearbox reaction, freer diff, and their combinations; all inside every
   offline check (the drive-reaction change itself can't be checked
   offline). Test sheet `plans/rear-fixes.md`.
+- **Round 15 (Rear Fix 4, freer diff, was best; replays A / B / C with it):**
+  - *Analysis fixes:* the per-frame yaw rate read ~20x too high (frames
+    sharing a timestamp); now the recorded yaw angle over 0.3 s. The first
+    replay's post-turn yaw (6-8 deg/s) still stands. Top speed is the
+    0.5 s mean (single frames spike).
+  - *Straight line:* top speed 293 km/h (DRS open, 7th, 11,850 rpm, no
+    longer accelerating); rear-wheel power ~590 kW; 0-100 3.1 s, 0-200
+    6.6 s; acceleration 0.82-1.0 g to 160 km/h (torque map trimming 80-100 %,
+    traction-limited), 0.86 g at 160-200, 0.54 at 200-240. Coast-down: air
+    drag about as modelled (fit CdA ~1.1, some of it with DRS open) plus ~3 kN
+    constant, mostly engine braking in gear. Braking 3.6-3.9 g at 200-300
+    km/h = the brake torque limit (~30 kN); below 150 km/h full pedal locks
+    the wheels (wheel speed 26-48 % of road speed). Steady 150 km/h hands
+    off: 0.15-0.45 deg/s drift, wheels straight.
+  - *Cornering:* 2.3 g at 80-120 km/h, 2.9 / 3.3 / 3.8 g (p95; peaks to
+    4.5) at 160-200 / 200-240 / 240-300. Roll 0.1-0.2 deg per g.
+  - *Deformation:* rear toe-in 2.6-5 deg per side on straights, more on
+    throttle (B: 3.9 -> 5.1); front-wing tips down 21 mm at 200-240 km/h,
+    31-34 mm at 240-300; front-wheel wobble 0.6-0.7 deg rms in fast
+    corners (0.04-0.16 on straights), larger under heavy braking.
+  - *Steering:* after hard turns the car still yaws 3-4 deg/s for 1-5 s
+    (was 6-8) with the rear axle steered up to 1.5 deg -- better, not gone.
+  - *DRS:* the replays carry no node positions, so the wing can't be seen.
+    By design (drs_hydros) DRS lifts the whole upper wing's leading edge
+    60 mm about its trailing edge; the RB14 wing mesh (main plane, flap and
+    probably the centre pillar) follows those nodes -- the "whole wing lifts
+    and the pillar comes off" seen in game. Needs a split mesh: fixed main
+    plane + pillar, a moving flap.
 - **Rear tyre clearance:** the rear floor / diffuser edge nodes sat 20-50 mm
   inside the 405 mm rear tyres' inner face; moved ~8 cm inboard (aero
   factors re-solved for the smaller floor).
