@@ -166,7 +166,7 @@ def stiffness():
         a0, b0 = _part_block(orig, part.replace("redbull", "fr04"))
         text = je._read(f)
         a, b = _part_block(text, part)
-        pat = re.compile(r'("beamSpring"\s*:\s*)(\d+(?:\.\d+)?)(\s*,\s*"beamDamp"\s*:\s*(?:\d+(?:\.\d+)?|"[^"]*"))?')
+        pat = re.compile(r'("beamSpring"\s*:\s*)(\d+(?:\.\d+)?|"[^"]*")(\s*,\s*"beamDamp"\s*:\s*(?:\d+(?:\.\d+)?|"[^"]*"))?')
         src = [(float(m.group(2)), m.group(3)) for m in pat.finditer(orig[a0:b0])]
         block = text[a:b]
         if len(pat.findall(block)) != len(src):
@@ -176,6 +176,10 @@ def stiffness():
         def cap_row(m):
             k, damp = next(it)
             out = m.group(1) + "%d" % min(k, cap)
+            if k > cap and part == "redbull_suspension_R":
+                # rear upright links x the tuning variable $rear_link_stiff
+                # (round 17; default 1)
+                out = m.group(1) + '"$=%d*$rear_link_stiff"' % cap
             if damp:
                 d = float(re.search(r'([\d.]+)$', damp).group(1))
                 if k > cap and part == "redbull_suspension_F" and d <= CARRIER_DAMP:
@@ -988,8 +992,10 @@ def hybrid():
     text = je._read(m)
     import re
     sc = ('["redbullSteerCheck", {}],\r\n        ["redbullPerf", {}],\r\n        '
-          '["redbullBrakeMap", {"order":1200, "enabled":"$brake_map", "lowFactor":0.5, "fullSpeed":250}]')
-    for c in ("redbullERS", "redbullDRS", "redbullTraction", "redbullSteerCheck", "redbullPerf", "redbullBrakeMap"):
+          '["redbullBrakeMap", {"order":1200, "enabled":"$brake_map", "lowFactor":0.5, "fullSpeed":250}],\r\n        '
+          '["redbullSensors", {}]')
+    for c in ("redbullERS", "redbullDRS", "redbullTraction", "redbullSteerCheck", "redbullPerf", "redbullBrakeMap",
+              "redbullSensors"):
         text = re.sub(r',\r\n        \["%s", \{.*?\}\]' % c, "", text)
     i = text.index('        ["flyBrakeBias"')
     j = text.index("\r\n", i)
@@ -999,27 +1005,45 @@ def hybrid():
             k = text.index('        ["biasMinus"],')
             k = text.index("\r\n", k) + 2
             text = text[:k] + '        ["%s"],\r\n' % action + text[k:]
-    # round-16 tuning variables (main part, next to the brake force slider)
+    je._write(m, text)
+    round16_vars()
+    drs_hydros()
+
+
+def round16_vars():
+    """The round-16/17 tuning variables (main part, next to the brake force
+    slider). Run first in main: the suspension calibration already
+    evaluates $rear_link_stiff / $rear_droop."""
+    import re
+    m = f"{V}/redbull.jbeam"
+    text = je._read(m)
     text = re.sub(r'        \["\$(?:%s)", "range".*\r\n' % "|".join(v[0].lstrip("$") for v in ROUND16_VARS), "", text)
     k = text.index('        ["$brakestrength", "range"')
     k = text.index("\r\n", k) + 2
     text = text[:k] + "".join('        ["%s", "range", %s],\r\n' % (n, rest) for n, rest in ROUND16_VARS) + text[k:]
     je._write(m, text)
-    drs_hydros()
 
 
 # Round 16 (fixes from replays A / B / C): defaults are Baseline; the
-# test cars (tools/rb14/variants.py) set them.
+# test cars (tools/rb14/variants.py) set them. Round 17: Test 05 (engine
+# power +12 %) is Baseline, so $pu_power defaults to 1.12.
 ROUND16_VARS = [
     ("$rear_toe_stiff", '"x", "Suspension", 1, 1, 6, "Rear Hub Toe Stiffness", '
      '"Stiffness of the rear hubs against toe (axle line vs upright), x the base", {"stepDis":0.5, "subCategory":"Rear"}'),
     ("$drs_model", '"", "Aerodynamics", 0, 0, 1, "DRS Model", '
      '"0: DRS tilts the upper wing; 1: wing stays put, DRS acts as forces (less drag and downforce)", {"stepDis":1}'),
-    ("$pu_power", '"x", "Engine", 1, 0.8, 1.25, "Engine Power", "Combustion engine torque, x the base (MGU-K unchanged)", {"stepDis":0.01}'),
+    ("$pu_power", '"x", "Engine", 1.12, 0.8, 1.25, "Engine Power", "Combustion engine torque, x the base (MGU-K unchanged)", {"stepDis":0.01}'),
     ("$brake_map", '"", "Brakes", 0, 0, 1, "Low-Speed Brake Modulation", '
      '"1: eases the brakes at low speed like a driver modulating the pedal (less lock-up)", {"stepDis":1}'),
     ("$tc_slip", '"", "Engine", 0.12, 0.05, 0.3, "Torque Map Slip", '
      '"Rear wheel slip the torque map allows before cutting power", {"stepDis":0.01}'),
+    # round 17 (post-corner drift suspects)
+    ("$rear_link_stiff", '"x", "Suspension", 1, 0.5, 2, "Rear Link Stiffness", '
+     '"Stiffness of the six links from each rear upright to the gearbox, x the base", {"stepDis":0.05, "subCategory":"Rear"}'),
+    ("$rear_droop", '"x", "Suspension", 1, 1, 3, "Rear Droop Travel", '
+     '"Rear wheel droop before the hard stop, x the base (~50 mm)", {"stepDis":0.1, "subCategory":"Rear"}'),
+    ("$halfshaft_play", '"x", "Differentials", 1, 1, 4, "Driveshaft Plunge", '
+     '"Rear driveshaft plunge before its end stops, x the base (+-5 % of its length)", {"stepDis":0.5, "subCategory":"Rear"}'),
 ]
 
 
@@ -1471,8 +1495,14 @@ TRAVEL_STOP = {"F": 0.034, "R": 0.037}
 def travel_stops():
     je.set_in_part(f"{V}/redbull_suspension_F.jbeam", "redbull_suspension_F",
                    r'"longBoundRange":0\.03,"shortBoundRange":[\d.]+', '"longBoundRange":0.03,"shortBoundRange":%s' % TRAVEL_STOP["F"])
+    # rear droop stop x the tuning variable $rear_droop (round 17; default 1)
     je.set_in_part(f"{V}/redbull_suspension_R.jbeam", "redbull_suspension_R",
-                   r'"longBoundRange":0\.03,"shortBoundRange":[\d.]+', '"longBoundRange":0.03,"shortBoundRange":%s' % TRAVEL_STOP["R"])
+                   r'"longBoundRange":(?:0\.03|"\$=0\.03\*\$rear_droop"),"shortBoundRange":[\d.]+',
+                   '"longBoundRange":"$=0.03*$rear_droop","shortBoundRange":%s' % TRAVEL_STOP["R"])
+    # rear driveshaft (halfshaft) end stops x $halfshaft_play (round 17)
+    je.set_all(f"{V}/redbull_differential_R.jbeam",
+               r'"beamLongBound":(?:0\.05|"\$=0\.05\*\$halfshaft_play"), "beamShortBound":(?:0\.05|"\$=0\.05\*\$halfshaft_play"),"boundZone":0\.1',
+               '"beamLongBound":"$=0.05*$halfshaft_play", "beamShortBound":"$=0.05*$halfshaft_play","boundZone":0.1')
 
 
 # 14. Brakes: carbon pads bite harder (brakeSpring); the rear parking
@@ -1582,6 +1612,7 @@ def alt_parts():
 if __name__ == "__main__":
     os.chdir(REPO)
     remove_alt_parts()
+    round16_vars()
     migrations()
     stiffness()
     torque_paths()

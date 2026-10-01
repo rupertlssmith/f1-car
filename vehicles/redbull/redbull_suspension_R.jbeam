@@ -89,7 +89,7 @@
           //multilink suspension
           {"beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
           {"beamDeform":453000,"beamStrength":1650000},
-          {"beamSpring":6000000,"beamDamp":600},
+          {"beamSpring":"$=6000000*$rear_link_stiff","beamDamp":600},
           //rear hub
           ["rh1r","rh3r"],
           ["rh1r","rh4r"],
@@ -165,7 +165,7 @@
 
           //attach to wheel
           {"optional":true},
-          {"beamSpring":6000000,"beamDamp":600},
+          {"beamSpring":"$=6000000*$rear_link_stiff","beamDamp":600},
           {"beamDeform":540600,"beamStrength":4800600},
           {"breakGroup":"wheel_RR"},
           ["rh1r","rw1r", {"name":"axle_RR"}],
@@ -194,7 +194,7 @@
           //lower arm
           {"deformLimitExpansion":1.5},
           {"beamDeform":138600,"beamStrength":6000600},
-          {"beamSpring":6000000,"beamDamp":1500},
+          {"beamSpring":"$=6000000*$rear_link_stiff","beamDamp":1500},
 
           ["rx2r","rh1r", {"breakGroup":"lowerarm_RR","dampCutoffHz":500}],
           ["rx2l","rh1l", {"breakGroup":"lowerarm_RL","dampCutoffHz":500}],
@@ -252,8 +252,8 @@
           {"beamPrecompression":1, "beamType":"|BOUNDED", "beamLongBound":1, "beamShortBound":1},
           {"beamSpring":0,"beamDamp":0,"beamDeform":72000,"beamStrength":900000},
           {"beamLimitSpring":801000,"beamLimitDamp":2000},
-          ["rh1r","rs1", {"breakGroup":"lowerarm_RR","longBoundRange":0.03,"shortBoundRange":0.037,"boundZone":0.016,"beamLimitDampRebound":0,"dampCutoffHz":500}],
-          ["rh1l","rs1", {"breakGroup":"lowerarm_RL","longBoundRange":0.03,"shortBoundRange":0.037,"boundZone":0.016,"beamLimitDampRebound":0,"dampCutoffHz":500}],
+          ["rh1r","rs1", {"breakGroup":"lowerarm_RR","longBoundRange":"$=0.03*$rear_droop","shortBoundRange":0.037,"boundZone":0.016,"beamLimitDampRebound":0,"dampCutoffHz":500}],
+          ["rh1l","rs1", {"breakGroup":"lowerarm_RL","longBoundRange":"$=0.03*$rear_droop","shortBoundRange":0.037,"boundZone":0.016,"beamLimitDampRebound":0,"dampCutoffHz":500}],
 
           //rocker travel limit
           {"beamPrecompression":1.0, "beamType":"|BOUNDED", "beamLongBound":1, "beamShortBound":1},

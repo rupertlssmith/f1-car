@@ -128,6 +128,10 @@ def series(F):
     step = np.sqrt(np.diff(px) ** 2 + np.diff(py) ** 2 + np.diff(pz) ** 2) / np.diff(t)
     d["pos_kmh"] = np.concatenate([[step[0]], step]) * 3.6
     d["px"], d["py"], d["pz"] = px, py, pz
+    # round-17 virtual sensors (lua/controller/redbullSensors.lua): every
+    # electrics value named sn_*
+    for k in sorted({k for f in F for k in f["e"] if k.startswith("sn_")}):
+        d[k] = e(k)
     d["front_net"] = (d["FL"] + d["FR"]) / 2          # + = steered left
     d["rear_net"] = (d["RL"] + d["RR"]) / 2           # + = rear wheels steered left
     d["rear_toe"] = (d["RR"] - d["RL"]) / 2           # + = toe-in, per side
@@ -200,6 +204,39 @@ def report(d):
                  next((t[j] - t[i] for j in np.where(t > t[i] + 0.3)[0] if abs(d["rear_net"][j]) < 0.3), math.nan)))
 
 
+def sensor_report(d):
+    """Per hard turn: which sensors on the inner rear wheel are still off
+    while the car drifts (1 s after the steering is centred) compared with
+    once it has settled (4.5 s after), and what they read in the turn."""
+    keys = [k for k in d if k.startswith("sn_")]
+    if not keys:
+        return
+    t = d["t"]
+    print("\nSENSORS (redbullSensors) around hard turns -- inner rear wheel and car-level values;")
+    print("  turn = 1 s before centring, hold = 1 s after, settled = 4.5 s after; sorted by |hold - settled|")
+    hard = np.abs(d["steer_in"]) > 0.3
+    ends = [i for i in range(1, len(t)) if hard[i - 1] and not hard[i]]
+    last = -1e9
+    for i in ends:
+        if t[i] - last < 3:
+            continue
+        last = t[i]
+        later = (t > t[i] + 0.3) & (t < t[i] + 5.0)
+        if not later.any() or np.nanmax(np.abs(d["steer_in"][later])) > 0.1:
+            continue                      # steering not held centred afterwards
+        left_turn = d["front_net"][i - 1] > 0
+        inner = "RL" if left_turn else "RR"
+        at = lambda dt: np.argmin(np.abs(t - (t[i] + dt)))
+        a, b, c = at(-1.0), at(1.0), at(4.5)
+        mine = [k for k in keys if k.startswith("sn_" + inner + "_") or not k.startswith(("sn_RL_", "sn_RR_", "sn_FL_", "sn_FR_"))]
+        rows = sorted(((abs(d[k][b] - d[k][c]), k) for k in mine if np.isfinite(d[k][b]) and np.isfinite(d[k][c])), reverse=True)
+        print("  %s turn ending %.1f s (inner %s): yaw rate hold %+.1f deg/s, settled %+.1f" %
+              ("left" if left_turn else "right", t[i], inner, d["yaw_rate"][b], d["yaw_rate"][c]))
+        for _, k in rows[:12]:
+            print("     %-26s turn %9.2f  hold %9.2f  settled %9.2f  (hold - settled %+.2f)" %
+                  (k, d[k][a], d[k][b], d[k][c], d[k][b] - d[k][c]))
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("replay")
@@ -207,6 +244,7 @@ def main():
     args = ap.parse_args()
     d = series(frames(args.replay))
     report(d)
+    sensor_report(d)
     if args.csv:
         keys = list(d)
         with open(args.csv, "w", newline="") as fh:

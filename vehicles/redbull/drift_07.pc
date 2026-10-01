@@ -2,7 +2,9 @@
   "format": 2,
   "mainPartName": "redbull",
   "model": "redbull",
-  "parts": {},
+  "parts": {
+    "redbull_wheeldata_R": "redbull_wheeldata_R_gbx"
+  },
   "vars": {
     "$arb_spring_F": 260000,
     "$arb_spring_R": 110000,
@@ -15,10 +17,10 @@
     "$damp_bump_R": 19000,
     "$damp_rebound_F": 24000,
     "$damp_rebound_R": 30000,
-    "$drs_model": 1,
     "$ffbstrength": 1,
     "$finaldrive_R": 4,
     "$fuel": 60,
+    "$halfshaft_play": 3,
     "$heave_spring_F": 70000,
     "$heave_spring_R": 65000,
     "$lsdlockcoef_R": 0.1,
@@ -26,6 +28,8 @@
     "$lsdpreload_R": 20,
     "$packer_F": 0.025,
     "$packer_R": 0.032,
+    "$rear_droop": 2,
+    "$rear_link_stiff": 1.2,
     "$rear_toe_stiff": 4,
     "$spring_F": 355000,
     "$spring_R": 495000,

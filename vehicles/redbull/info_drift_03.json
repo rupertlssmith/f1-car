@@ -1,0 +1,13 @@
+{
+  "Config Type": "Custom",
+  "Configuration": "Drift Fix 03 · Driveshaft play",
+  "Description": "Drift Fix test car 3: the driveshaft end stops pushing the inner axle node: 3x the plunge before the stops (+-15 % of its length); check: sn_R?_shaft (base stops at +-33 mm). Everything else is Baseline (halfshaft_play 3). Passes every offline check.",
+  "Drivetrain": "RWD",
+  "Fuel Type": "Gasoline",
+  "Induction Type": "Turbo",
+  "Propulsion": "Hybrid",
+  "Transmission": "Sequential",
+  "Off-Road Score": 0,
+  "Population": 0,
+  "Value": 12000000
+}

@@ -20,6 +20,7 @@ V.__mul = function(a, s) return vec3(a.x * s, a.y * s, a.z * s) end
 function V:dot(b) return self.x * b.x + self.y * b.y + self.z * b.z end
 function V:cross(b) return vec3(self.y * b.z - self.z * b.y, self.z * b.x - self.x * b.z, self.x * b.y - self.y * b.x) end
 function V:normalized() local l = math.sqrt(self:dot(self)); return self * (1 / l) end
+function V:length() return math.sqrt(self:dot(self)) end
 
 local failures = 0
 local function check(cond, what)
@@ -268,6 +269,42 @@ ers.updateGFX(0.02)
 local iceS = (505 + (440 - 505) * (500 / 1500)) * 1.12
 local ersS = math.min(180, 120000 / (11000 * math.pi / 30))
 check(math.abs(e.throttle - iceS / (iceS + ersS)) < 1e-6, "harvest mode caps to the scaled ICE share")
+
+-- ------------------------------------------------------------ sensors
+print("redbullSensors")
+electrics.values = {}
+e = electrics.values
+package.path = "tools/rb14/?.lua;" .. package.path
+local NP = require("test_nodes")
+local yawT, shift = 0, vec3(0, 0, 0)
+local moved = {}
+local function placed(n)
+  local p = vec3(NP[n][1], NP[n][2], NP[n][3]) + (moved[n] or vec3(0, 0, 0))
+  local c, s = math.cos(yawT), math.sin(yawT)
+  return vec3(p.x * c - p.y * s, p.x * s + p.y * c, p.z) + shift
+end
+local snames2, i2 = {}, 0
+v = {data = {nodes = {}}}
+for n, _ in pairs(NP) do v.data.nodes[i2] = {name = n, cid = i2}; snames2[i2] = n; i2 = i2 + 1 end
+obj = {getNodePosition = function(self, c) return placed(snames2[c]) end}
+wheels = {wheels = {{name = "RL", downForceRaw = 3000}}}
+local sn = require("redbullSensors")
+sn.init({})
+sn.updateGFX(0.02)
+check(math.abs(e.sn_RL_toe) < 1e-6 and math.abs(e.sn_RR_toe) < 1e-6 and math.abs(e.sn_rearYaw) < 1e-6,
+      "modelled geometry: rear toe 0, rear yaw 0")
+local shaft0, in_y0 = e.sn_RL_shaft, e.sn_RL_in_y
+check(e.sn_RL_shaft > 600 and e.sn_RL_shaft < 700, string.format("driveshaft %.0f mm", e.sn_RL_shaft))
+check(e.sn_load_RL == 3000, "wheel load passed through")
+yawT, shift = math.rad(30), vec3(5, -3, 1)
+sn.updateGFX(0.02)
+check(math.abs(e.sn_RL_toe) < 1e-6 and math.abs(e.sn_RL_shaft - shaft0) < 1e-6 and math.abs(e.sn_RL_in_y - in_y0) < 1e-6,
+      "whole car moved and turned: readings unchanged")
+moved.rw1ll = vec3(0, -0.010, 0)        -- left rear outer axle node 10 mm forward (-y)
+sn.updateGFX(0.02)
+local expect = -math.deg(math.atan(0.010 / 0.27))   -- outer end forward on the left wheel = pointing right (toe-in)
+check(math.abs(e.sn_RL_toe - expect) < 0.05 and math.abs(e.sn_RR_toe) < 1e-6,
+      string.format("RL outer node 10 mm forward: RL toe %+.2f deg (expect %+.2f), RR unchanged", e.sn_RL_toe, expect))
 
 print(failures == 0 and "all controller checks passed" or (failures .. " check(s) FAILED"))
 os.exit(failures == 0 and 0 or 1)

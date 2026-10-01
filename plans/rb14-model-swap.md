@@ -576,6 +576,26 @@ Every config: 1.9 g at low speed, 5-6 g braking from 300 km/h.
   front-wheel wobble in fast corners (no solver headroom without more nose
   mass); a proper DRS (split wing mesh with a moving flap). Test sheet
   `plans/round16-tests.md`.
+- **Round 17 (Test 05 is Baseline; drift sensors and seven drift-fix cars):**
+  the one issue left: after a hard turn, wheel centred, the car keeps
+  turning the other way for ~2.5-4.5 s. Replays B / C: the *inner* rear
+  wheel loses ~3 deg of toe-in in the turn (the outer one barely moves),
+  holds it ~1.5-2 s after centring, then snaps back -- the counter-yaw stops
+  with it. Not the whole rear end (the toe between the wheels changes), not
+  drive torque (equal left / right), and the offline model can't reproduce
+  it (rear toe moves ~0.1-0.3 deg at 3.5 g; every beam under 20 % of its
+  deform force). So: virtual sensors, `lua/controller/redbullSensors.lua`,
+  always on, recorded in replays as `sn_*` electrics -- per rear wheel the
+  toe / camber against the gearbox, both axle nodes in the gearbox frame,
+  the driveshaft length, spring length, axle-to-upright distances and the
+  six link lengths; the gearbox-vs-tub yaw; front toe, rack and tie rods;
+  wheel loads where the game gives them. `replay_analysis.py` lists, per
+  hard turn, the inner wheel's sensors still off while the car drifts.
+  New variables `$rear_link_stiff` (1.5x fails the gates), `$rear_droop`,
+  `$halfshaft_play`; Baseline `$pu_power` 1.12. Drift Fix 1-6: stiff rear
+  hubs 5x, rear links 1.2x, driveshaft play 3x, droop room 2x, gearbox
+  torque reaction, rear toe reset; 7 = all (hubs 4x). Sheet
+  `plans/drift-fixes.md`.
 - **Rear tyre clearance:** the rear floor / diffuser edge nodes sat 20-50 mm
   inside the 405 mm rear tyres' inner face; moved ~8 cm inboard (aero
   factors re-solved for the smaller floor).

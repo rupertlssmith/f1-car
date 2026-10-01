@@ -1,0 +1,13 @@
+{
+  "Config Type": "Custom",
+  "Configuration": "Drift Fix 07 · All drift fixes",
+  "Description": "Drift Fix test car 7: 1-6 together (hub torsion 4x). Everything else is Baseline (rear_toe_stiff 4, rear_link_stiff 1.2, halfshaft_play 3, rear_droop 2, toe_R 1.0329, camber_R 0.991, part redbull_wheeldata_R_gbx). Passes every offline check.",
+  "Drivetrain": "RWD",
+  "Fuel Type": "Gasoline",
+  "Induction Type": "Turbo",
+  "Propulsion": "Hybrid",
+  "Transmission": "Sequential",
+  "Off-Road Score": 0,
+  "Population": 0,
+  "Value": 12000000
+}

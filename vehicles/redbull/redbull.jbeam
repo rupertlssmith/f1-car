@@ -25,7 +25,8 @@
         ["redbullTraction", {"order":1100, "targetSlip":"$tc_slip", "minSlipSpeed":2.5, "gain":4.0, "release":3.0}],
         ["redbullSteerCheck", {}],
         ["redbullPerf", {}],
-        ["redbullBrakeMap", {"order":1200, "enabled":"$brake_map", "lowFactor":0.5, "fullSpeed":250}]
+        ["redbullBrakeMap", {"order":1200, "enabled":"$brake_map", "lowFactor":0.5, "fullSpeed":250}],
+        ["redbullSensors", {}]
     ],
     "variables": [
         ["name", "type", "unit", "category", "default", "min", "max", "title", "description"],
@@ -33,9 +34,12 @@
         ["$brakestrength", "range", "", "Brakes", 1, 0.6, 1.5, "Brake Force Multiplier", "Scales the overall brake torque for this setup", {"minDis":60, "maxDis":150}],
         ["$rear_toe_stiff", "range", "x", "Suspension", 1, 1, 6, "Rear Hub Toe Stiffness", "Stiffness of the rear hubs against toe (axle line vs upright), x the base", {"stepDis":0.5, "subCategory":"Rear"}],
         ["$drs_model", "range", "", "Aerodynamics", 0, 0, 1, "DRS Model", "0: DRS tilts the upper wing; 1: wing stays put, DRS acts as forces (less drag and downforce)", {"stepDis":1}],
-        ["$pu_power", "range", "x", "Engine", 1, 0.8, 1.25, "Engine Power", "Combustion engine torque, x the base (MGU-K unchanged)", {"stepDis":0.01}],
+        ["$pu_power", "range", "x", "Engine", 1.12, 0.8, 1.25, "Engine Power", "Combustion engine torque, x the base (MGU-K unchanged)", {"stepDis":0.01}],
         ["$brake_map", "range", "", "Brakes", 0, 0, 1, "Low-Speed Brake Modulation", "1: eases the brakes at low speed like a driver modulating the pedal (less lock-up)", {"stepDis":1}],
         ["$tc_slip", "range", "", "Engine", 0.12, 0.05, 0.3, "Torque Map Slip", "Rear wheel slip the torque map allows before cutting power", {"stepDis":0.01}],
+        ["$rear_link_stiff", "range", "x", "Suspension", 1, 0.5, 2, "Rear Link Stiffness", "Stiffness of the six links from each rear upright to the gearbox, x the base", {"stepDis":0.05, "subCategory":"Rear"}],
+        ["$rear_droop", "range", "x", "Suspension", 1, 1, 3, "Rear Droop Travel", "Rear wheel droop before the hard stop, x the base (~50 mm)", {"stepDis":0.1, "subCategory":"Rear"}],
+        ["$halfshaft_play", "range", "x", "Differentials", 1, 1, 4, "Driveshaft Plunge", "Rear driveshaft plunge before its end stops, x the base (+-5 % of its length)", {"stepDis":0.5, "subCategory":"Rear"}],
         ["$ffbstrength", "range", "", "Chassis", 1, 0.5, 1.5, "Setup-Specific Force Feedback Multiplier", "Scales the force feedback strength for this setup", {"minDis":50, "maxDis":150}],
     ],
     "interiorSounds": {

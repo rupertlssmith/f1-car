@@ -1,0 +1,13 @@
+{
+  "Config Type": "Custom",
+  "Configuration": "Drift Fix 04 · Rear droop room",
+  "Description": "Drift Fix test car 4: the unloaded inner wheel reaching its droop stop: 2x the droop travel; check: sn_R?_spring, sn_R?_in_z / out_z. Everything else is Baseline (rear_droop 2). Passes every offline check.",
+  "Drivetrain": "RWD",
+  "Fuel Type": "Gasoline",
+  "Induction Type": "Turbo",
+  "Propulsion": "Hybrid",
+  "Transmission": "Sequential",
+  "Off-Road Score": 0,
+  "Population": 0,
+  "Value": 12000000
+}

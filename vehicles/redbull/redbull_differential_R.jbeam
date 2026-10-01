@@ -75,7 +75,7 @@
     "beams": [
           ["id1:", "id2:"],
           //halfshafts
-          {"beamType":"|BOUNDED", "beamLongBound":0.05, "beamShortBound":0.05,"boundZone":0.1},
+          {"beamType":"|BOUNDED", "beamLongBound":"$=0.05*$halfshaft_play", "beamShortBound":"$=0.05*$halfshaft_play","boundZone":0.1},
           {"beamSpring":0,"beamDamp":0,"beamDeform":10500,"beamStrength":21000},
           {"beamLimitSpring":5001000,"beamLimitDamp":250},
           ["rw1r","rdiff", {"name":"halfshaft_RR", "breakGroup":"wheel_RR", "breakGroupType":1, "deformGroup":"wheelaxleRR", "deformationTriggerRatio":0.2, "optional":true}],
