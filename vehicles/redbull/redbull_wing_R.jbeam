@@ -304,8 +304,16 @@
     "hydros": [
         ["id1:", "id2:"],
         //DRS: lifts the leading edge (see tools/rb14/f1_setup.py)
-        ["rep1r","rwg1r", {"factor":0.1563, "inputSource":"drs", "inputFactor":1, "inRate":4, "outRate":4, "beamSpring":2001000, "beamDamp":40, "beamDeform":"FLT_MAX", "beamStrength":20000, "breakGroup":"endplates_RR"}],
-        ["rep1l","rwg1l", {"factor":0.1563, "inputSource":"drs", "inputFactor":1, "inRate":4, "outRate":4, "beamSpring":2001000, "beamDamp":40, "beamDeform":"FLT_MAX", "beamStrength":20000, "breakGroup":"endplates_RL"}],
+        ["rep1r","rwg1r", {"factor":"$=0.1563*(1-$drs_model)", "inputSource":"drs", "inputFactor":1, "inRate":4, "outRate":4, "beamSpring":2001000, "beamDamp":40, "beamDeform":"FLT_MAX", "beamStrength":20000, "breakGroup":"endplates_RR"}],
+        ["rep1l","rwg1l", {"factor":"$=0.1563*(1-$drs_model)", "inputSource":"drs", "inputFactor":1, "inRate":4, "outRate":4, "beamSpring":2001000, "beamDamp":40, "beamDeform":"FLT_MAX", "beamStrength":20000, "breakGroup":"endplates_RL"}],
+    ],
+    "thrusters": [
+        ["id1:", "id2:", "factor", "thrustLimit", "control"],
+        //DRS as forces, $drs_model 1 (see tools/rb14/f1_setup.py): forward on rx2 = less drag, up = less downforce
+        ["rx1r", "rx2r", "$=640*$drs_model", "$=1024*$drs_model", "drsThrust"],
+        ["rx4r", "rx2r", "$=1570*$drs_model", "$=2512*$drs_model", "drsThrust"],
+        ["rx1l", "rx2l", "$=640*$drs_model", "$=1024*$drs_model", "drsThrust"],
+        ["rx4l", "rx2l", "$=1570*$drs_model", "$=2512*$drs_model", "drsThrust"],
     ],
     "triangles": [
             ["id1:","id2:","id3:"],

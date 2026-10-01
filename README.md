@@ -80,12 +80,13 @@ keys, rebindable under Options > Controls > Bindings > Vehicle Specific:
 An always-on timer posts 0-100 / 0-200 / 0-300 km/h times from a standstill
 and your top speed (km/h and mph) after each run.
 
-The build also carries five **front-fix test cars**, listed as *Front Fix N ·
-...*: each tries a fix for the front wheels' judder in hard corners, safest
-first (the later ones go over an offline limit on purpose and may break at
-spawn). Note for each whether it spawns cleanly and how the front feels in
-[`plans/front-fixes.md`](plans/front-fixes.md). Build without them with
-`python3 tools/build_mod.py --no-variants`.
+The test build (`python3 tools/build_mod.py --test`) carries the current
+round's **test cars**, listed as *Test NN · ...*: one per fix, then the fixes
+combined; see the round's sheet in `plans/` (now `plans/round16-tests.md`).
+Their settings are ordinary tuning variables (Suspension > Rear Hub Toe
+Stiffness, Aerodynamics > DRS Model, Engine > Engine Power / Torque Map Slip,
+Brakes > Brake Force Multiplier / Low-Speed Brake Modulation), so any car can
+be set the same way in the tuning menu.
 
 The setup numbers (mass, rates, aero, power, gearing) and how they were
 derived are in [`plans/rb14-model-swap.md`](plans/rb14-model-swap.md)

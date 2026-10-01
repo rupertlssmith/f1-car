@@ -20,16 +20,22 @@
         ["fileName"],
         ["vehicleController", {}],
         ["flyBrakeBias", {"startBias":"$brakebias", "torqueFront":"$=$brakestrength*5000", "torqueRear":"$=$brakestrength*5000", "minBias":0.50, "maxBias":0.64}],
-        ["redbullERS", {"order":1000, "deployKW":120, "maxTorque":180, "storeMJ":4.0, "mguhKW":40, "harvestKW":120, "iceTorque":[[0, 0], [1000, 150], [2000, 230], [3000, 300], [4000, 360], [5000, 410], [6000, 450], [7000, 480], [8000, 500], [9000, 505], [10000, 505], [10500, 505], [11000, 485], [11500, 462], [12000, 440], [12500, 405], [13000, 360], [13500, 300], [14000, 240]]}],
+        ["redbullERS", {"order":1000, "deployKW":120, "maxTorque":180, "storeMJ":4.0, "mguhKW":40, "harvestKW":120, "iceScale":"$pu_power", "iceTorque":[[0, 0], [1000, 150], [2000, 230], [3000, 300], [4000, 360], [5000, 410], [6000, 450], [7000, 480], [8000, 500], [9000, 505], [10000, 505], [10500, 505], [11000, 485], [11500, 462], [12000, 440], [12500, 405], [13000, 360], [13500, 300], [14000, 240]]}],
         ["redbullDRS", {"minSpeed":20}],
-        ["redbullTraction", {"order":1100, "targetSlip":0.12, "minSlipSpeed":2.5, "gain":4.0, "release":3.0}],
+        ["redbullTraction", {"order":1100, "targetSlip":"$tc_slip", "minSlipSpeed":2.5, "gain":4.0, "release":3.0}],
         ["redbullSteerCheck", {}],
-        ["redbullPerf", {}]
+        ["redbullPerf", {}],
+        ["redbullBrakeMap", {"order":1200, "enabled":"$brake_map", "lowFactor":0.5, "fullSpeed":250}]
     ],
     "variables": [
         ["name", "type", "unit", "category", "default", "min", "max", "title", "description"],
         ["$brakebias", "range", "", "Brakes", 0.58, 0.50, 0.64, "Brake Bias", "Share of brake torque on the front wheels", {"minDis":50, "maxDis":64}],
-        ["$brakestrength", "range", "", "Brakes", 1, 0.6, 1.0, "Brake Force Multiplier", "Scales the overall brake torque for this setup", {"minDis":60, "maxDis":100}],
+        ["$brakestrength", "range", "", "Brakes", 1, 0.6, 1.5, "Brake Force Multiplier", "Scales the overall brake torque for this setup", {"minDis":60, "maxDis":150}],
+        ["$rear_toe_stiff", "range", "x", "Suspension", 1, 1, 6, "Rear Hub Toe Stiffness", "Stiffness of the rear hubs against toe (axle line vs upright), x the base", {"stepDis":0.5, "subCategory":"Rear"}],
+        ["$drs_model", "range", "", "Aerodynamics", 0, 0, 1, "DRS Model", "0: DRS tilts the upper wing; 1: wing stays put, DRS acts as forces (less drag and downforce)", {"stepDis":1}],
+        ["$pu_power", "range", "x", "Engine", 1, 0.8, 1.25, "Engine Power", "Combustion engine torque, x the base (MGU-K unchanged)", {"stepDis":0.01}],
+        ["$brake_map", "range", "", "Brakes", 0, 0, 1, "Low-Speed Brake Modulation", "1: eases the brakes at low speed like a driver modulating the pedal (less lock-up)", {"stepDis":1}],
+        ["$tc_slip", "range", "", "Engine", 0.12, 0.05, 0.3, "Torque Map Slip", "Rear wheel slip the torque map allows before cutting power", {"stepDis":0.01}],
         ["$ffbstrength", "range", "", "Chassis", 1, 0.5, 1.5, "Setup-Specific Force Feedback Multiplier", "Scales the force feedback strength for this setup", {"minDis":50, "maxDis":150}],
     ],
     "interiorSounds": {

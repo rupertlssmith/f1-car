@@ -221,5 +221,53 @@ e.airspeed = 280 / 3.6
 pf.updateGFX(0.01)
 check(msgs[#msgs]:find("Top speed: 300 km/h %(186 mph%)") ~= nil, "top speed reported: " .. msgs[#msgs])
 
+-- ------------------------------------------------------------ brake map
+print("redbullBrakeMap")
+electrics.values = {}
+e = electrics.values
+local bm = require("redbullBrakeMap")
+bm.init({enabled = 1, lowFactor = 0.5, fullSpeed = 250})
+e.airspeed, e.brake = 0, 1
+bm.updateGFX(0.02)
+check(math.abs(e.brake - 0.5) < 1e-9, "standstill: full pedal -> half brake")
+e.airspeed, e.brake = 300 / 3.6, 1
+bm.updateGFX(0.02)
+check(math.abs(e.brake - 1) < 1e-9, "300 km/h: full brake")
+e.airspeed, e.brake = 125 / 3.6, 1
+bm.updateGFX(0.02)
+check(math.abs(e.brake - 0.625) < 1e-6, string.format("125 km/h: %.3f of the pedal", e.brake))
+bm.init({enabled = 0})
+e.airspeed, e.brake = 0, 1
+bm.updateGFX(0.02)
+check(e.brake == 1, "disabled: brake untouched")
+
+-- ------------------------------------------------------------ DRS thrust
+print("redbullDRS thrust")
+electrics.values = {}
+e = electrics.values
+guihooks = {message = function() end}
+drs.init({minSpeed = 20})
+e.wheelspeed, e.airspeed, e.brake, e.drsRequest = 300 / 3.6, 300 / 3.6, 0, 1
+drs.updateGFX(0.02)
+check(e.drs == 1 and math.abs(e.drsThrust - 1) < 1e-9, "open at 300 km/h: thrust control 1")
+e.wheelspeed, e.airspeed = 150 / 3.6, 150 / 3.6
+drs.updateGFX(0.02)
+check(math.abs(e.drsThrust - 0.25) < 1e-9, "150 km/h: thrust control 0.25")
+e.brake = 0.5
+drs.updateGFX(0.02)
+check(e.drs == 0 and e.drsThrust == 0, "closed: no thrust")
+
+-- ------------------------------------------------------------ ERS power scale
+print("redbullERS iceScale")
+electrics.values = {}
+e = electrics.values
+ers.init({deployKW = 120, maxTorque = 180, storeMJ = 4.0, mguhKW = 40, harvestKW = 120, iceTorque = ice, iceScale = 1.12})
+e.ersMode = 0
+e.throttle, e.brake, e.rpm, e.wheelspeed = 1, 0, 11000, 60
+ers.updateGFX(0.02)
+local iceS = (505 + (440 - 505) * (500 / 1500)) * 1.12
+local ersS = math.min(180, 120000 / (11000 * math.pi / 30))
+check(math.abs(e.throttle - iceS / (iceS + ersS)) < 1e-6, "harvest mode caps to the scaled ICE share")
+
 print(failures == 0 and "all controller checks passed" or (failures .. " check(s) FAILED"))
 os.exit(failures == 0 and 0 or 1)

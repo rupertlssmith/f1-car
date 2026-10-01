@@ -1,0 +1,13 @@
+{
+  "Config Type": "Custom",
+  "Configuration": "Test 06 · Brakes to spec",
+  "Description": "Test test car 6: brake force 1.3x: ~5 g from 300 km/h (3.9 g, brake-torque limited). Everything else is Baseline (brakestrength 1.3). Passes every offline check.",
+  "Drivetrain": "RWD",
+  "Fuel Type": "Gasoline",
+  "Induction Type": "Turbo",
+  "Propulsion": "Hybrid",
+  "Transmission": "Sequential",
+  "Off-Road Score": 0,
+  "Population": 0,
+  "Value": 12000000
+}

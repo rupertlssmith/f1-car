@@ -194,9 +194,11 @@ def stiffness():
     je.set_in_part(f"{V}/redbull_suspension_F.jbeam", "redbull_suspension_F",
                    r'\{"spring":\d+, "damp":0, "deform":\d+, "strength":\d+\}',
                    '{"spring":%d, "damp":0, "deform":%d, "strength":%d}' % (HUB_TORSION_F, 25000 * 4, 100000 * 4))
+    # rear hub rigidifier (axle line vs upright: the rear toe) x the tuning
+    # variable $rear_toe_stiff (round 16; default 1)
     je.set_in_part(f"{V}/redbull_suspension_R.jbeam", "redbull_suspension_R",
-                   r'\{"spring":50000, "damp":0, "deform":\d+, "strength":\d+\}',
-                   '{"spring":50000, "damp":0, "deform":%d, "strength":%d}' % (35000 * 4, 100000 * 4))
+                   r'\{"spring":(?:50000|"\$=50000\*\$rear_toe_stiff"), "damp":0, "deform":\d+, "strength":\d+\}',
+                   '{"spring":"$=50000*$rear_toe_stiff", "damp":0, "deform":%d, "strength":%d}' % (35000 * 4, 100000 * 4))
     # generated wheel hubs: lighter hub nodes than the F4 (0.35 vs 0.55 kg),
     # so the hub beams scale with them to keep the F4's (stable) frequencies
     k = HUB_SPRING_SCALE
@@ -807,7 +809,7 @@ def ers_torque(rpm):
 def _set_torque_table(path, rows):
     import re
     text = je._read(path)
-    body = "".join("            [%d, %d],\r\n" % (r, t) for r, t in rows)
+    body = "".join('            [%d, "$=%d*$pu_power+%d"],\r\n' % (r, ice, ers) for r, ice, ers in rows)
     new, n = re.subn(r'("torque":\[\r\n            \["rpm", "torque"\],\r\n)(?:            \[[^\]]*\],\r\n)+',
                      lambda m: m.group(1) + body, text, count=1)
     if n != 1:
@@ -825,7 +827,8 @@ def power_unit():
     text = je._read(f)
     text = re.sub(r'        "torqueReactionNodes:":\["e1l","e2l","e4r"\],\r\n', '        //"torqueReactionNodes:":["e1l","e2l","e4r"], (off, see tools/rb14/f1_setup.py)\r\n', text)
     je._write(f, text)
-    total = [(r, round(t + ers_torque(r) * (1 if r >= 1000 else 0))) for r, t in ICE_CURVE]
+    # ICE x the tuning variable $pu_power (round 16, default 1) + MGU-K
+    total = [(r, t, round(ers_torque(r) * (1 if r >= 1000 else 0))) for r, t in ICE_CURVE]
     _set_torque_table(f, total)
     je.set_in_part(f, "redbull_engine_i4", r'"name":"[^"]*"', '"name":"1.6L V6 Turbo Hybrid Power Unit"')
     for key, val in (("idleRPM", 4000), ("idleRPMRoughness", 150), ("maxRPM", 13000), ("revLimiterCutTime", 0.02),
@@ -875,7 +878,11 @@ def gearbox():
                '"uiName":"Rear Differential","defaultVirtualInertia":0.25}')
     je.set_all(d, r'"gearRatio":\s*(?:[\d.]+|"\$finaldrive_R")\s*,', '"gearRatio":"$finaldrive_R",')
     je.set_in_part(d, "redbull_differential_R", r'"name":"[^"]*"', '"name":"Limited Slip Rear Differential"')
-    je.set_all(d, r'\["\$lsdlockcoef_R", "range", "", "Differentials", [\d.]+,', '["$lsdlockcoef_R", "range", "", "Differentials", 0.20,')
+    # round 16: Rear Fix 4 (freer diff) is Baseline -- the rear drive torque
+    # stayed lopsided after corners with 0.20 / 60 Nm / 0.12
+    je.set_all(d, r'\["\$lsdlockcoef_R", "range", "", "Differentials", [\d.]+,', '["$lsdlockcoef_R", "range", "", "Differentials", 0.10,')
+    je.set_all(d, r'\["\$lsdpreload_R", "range", "N/m", "Differentials", [\d.]+,', '["$lsdpreload_R", "range", "N/m", "Differentials", 20,')
+    je.set_all(d, r'\["\$lsdlockcoefrev_R", "range", "", "Differentials", [\d.]+,', '["$lsdlockcoefrev_R", "range", "", "Differentials", 0.06,')
     text = je._read(d)
     if '"$finaldrive_R"' not in text.split('"variables"')[-1] or '"variables"' not in text:
         i = text.index('    "differential_R": {')
@@ -911,6 +918,10 @@ def brakes():
     je.set_in_part(f, "redbull_brake_F", r'"name":"[^"]*"', '"name":"Front Carbon Brakes"')
     je.set_in_part(f, "redbull_brake_R", r'"name":"[^"]*"', '"name":"Rear Carbon Brakes"')
     m = f"{V}/redbull.jbeam"
+    # brake force slider up to 1.5x (round 16: at 1.0 the brakes cap braking
+    # at ~3.9 g from 300 km/h; 2018 F1 cars reached 5+ g)
+    je.set_all(m, r'\["\$brakestrength", "range", "", "Brakes", 1, 0.6, [\d.]+, ([^\]]*?)\{"minDis":60, "maxDis":\d+\}\]',
+               '["$brakestrength", "range", "", "Brakes", 1, 0.6, 1.5, "Brake Force Multiplier", "Scales the overall brake torque for this setup", {"minDis":60, "maxDis":150}]')
     je.set_all(m, r'\["\$brakebias", "range", "", "Brakes", [^\]]*\]',
                '["$brakebias", "range", "", "Brakes", 0.58, 0.50, 0.64, "Brake Bias", "Share of brake torque on the front wheels", {"minDis":50, "maxDis":64}]')
     je.set_all(m, r'\["flyBrakeBias", \{[^}]*\}\]',
@@ -971,13 +982,14 @@ def hybrid():
     m = f"{V}/redbull.jbeam"
     ice = "[" + ", ".join("[%d, %d]" % rt for rt in ICE_CURVE) + "]"
     ers = ('["redbullERS", {"order":1000, "deployKW":%g, "maxTorque":%g, "storeMJ":4.0, "mguhKW":40, "harvestKW":120, '
-           '"iceTorque":%s}]' % (ERS_KW, ERS_MAX_TQ, ice))
+           '"iceScale":"$pu_power", "iceTorque":%s}]' % (ERS_KW, ERS_MAX_TQ, ice))
     drs = '["redbullDRS", {"minSpeed":20}]'
-    tc = '["redbullTraction", {"order":1100, "targetSlip":0.12, "minSlipSpeed":2.5, "gain":4.0, "release":3.0}]'
+    tc = '["redbullTraction", {"order":1100, "targetSlip":"$tc_slip", "minSlipSpeed":2.5, "gain":4.0, "release":3.0}]'
     text = je._read(m)
     import re
-    sc = '["redbullSteerCheck", {}],\r\n        ["redbullPerf", {}]'
-    for c in ("redbullERS", "redbullDRS", "redbullTraction", "redbullSteerCheck", "redbullPerf"):
+    sc = ('["redbullSteerCheck", {}],\r\n        ["redbullPerf", {}],\r\n        '
+          '["redbullBrakeMap", {"order":1200, "enabled":"$brake_map", "lowFactor":0.5, "fullSpeed":250}]')
+    for c in ("redbullERS", "redbullDRS", "redbullTraction", "redbullSteerCheck", "redbullPerf", "redbullBrakeMap"):
         text = re.sub(r',\r\n        \["%s", \{.*?\}\]' % c, "", text)
     i = text.index('        ["flyBrakeBias"')
     j = text.index("\r\n", i)
@@ -987,8 +999,28 @@ def hybrid():
             k = text.index('        ["biasMinus"],')
             k = text.index("\r\n", k) + 2
             text = text[:k] + '        ["%s"],\r\n' % action + text[k:]
+    # round-16 tuning variables (main part, next to the brake force slider)
+    text = re.sub(r'        \["\$(?:%s)", "range".*\r\n' % "|".join(v[0].lstrip("$") for v in ROUND16_VARS), "", text)
+    k = text.index('        ["$brakestrength", "range"')
+    k = text.index("\r\n", k) + 2
+    text = text[:k] + "".join('        ["%s", "range", %s],\r\n' % (n, rest) for n, rest in ROUND16_VARS) + text[k:]
     je._write(m, text)
     drs_hydros()
+
+
+# Round 16 (fixes from replays A / B / C): defaults are Baseline; the
+# test cars (tools/rb14/variants.py) set them.
+ROUND16_VARS = [
+    ("$rear_toe_stiff", '"x", "Suspension", 1, 1, 6, "Rear Hub Toe Stiffness", '
+     '"Stiffness of the rear hubs against toe (axle line vs upright), x the base", {"stepDis":0.5, "subCategory":"Rear"}'),
+    ("$drs_model", '"", "Aerodynamics", 0, 0, 1, "DRS Model", '
+     '"0: DRS tilts the upper wing; 1: wing stays put, DRS acts as forces (less drag and downforce)", {"stepDis":1}'),
+    ("$pu_power", '"x", "Engine", 1, 0.8, 1.25, "Engine Power", "Combustion engine torque, x the base (MGU-K unchanged)", {"stepDis":0.01}'),
+    ("$brake_map", '"", "Brakes", 0, 0, 1, "Low-Speed Brake Modulation", '
+     '"1: eases the brakes at low speed like a driver modulating the pedal (less lock-up)", {"stepDis":1}'),
+    ("$tc_slip", '"", "Engine", 0.12, 0.05, 0.3, "Torque Map Slip", '
+     '"Rear wheel slip the torque map allows before cutting power", {"stepDis":0.01}'),
+]
 
 
 # DRS: the rear wing's leading-edge nodes hang from the endplates by stiff
@@ -1015,7 +1047,7 @@ def drs_hydros():
         a, b = v.pos["rep1" + side], v.pos["rwg1" + side]
         L0 = np.linalg.norm(b - a)
         L1 = np.linalg.norm(b + np.array([0, 0, DRS_LIFT]) - a)
-        rows.append('        ["rep1%s","rwg1%s", {"factor":%.4f, "inputSource":"drs", "inputFactor":1, "inRate":4, "outRate":4, '
+        rows.append('        ["rep1%s","rwg1%s", {"factor":"$=%.4f*(1-$drs_model)", "inputSource":"drs", "inputFactor":1, "inRate":4, "outRate":4, '
                     '"beamSpring":2001000, "beamDamp":40, "beamDeform":"FLT_MAX", "beamStrength":20000, "breakGroup":"endplates_R%s"}],\r\n'
                     % (side, side, (L1 - L0) / L0, side.upper()))
     # every setting inline: option rows would carry on into the steering
@@ -1027,7 +1059,29 @@ def drs_hydros():
     text = re.sub(r'    "hydros": \[\r\n        \["id1:", "id2:"\],\r\n        //DRS.*?    \],\r\n', "", text, flags=re.S)
     k = text.index('    "triangles": [')
     text = text[:k] + block + text[k:]
+    # $drs_model 1 (round 16): the wing stays put -- the RB14 wing mesh is
+    # one piece (main plane, flap, pillar), so tilting its leading edge
+    # lifted the whole wing and pulled the pillar off the car. The DRS
+    # effect comes from thrusters on the gearbox instead: forward (less
+    # drag) and up (less rear downforce), x (speed / 300 km/h)^2 via
+    # electrics.values.drsThrust (lua/controller/redbullDRS.lua).
+    fw, up = DRS_DRAG_300 / 2, DRS_DOWNFORCE_300 / 2
+    rows = "".join('        ["rx1%s", "rx2%s", "$=%d*$drs_model", "$=%d*$drs_model", "drsThrust"],\r\n'
+                   '        ["rx4%s", "rx2%s", "$=%d*$drs_model", "$=%d*$drs_model", "drsThrust"],\r\n'
+                   % (s, s, fw, fw * 1.6, s, s, up, up * 1.6) for s in "rl")
+    block = ('    "thrusters": [\r\n'
+             '        ["id1:", "id2:", "factor", "thrustLimit", "control"],\r\n'
+             '        //DRS as forces, $drs_model 1 (see tools/rb14/f1_setup.py): forward on rx2 = less drag, up = less downforce\r\n'
+             + rows + '    ],\r\n')
+    text = re.sub(r'    "thrusters": \[\r\n        \["id1:", "id2:", "factor", "thrustLimit", "control"\],\r\n        //DRS as forces.*?    \],\r\n', "", text, flags=re.S)
+    k = text.index('    "triangles": [')
+    text = text[:k] + block + text[k:]
     je._write(f, text)
+
+
+# DRS effect at 300 km/h on Baseline (setup_report "aero DRS open"):
+# downforce 21.3 -> 18.1 kN, drag 5.54 -> 4.26 kN
+DRS_DRAG_300, DRS_DOWNFORCE_300 = 1280, 3140
 
 
 # --------------------------------------------- ride-height floor (optional)

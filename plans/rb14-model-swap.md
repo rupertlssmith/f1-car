@@ -559,6 +559,23 @@ Every config: 1.9 g at low speed, 5-6 g braking from 300 km/h.
     probably the centre pillar) follows those nodes -- the "whole wing lifts
     and the pillar comes off" seen in game. Needs a split mesh: fixed main
     plane + pillar, a moving flap.
+- **Round 16 (Rear Fix 4 is Baseline; 14 test cars):** Baseline diff power
+  lock 0.10, preload 20 Nm, coast lock 0.06. New tuning variables (defaults
+  = Baseline): `$rear_toe_stiff` (rear hub toe torsion bar; 5x is the most
+  the gates allow, the cars use 4x), `$drs_model` (1: the wing stays put and
+  DRS acts as gearbox thrusters, -1.28 kN drag / -3.14 kN downforce at 300
+  km/h x (v/300)^2, `electrics.values.drsThrust`), `$pu_power` (ICE torque
+  scale; the torque table is ICE x scale + MGU-K, the ERS controller scales
+  its ICE share to match), `$brake_map` (lua/controller/redbullBrakeMap.lua:
+  brake x 0.5 + 0.5 (v/250 km/h)^2, capped at 1), `$tc_slip` (torque-map
+  slip target); the brake force slider now goes to 1.5. Cars: one per fix
+  (stiff rear hubs 4x; rear toe reset; DRS flap fix; traction 18 %; power
+  +12 %; brakes 1.3x; brake modulation), the fixes combined worst-first
+  (Test 08-13, Test 13 = all) and the performance changes alone (Test 14).
+  All inside every offline check. Not addressed: front-wing droop and
+  front-wheel wobble in fast corners (no solver headroom without more nose
+  mass); a proper DRS (split wing mesh with a moving flap). Test sheet
+  `plans/round16-tests.md`.
 - **Rear tyre clearance:** the rear floor / diffuser edge nodes sat 20-50 mm
   inside the 405 mm rear tyres' inner face; moved ~8 cm inboard (aero
   factors re-solved for the smaller floor).

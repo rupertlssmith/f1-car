@@ -1,0 +1,13 @@
+{
+  "Config Type": "Custom",
+  "Configuration": "Test 01 · Stiff rear hubs",
+  "Description": "Test test car 1: rear hub toe stiffness 4x (the torsion bar holding each rear axle line to its upright): less rear toe-in under drive torque and load (replays: 2.6-5 deg per side, rising with throttle). Everything else is Baseline (rear_toe_stiff 4). Passes every offline check.",
+  "Drivetrain": "RWD",
+  "Fuel Type": "Gasoline",
+  "Induction Type": "Turbo",
+  "Propulsion": "Hybrid",
+  "Transmission": "Sequential",
+  "Off-Road Score": 0,
+  "Population": 0,
+  "Value": 12000000
+}

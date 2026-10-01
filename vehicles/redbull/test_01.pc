@@ -25,6 +25,7 @@
     "$lsdpreload_R": 20,
     "$packer_F": 0.025,
     "$packer_R": 0.032,
+    "$rear_toe_stiff": 4,
     "$spring_F": 355000,
     "$spring_R": 495000,
     "$springheight_F": 0,
@@ -32,7 +33,7 @@
     "$tirepressure_F": 21,
     "$tirepressure_R": 19.5,
     "$toe_F": 0.9991,
-    "$toe_R": 0.9928,
+    "$toe_R": 0.9925,
     "$wing_angle_B": 3,
     "$wing_angle_F": -3,
     "$wing_angle_R": 8

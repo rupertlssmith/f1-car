@@ -687,7 +687,7 @@ def powertrain_report(v, massr, aero, grip, ice_only=False):
     for pname, _ in v.tree:          # parts (engine, ECU, internals) each add keys
         if isinstance(v.parts[pname].get("mainEngine"), dict):
             eng.update(v.parts[pname]["mainEngine"])
-    curve = [(float(r[0]), float(r[1])) for r in eng["torque"][1:]]
+    curve = [(float(r[0]), v.val(r[1])) for r in eng["torque"][1:]]
     ers = ers_params(v)
     if ice_only and ers:
         curve = [(float(r), float(t)) for r, t in ers["iceTorque"]]

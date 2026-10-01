@@ -79,7 +79,7 @@
     ],
     "torsionbars": [
         ["id1:", "id2:", "id3:", "id4:"],
-        {"spring":50000, "damp":0, "deform":140000, "strength":400000},
+        {"spring":"$=50000*$rear_toe_stiff", "damp":0, "deform":140000, "strength":400000},
         ["rw1rr", "rw1r", "rh3r", "rh4r"],
         ["rw1ll", "rw1l", "rh3l", "rh4l"],
     ],

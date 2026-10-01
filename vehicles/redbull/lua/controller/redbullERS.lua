@@ -25,6 +25,7 @@ local reserve = {0, 0.25, 0}
 local modeNames = {[0] = "Harvest", [1] = "Balanced", [2] = "Overtake"}
 
 local rpmTable, tqTable = {}, {}
+local iceScale = 1            -- tuning variable $pu_power (the jbeam curve is ICE x scale + MGU-K)
 local soc = 0
 local lastMode = -1
 local emptyWarned = false
@@ -60,7 +61,7 @@ local function updateGFX(dt)
   local speed = electrics.values.wheelspeed or 0
   local av = rpm * math.pi / 30
 
-  local ice = iceTorque(rpm)
+  local ice = iceTorque(rpm) * iceScale
   local ers = ersTorque(av)
   local total = ice + ers
   local cap = total > 0 and ice / total or 1
@@ -125,6 +126,7 @@ local function init(jbeamData)
   storeJ = (jbeamData.storeMJ or storeJ / 1e6) * 1e6
   mguhKW = jbeamData.mguhKW or mguhKW
   harvestKW = jbeamData.harvestKW or harvestKW
+  iceScale = tonumber(jbeamData.iceScale) or 1
   rpmTable, tqTable = {}, {}
   for _, row in ipairs(jbeamData.iceTorque or {}) do
     table.insert(rpmTable, row[1])

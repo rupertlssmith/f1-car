@@ -1,0 +1,13 @@
+{
+  "Config Type": "Custom",
+  "Configuration": "Test 10 · Fixes 1-4",
+  "Description": "Test test car 10: Stiff rear hubs + Rear toe reset + DRS flap fix + Traction. Everything else is Baseline (rear_toe_stiff 4, toe_R 1.0329, camber_R 0.991, drs_model 1, tc_slip 0.18). Passes every offline check.",
+  "Drivetrain": "RWD",
+  "Fuel Type": "Gasoline",
+  "Induction Type": "Turbo",
+  "Propulsion": "Hybrid",
+  "Transmission": "Sequential",
+  "Off-Road Score": 0,
+  "Population": 0,
+  "Value": 12000000
+}

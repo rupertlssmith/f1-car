@@ -1,0 +1,13 @@
+{
+  "Config Type": "Custom",
+  "Configuration": "Test 08 · Fixes 1-2",
+  "Description": "Test test car 8: Stiff rear hubs + Rear toe reset. Everything else is Baseline (rear_toe_stiff 4, toe_R 1.0329, camber_R 0.991). Passes every offline check.",
+  "Drivetrain": "RWD",
+  "Fuel Type": "Gasoline",
+  "Induction Type": "Turbo",
+  "Propulsion": "Hybrid",
+  "Transmission": "Sequential",
+  "Off-Road Score": 0,
+  "Population": 0,
+  "Value": 12000000
+}
