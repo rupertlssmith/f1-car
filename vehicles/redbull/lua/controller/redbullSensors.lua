@@ -32,9 +32,12 @@ local cid = {}
 local ok = {}
 local wheelData = {}
 
-local function has(...)
+local function has(what, ...)
   for _, n in ipairs({...}) do
-    if not cid[n] then return false end
+    if not cid[n] then
+      log("E", "redbullSensors", what .. " sensors off: node " .. n .. " missing")
+      return false
+    end
   end
   return true
 end
@@ -120,16 +123,15 @@ local function init(jbeamData)
   for _, n in pairs(v.data.nodes) do
     if n.name then cid[n.name] = n.cid end
   end
-  local frames = has("fx1r", "fx1l", "fx2r", "fx2l", "rx1r", "rx1l", "rx2r", "rx2l", "rdiff")
+  local frames = has("all", "fx1r", "fx1l", "fx2r", "fx2l", "rx1r", "rx1l", "rx2r", "rx2l", "rdiff")
   for _, S in ipairs({"L", "R"}) do
     local s = S:lower()
-    ok["R" .. S] = frames and has("rw1" .. s, "rw1" .. s .. s, "rh1" .. s, "rh3" .. s, "rh4" .. s, "rs1",
+    ok["R" .. S] = frames and has("R" .. S, "rw1" .. s, "rw1" .. s .. s, "rh1" .. s, "rh3" .. s, "rh4" .. s, "rs1",
                                   "rx1" .. s, "rx2" .. s, "rx3" .. s, "rx4" .. s)
-    ok["F" .. S] = frames and has("fw1" .. s, "fw1" .. s .. s, "fh3" .. s, "fh6" .. s)
+    ok["F" .. S] = frames and has("F" .. S, "fw1" .. s, "fw1" .. s .. s, "fh3" .. s, "fh6" .. s)
   end
-  ok.rack = has("fh6r", "fx3r")
+  ok.rack = has("rack", "fh6r", "fx3r")
   enabled = frames
-  if not frames then log("E", "redbullSensors", "frame nodes missing; sensors disabled") end
   wheelData = (wheels and wheels.wheels) or {}
 end
 

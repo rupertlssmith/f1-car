@@ -43,7 +43,7 @@ the renders, which use headless Blender.
 | `tools/rb14/envelope.py` | Which points are hidden inside the RB14 bodywork (used to decide which F4 internals to keep) |
 | `tools/rb14/preview.py` | Assembles the *built* mod (the `.dae`s, materials and textures the game loads) into a textured `.glb`, wheels and wings placed like the jbeam does |
 | `tools/rb14/render.py` | Blender (headless) preview renders, optional jbeam node/beam overlay and close-up camera |
-| `tools/check_mod.py` | Consistency checks: references, meshes, groups, materials, textures, configs, controllers, actions and key bindings; `--fit` measures how far each flexbody's vertices are from its nodes |
+| `tools/check_mod.py` | Consistency checks, run by every `build_mod.py` (errors refuse the build; `--no-check` skips): every reference (nodes, node groups / properties, `$variables`, named beams, deform groups, powertrain inputs, wheels, storages, rails, triggers, electrics read by hydros / thrusters / props) in the default car, every configuration and with each optional part fitted; the mod's Lua controllers run (luajit, `tools/rb14/check_controllers.lua`) on each car's nodes; meshes, materials, textures, config info / thumbnails, actions and key bindings. Known F4 leftovers are listed as accepted notes (`ACCEPTED`); `--fit` measures how far each flexbody's vertices are from its nodes |
 | `tools/rb14/f1_setup.py` | Milestone 4: turns the re-fitted F4 physics into the 2018 F1 setup (mass, tyres, suspension, alignment, power unit, gearbox, diff, brakes, aero, ERS/DRS, ride-height floor, the four configs). Sets absolute values, calibrating against `setup_report.py`, so it is safe to re-run |
 | `tools/rb14/setup_report.py` | Offline setup sheet read from the jbeam the way the game merges it: mass and balance, a linear spring-network model of each axle (wheel/heave/roll rates, ride frequency, static sag), flat-plate aero by part (and with DRS open), torque/power, gearing, a straight-line launch sim, tyre-limited lateral and braking g. `--config <name>` for a `.pc` |
 | `tools/rb14/jbeam_edit.py` | Format-preserving (CRLF, comments) jbeam text edits used by `f1_setup.py` |
@@ -618,6 +618,19 @@ Every config: 1.9 g at low speed, 5-6 g braking from 300 km/h.
   combined medium / strong / max, 16 strong + more toe-in, 17 / 18 static
   rear toe +-0.6 deg. 4, 8, 11 and 15 are just over the stiffness target
   (1.68-1.72). Sheet `plans/hub-fixes.md`.
+- **Reference check (after round 18):** `check_mod.py` only checked beam-
+  style node columns in the default car. It now checks every reference, in
+  all 29 cars (default, 22 configurations, 6 optional parts), and runs the
+  Lua controllers on each car's nodes. Found (all inherited from the F4,
+  which shows the same): front spindles fed from devices no part defines
+  (now root devices, input "dummy"; the replays show the game built them
+  anyway), the springs reading an undefined `$rideheight_F / _R` (now 1;
+  precompressionRange overrides it), and the fuel cell naming a beam
+  "fuelTank" that didn't exist (now ft1-rt4l; the tank's beams are
+  unbreakable as in the F4, so no behaviour change). Accepted as dead F4
+  leftovers: beams to the missing nc7 / fw2 / rh5 nodes, the empty flywheel
+  slot, the mainEngine_piping deform group. The sensors controller now logs
+  which node is missing instead of silently dropping a wheel.
 - **Rear tyre clearance:** the rear floor / diffuser edge nodes sat 20-50 mm
   inside the 405 mm rear tyres' inner face; moved ~8 cm inboard (aero
   factors re-solved for the smaller floor).

@@ -63,7 +63,7 @@
           {"deformLimitExpansion":""},
           ["ft1","rt4r"],
           {"breakGroup":"fuelTank","beamSpring":60000,"beamDamp":50},
-          ["ft1","rt4l"],
+          ["ft1","rt4l", {"name":"fuelTank"}],
           ["ft1","rt3l"],
           ["ft1","rt3r"],
 

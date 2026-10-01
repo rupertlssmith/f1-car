@@ -9,7 +9,17 @@ broken car:
 
   - jbeam files that do not parse
   - slot defaults / configuration parts that do not exist
-  - beams, triangles, props, cameras... referring to nodes that do not exist
+  - every reference between pieces, checked in the default car, in every
+    configuration (.pc) and with every optional part fitted in turn:
+      nodes (every "...:" column or option: beams, torsion bars, wheels'
+      torque arms, rails, gearbox / oil-pan nodes...), node groups
+      ("[...]:"), $variables, named beams (breakTriggerBeam), deform groups,
+      powertrain inputs, wheels, energy storages, rails (slidenodes),
+      triggers and their actions, and the electrics that hydros, thrusters
+      and props read (from the game or the mod's Lua)
+  - the mod's Lua controllers run (luajit, stubbed game) on each car's real
+    nodes and parameters: missing nodes, errors, disabled controllers
+  - configurations without their info_*.json / thumbnail
   - flexbody/prop meshes missing from every .dae
   - flexbody node groups that no node belongs to
   - materials used by meshes but not defined; textures missing on disk
@@ -60,6 +70,10 @@ class Report:
         self.errors.append(msg)
 
     def warn(self, msg):
+        for pat, why in ACCEPTED:
+            if re.search(pat, msg):
+                self.notes.append(f"accepted: {msg} -- {why}")
+                return
         self.warnings.append(msg)
 
     def note(self, msg):
@@ -185,17 +199,6 @@ def main():
                 if isinstance(g, str) and g:
                     groups.setdefault(g, []).append(None)
 
-    # node references
-    for name, _ in tree:
-        part = parts[name][1]
-        for sec, cols in NODE_SECTIONS.items():
-            for r in jbeam.table_rows(part.get(sec, [])):
-                for c in cols:
-                    v = r.get(c)
-                    if isinstance(v, str) and v and v not in nodes and v != "9999":
-                        # the game skips these with a console warning
-                        rep.warn(f"{name}.{sec}: unknown node {v!r} (ignored by the game)")
-
     # meshes
     import dae
     meshes = {}
@@ -305,9 +308,362 @@ def main():
             if var not in variables:
                 rep.warn(f"{os.path.basename(pc)}: variable {var} not defined by any part")
 
+    check_references(parts, main_part, variables, args.mod, dirs, actions, rep)
+
     if args.fit:
         fit_report(tree, parts, nodes, groups, meshes, variables, rep)
     return finish(rep, len(tree), len(nodes), len(meshes))
+
+
+# ------------------------------------------------------------ references
+# BeamNG convention: a column or option whose name ends in ":" holds node
+# ids ("id1:", "torqueArm:", "links:"...), and "[...]:" holds node groups.
+SKIP_SECTIONS = {"information", "slots", "slots2", "variables", "nodes", "flexbodies"}
+# electrics the game itself provides (inputs, drivetrain, lights...)
+BASE_ELECTRICS = {
+    "throttle", "throttle_input", "brake", "brake_input", "clutch", "clutch_input", "steering", "steering_input",
+    "parkingbrake", "parkingbrake_input", "rpm", "rpmspin", "rpmTacho", "wheelspeed", "airspeed", "gear", "gear_A",
+    "gear_M", "gearIndex", "ignition", "ignitionLevel", "running", "engineRunning", "fuel", "oiltemp", "watertemp",
+    "lowfuel", "lights", "lowbeam", "highbeam", "signal_L", "signal_R", "hazard", "reverse", "horn", "brakelights",
+    "abs", "esc", "tcs", "checkengine", "odometer", "trip", "turboBoost", "avgWheelAV", "clutchRatio", "virtualAirspeed",
+    "engineLoad", "isShifting", "throttleOverride", "brakelight_signal_L", "brakelight_signal_R",
+}
+# Known leftovers from the F4, checked and accepted: (regex on the message,
+# why). Printed as notes, so anything new still shows up as a warning.
+ACCEPTED = [
+    (r"unknown node 'nc7'", "F4 front wing: node nc7 commented out in the F4 itself; its beams are dead"),
+    (r"unknown node 'fw2[rl]'", "F4 front hub: fw2 nodes never existed in the F4; dead beams (removing them would "
+                                "shift f1_setup's row-by-row F4 calibration)"),
+    (r"unknown node 'rh5[rl]'", "F4 rear hub: rh5 nodes commented out in the F4 (round 18's brace nodes are rh6 / rh7)"),
+    (r"slot redbull_flywheel .* unknown part", "F4 flywheel slot: the F4 never had the part; engine inertia is "
+                                               "set in mainEngine"),
+    (r"deform group 'mainEngine_piping'", "F4 engine: no piping beams; that damage type just never happens"),
+]
+LUA_ELECTRIC = re.compile(r"electrics\.values\.([A-Za-z_]\w*)\s*=(?!=)|electrics\.values\[\"([A-Za-z_]\w*)\"\]\s*=(?!=)")
+VAR_TOKEN = re.compile(r"\$[A-Za-z_][A-Za-z0-9_]*")
+
+
+def tree_info(tree, parts, variables, rep=None):
+    """What the parts of one car define: nodes (positions), groups, beam
+    names, deform groups, wheels, powertrain devices, storages, rails,
+    triggers, variables."""
+    info = {k: {} for k in ("nodes", "groups")}
+    info["containers"] = []
+    info.update({k: set() for k in ("beams", "deform", "wheels", "devices", "storages", "rails", "triggers", "vars")})
+    for name, off in tree:
+        part = parts[name][1]
+        for r in jbeam.table_rows(part.get("variables", [])):
+            info["vars"].add(r.get("name"))
+        for r in jbeam.table_rows(part.get("nodes", [])):
+            try:
+                x, y, z = (evaluate(r[k], variables) for k in ("posX", "posY", "posZ"))
+            except (ValueError, KeyError, SyntaxError, TypeError) as e:
+                if rep:
+                    rep.error(f"{name}: node {r.get('id')} has a bad coordinate ({e})")
+                continue
+            sx = 1.0 if x >= 0 else -1.0
+            info["nodes"][r["id"]] = ((x + sx * off[0], y + off[1], z + off[2]), name)
+            # "[attr]:" references select nodes by any list / name property
+            # ("[group]:", "[engineGroup]:"...): index them all
+            for attr, g in r.items():
+                if attr in ("id", "posX", "posY", "posZ") or not isinstance(g, (str, list)):
+                    continue
+                for gg in ([g] if isinstance(g, str) else g):
+                    if isinstance(gg, str) and gg:
+                        info["groups"].setdefault((attr, gg), []).append(r["id"])
+            if r.get("containerBeam"):
+                info["containers"].append((name, r["id"], r["containerBeam"]))
+        for sec in ("beams", "triangles", "hydros", "torsionbars"):
+            for r in jbeam.table_rows(part.get(sec, [])):
+                if sec == "beams" and r.get("name"):
+                    info["beams"].add(r["name"])
+                if r.get("deformGroup"):
+                    info["deform"].add(r["deformGroup"])
+        for r in jbeam.table_rows(part.get("pressureWheels", [])) + jbeam.table_rows(part.get("hubWheels", [])):
+            info["wheels"].add(r.get("name"))
+            for col in ("hubGroup", "group"):
+                if isinstance(r.get(col), str) and r[col]:
+                    info["groups"].setdefault(("group", r[col]), []).append(None)
+        for r in jbeam.table_rows(part.get("powertrain", [])):
+            info["devices"].add(r.get("name"))
+        for r in jbeam.table_rows(part.get("energyStorage", [])):
+            info["storages"].add(r.get("name"))
+        if isinstance(part.get("rails"), dict):
+            info["rails"].update(part["rails"])
+        for r in jbeam.table_rows(part.get("triggers2", [])) + jbeam.table_rows(part.get("triggers", [])):
+            info["triggers"].add(r.get("id"))
+    return info
+
+
+def _walk(v, path, fn):
+    """Call fn(key, value, path) for every dict key below v."""
+    if isinstance(v, dict):
+        for k, x in v.items():
+            fn(k, x, path)
+            _walk(x, path, fn)
+    elif isinstance(v, list):
+        for x in v:
+            _walk(x, path, fn)
+
+
+def tree_refs(tree, parts, info, actions, electrics):
+    """[(level, message)] for every reference the car can't resolve."""
+    out = []
+    nodes, groups = info["nodes"], info["groups"]
+
+    def names(v):
+        return [v] if isinstance(v, str) else [x for x in v if isinstance(x, str)] if isinstance(v, list) else []
+
+    for name, _ in tree:
+        part = parts[name][1]
+        for sec, val in part.items():
+            if sec in SKIP_SECTIONS:
+                continue
+            where = f"{name}.{sec}"
+
+            def ref(k, v, _p=None, where=where):
+                if not (isinstance(k, str) and k.endswith(":")):
+                    return
+                for n in names(v):
+                    if not n or n == "9999":
+                        continue
+                    if k.startswith("["):
+                        if (k[1:k.index("]")], n) not in groups:
+                            out.append(("error", f"{where}: no node has {k[1:k.index(']')]} {n!r} ({k})"))
+                    elif ":" in k[:-1]:
+                        continue                # "triggerId:triggers2" style: checked below
+                    elif n not in nodes:
+                        out.append(("warn", f"{where}: unknown node {n!r} ({k}) (ignored by the game)"))
+            rows = jbeam.table_rows(val)
+            if rows:
+                for r in rows:
+                    for k, v in r.items():
+                        ref(k, v)
+                    for k, v in r.items():
+                        _walk(v, where, lambda kk, vv, _p, where=where: ref(kk, vv))
+            else:
+                _walk({sec: val}, where, lambda kk, vv, _p, where=where: ref(kk, vv))
+
+            # named things
+            def named(k, v, _p, where=where):
+                if k == "breakTriggerBeam" and isinstance(v, str) and v and v not in info["beams"]:
+                    out.append(("warn", f"{where}: breakTriggerBeam {v!r} is no beam's name (never breaks)"))
+                if isinstance(k, str) and (k == "deformGroups" or k.startswith("deformGroups_")):
+                    for g in names(v):
+                        if g not in info["deform"]:
+                            out.append(("warn", f"{where}: deform group {g!r} is on no beam (damage never triggers)"))
+                if k == "connectedWheel" and isinstance(v, str) and v not in info["wheels"]:
+                    out.append(("error", f"{where}: connectedWheel {v!r} is not a wheel"))
+                if k == "energyStorage" and isinstance(v, str) and v not in info["storages"]:
+                    out.append(("error", f"{where}: energyStorage {v!r} not defined"))
+            _walk({sec: val}, where, named)
+            for r in rows:
+                _walk(r, where, named)
+
+        lost = {}
+        for owner, node, beam in info["containers"]:
+            if owner == name and beam not in info["beams"]:
+                lost.setdefault(beam, []).append(node)
+        for beam, ns in lost.items():
+            out.append(("warn", f"{name}.nodes: containerBeam {beam!r} (on {', '.join(ns)}) is no beam's name"))
+        for r in jbeam.table_rows(part.get("powertrain", [])):
+            src = r.get("inputName")
+            if src and src != "dummy" and src not in info["devices"]:
+                out.append(("error", f"{name}.powertrain: {r.get('name')} input {src!r} is no powertrain device"))
+        for r in jbeam.table_rows(part.get("slidenodes", [])):
+            if r.get("railName") and r["railName"] not in info["rails"]:
+                out.append(("error", f"{name}.slidenodes: rail {r['railName']!r} not defined"))
+        for r in jbeam.table_rows(part.get("triggerEventLinks2", [])):
+            t, a = r.get("triggerId:triggers2"), r.get("inputAction")
+            if t and t not in info["triggers"]:
+                out.append(("error", f"{name}.triggerEventLinks2: trigger {t!r} not defined"))
+            if a and ":" not in a and a not in actions:
+                out.append(("error", f"{name}.triggerEventLinks2: action {a!r} not in the interaction file"))
+        for sec, col in (("hydros", "inputSource"), ("thrusters", "control"), ("props", "func")):
+            for r in jbeam.table_rows(part.get(sec, [])):
+                e = r.get(col)
+                if isinstance(e, str) and e and e not in electrics:
+                    out.append(("warn", f"{name}.{sec}: electrics value {e!r} is set by neither the game nor the mod's Lua"))
+
+        # $variables used but not defined anywhere in this car
+        def var(k, v, _p, name=name):
+            if isinstance(v, str) and v.startswith("$"):
+                for t in VAR_TOKEN.findall(v):
+                    if t not in info["vars"]:
+                        out.append(("error", f"{name}: variable {t} used but not defined in this car (reads as 0)"))
+        _walk({k: x for k, x in part.items() if k not in ("variables", "information")}, name, var)
+        for k, x in part.items():
+            if isinstance(x, list):
+                for row in x:
+                    if isinstance(row, list):
+                        for c in row:
+                            var(None, c, None)
+    return out
+
+
+def config_trees(parts, main_part, mod):
+    """(label, tree, variables, missing slots) for the default car, every
+    configuration, and every optional part fitted to the default car."""
+    defaults = {}
+    for _, p in parts.values():
+        for r in jbeam.table_rows(p.get("variables", [])):
+            defaults[r["name"]] = r.get("default", 0)
+    out = []
+    tree, missing = default_tree(parts, main_part)
+    out.append(("default", tree, dict(defaults), missing, {}))
+    used = {n for n, _ in tree}
+    for pc in sorted(glob.glob(f"vehicles/{mod}/*.pc")):
+        try:
+            cfg = jbeam.load(pc)
+        except jbeam.JbeamError:
+            continue
+        over = {k: v for k, v in (cfg.get("parts") or {}).items() if v}
+        t, m = default_tree(parts, main_part, over)
+        out.append((os.path.basename(pc)[:-3], t, {**defaults, **(cfg.get("vars") or {})}, m, over))
+        used |= {n for n, _ in t}
+    slot_types = set()
+    for _, p in parts.values():
+        for r in jbeam.table_rows(p.get("slots", [])):
+            slot_types.add(r.get("type"))
+        for r in jbeam.table_rows(p.get("slots2", [])):
+            slot_types.add(r.get("name"))
+    for name, (f, p) in sorted(parts.items()):
+        st = p.get("slotType")
+        if name in used or st == "main":
+            continue
+        if st not in slot_types:
+            out.append((f"part {name}", None, None, None, {"_unused": st}))
+            continue
+        t, m = default_tree(parts, main_part, {st: name})
+        if name in {n for n, _ in t}:
+            out.append((f"with {name}", t, dict(defaults), m, {st: name}))
+        else:
+            out.append((f"part {name}", None, None, None, {"_unreached": st}))
+    return out
+
+
+def check_references(parts, main_part, variables, mod, dirs, actions, rep):
+    electrics = set(BASE_ELECTRICS)
+    for d in dirs:
+        for f in glob.glob(os.path.join(d, "lua", "**", "*.lua"), recursive=True):
+            for a, b in LUA_ELECTRIC.findall(open(f, encoding="utf-8", errors="replace").read()):
+                electrics.add(a or b)
+    found = {}                                  # (level, message) -> [cars]
+    cars = []
+    for label, tree, vars_, missing, over in config_trees(parts, main_part, mod):
+        if tree is None:
+            why = over.get("_unused") or over.get("_unreached")
+            rep.note(f"{label}: slot type {why!r} is offered by no part the car can reach (part never used)")
+            continue
+        cars.append(label)
+        for owner, stype, choice in missing:
+            if stype in over:                   # (slot defaults: reported above)
+                found.setdefault(("error", f"slot {stype} in {owner} -> unknown part {choice}"), []).append(label)
+        info = tree_info(tree, parts, vars_)
+        for key in dict.fromkeys(tree_refs(tree, parts, info, actions, electrics)):
+            found.setdefault(key, []).append(label)
+        # slots a configuration sets that its car doesn't have
+        have = set()
+        for n, _ in tree:
+            have |= {r.get("type") for r in jbeam.table_rows(parts[n][1].get("slots", []))}
+            have |= {r.get("name") for r in jbeam.table_rows(parts[n][1].get("slots2", []))}
+        for slot in over:
+            if slot not in have:
+                found.setdefault(("warn", f"configuration sets slot {slot}, which its car does not have"), []).append(label)
+        cars_lua = lua_check(label, tree, parts, info, vars_, dirs)
+        for key in dict.fromkeys(cars_lua):
+            found.setdefault(key, []).append(label)
+    print(f"references checked in {len(cars)} cars: the default, {sum(not c.startswith('with ') for c in cars) - 1} "
+          f"configurations and {sum(c.startswith('with ') for c in cars)} optional parts fitted in turn")
+    for (level, msg), where in found.items():
+        tag = "" if len(where) == len(cars) else " [%s]" % ", ".join(where[:6] + (["..."] if len(where) > 6 else []))
+        (rep.error if level == "error" else rep.warn if level == "warn" else rep.note)(msg + tag)
+    # every configuration needs its info file and thumbnail
+    for pc in sorted(glob.glob(f"vehicles/{mod}/*.pc")):
+        stem = pc[:-3]
+        base = os.path.basename(stem)
+        if not os.path.exists(os.path.join(os.path.dirname(pc), f"info_{base}.json")):
+            rep.warn(f"{base}.pc has no info_{base}.json (listed without a name / description)")
+        if not any(os.path.exists(stem + e) for e in (".jpg", ".png")):
+            rep.warn(f"{base}.pc has no thumbnail")
+
+
+# ------------------------------------------------------------ Lua controllers
+LUA_RUNNER = os.path.join(HERE, "rb14", "check_controllers.lua")
+_lua_missing = []
+
+
+def _lua(v):
+    if isinstance(v, bool):
+        return "true" if v else "false"
+    if isinstance(v, (int, float)):
+        return repr(float(v))
+    if isinstance(v, str):
+        return json.dumps(v)
+    if isinstance(v, list):
+        return "{" + ", ".join(_lua(x) for x in v) + "}"
+    if isinstance(v, dict):
+        return "{" + ", ".join("[%s] = %s" % (json.dumps(k), _lua(x)) for k, x in v.items()) + "}"
+    return "nil"
+
+
+def _resolve(v, vars_):
+    if isinstance(v, str) and v.startswith("$"):
+        try:
+            return evaluate(v, vars_)
+        except (ValueError, SyntaxError, TypeError, NameError):
+            return v
+    if isinstance(v, list):
+        return [_resolve(x, vars_) for x in v]
+    if isinstance(v, dict):
+        return {k: _resolve(x, vars_) for k, x in v.items()}
+    return v
+
+
+def lua_check(label, tree, parts, info, vars_, dirs):
+    """Run the car's own (mod) Lua controllers on its nodes; [(level, msg)]."""
+    import shutil
+    import subprocess
+    import tempfile
+    exe = shutil.which("luajit")
+    if not exe or not os.path.exists(LUA_RUNNER):
+        if not _lua_missing:
+            _lua_missing.append(1)
+            return [("note", "luajit not found: Lua controllers not run against the cars")]
+        return []
+    ctrls = []
+    for name, _ in tree:
+        for r in jbeam.table_rows(parts[name][1].get("controller") or []):
+            fn = r.get("fileName")
+            files = [os.path.join(d, "lua", "controller", f"{fn}.lua") for d in dirs] if isinstance(fn, str) else []
+            path = next((f for f in files if os.path.exists(f)), None)
+            if path:
+                params = {k: x for k, x in r.items() if k != "fileName"}
+                ctrls.append((fn, path, _resolve(params, vars_)))
+    if not ctrls:
+        return []
+    src = ["return {", "nodes = {"]
+    for n, (p, _) in info["nodes"].items():
+        src.append("  [%s] = {%r, %r, %r}," % (json.dumps(n), *map(float, p)))
+    src.append("}, controllers = {")
+    for fn, path, params in ctrls:
+        src.append("  {name = %s, path = %s, params = %s}," % (json.dumps(fn), json.dumps(path), _lua(params)))
+    src.append("}}")
+    with tempfile.NamedTemporaryFile("w", suffix=".lua", delete=False) as fh:
+        fh.write("\n".join(src))
+        car = fh.name
+    try:
+        res = subprocess.run([exe, LUA_RUNNER, car], capture_output=True, text=True, timeout=60)
+    finally:
+        os.remove(car)
+    out = []
+    for line in (res.stdout + res.stderr).splitlines():
+        m = re.match(r"^(ERROR|WARN) (.*)$", line)
+        if m:
+            out.append(("error" if m.group(1) == "ERROR" else "warn", "Lua " + m.group(2)))
+    if res.returncode not in (0, 1) and not out:
+        out.append(("error", f"Lua controller runner failed: {(res.stderr or res.stdout).strip()[-300:]}"))
+    return out
 
 
 def fit_report(tree, parts, nodes, groups, meshes, variables, rep):

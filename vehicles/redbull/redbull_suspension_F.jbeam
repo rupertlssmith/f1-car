@@ -365,8 +365,8 @@
     ],
     "powertrain" : [
         ["type", "name", "inputName", "inputIndex"],
-        ["shaft", "spindleFL", "wheelaxleFL", 1, {"connectedWheel":"FL", "breakTriggerBeam":"axle_FL", "uiName":"Front Left Axle", "friction":1.1, "dynamicFriction":0.0028, "electricsName":"wheelaxleFL"}],
-        ["shaft", "spindleFR", "wheelaxleFR", 1, {"connectedWheel":"FR", "breakTriggerBeam":"axle_FR", "uiName":"Front Right Axle", "friction":1.1, "dynamicFriction":0.0028, "electricsName":"wheelaxleFR"}],
+        ["shaft", "spindleFL", "dummy", 0, {"connectedWheel":"FL", "breakTriggerBeam":"axle_FL", "uiName":"Front Left Axle", "friction":1.1, "dynamicFriction":0.0028, "electricsName":"wheelaxleFL"}],
+        ["shaft", "spindleFR", "dummy", 0, {"connectedWheel":"FR", "breakTriggerBeam":"axle_FR", "uiName":"Front Right Axle", "friction":1.1, "dynamicFriction":0.0028, "electricsName":"wheelaxleFR"}],
     ],
 },
 "redbull_coilover_F": {
@@ -488,9 +488,9 @@
           //IMPORTANT: if precompressionRange is ~= nil then it supersedes beamPrecompression.
           //The case() is for backwards compatibility for old configs containing the "rideheight_F" variable.
           //To change the base ride height, edit the springheight_F offset in the expression.
-          ["fh1r","fs1", {"breakGroup":["lowerarm_FR","upperarm_FR"],"name":"spring_FR", "beamPrecompression":"$=$rideheight_F", "precompressionRange":"$=(($springheight_F + 0.01)*(0.5965*$spring_F + $heave_spring_F/0.5965) + 4890.0)/$spring_F",
+          ["fh1r","fs1", {"breakGroup":["lowerarm_FR","upperarm_FR"],"name":"spring_FR", "beamPrecompression":1, "precompressionRange":"$=(($springheight_F + 0.01)*(0.5965*$spring_F + $heave_spring_F/0.5965) + 4890.0)/$spring_F",
               "soundFile":"event:>Vehicle>Suspension>car_modn_med_01>spring_compress_01","colorFactor":0.4,"attackFactor":60,"volumeFactor":1.5,"decayFactor":40,"noiseFactor":0.01,"pitchFactor":1.0,"maxStress":2000}],
-          ["fh1l","fs1", {"breakGroup":["lowerarm_FL","upperarm_FL"],"name":"spring_FL", "beamPrecompression":"$=$rideheight_F", "precompressionRange":"$=(($springheight_F + 0.01)*(0.5965*$spring_F + $heave_spring_F/0.5965) + 4890.0)/$spring_F",
+          ["fh1l","fs1", {"breakGroup":["lowerarm_FL","upperarm_FL"],"name":"spring_FL", "beamPrecompression":1, "precompressionRange":"$=(($springheight_F + 0.01)*(0.5965*$spring_F + $heave_spring_F/0.5965) + 4890.0)/$spring_F",
               "soundFile":"event:>Vehicle>Suspension>car_modn_med_01>spring_compress_01","colorFactor":0.4,"attackFactor":60,"volumeFactor":1.5,"decayFactor":40,"noiseFactor":0.01,"pitchFactor":1.0,"maxStress":2000}],
           //damper
           {"beamPrecompression":1, "beamType":"|BOUNDED","beamLongBound":1, "beamShortBound":1},

@@ -343,7 +343,7 @@
         ],
         [
             "vehicles/redbull/lua/controller/redbullSensors.lua",
-            "f2e0326d2eab2829"
+            "cdc82445b2ad3e03"
         ],
         [
             "vehicles/redbull/lua/controller/redbullSteerCheck.lua",
@@ -531,7 +531,7 @@
         ],
         [
             "vehicles/redbull/redbull_fueltank.jbeam",
-            "9a943581bba8bb9d"
+            "d553742a90a1fc87"
         ],
         [
             "vehicles/redbull/redbull_lights_b.color.dds",
@@ -603,11 +603,11 @@
         ],
         [
             "vehicles/redbull/redbull_suspension_F.jbeam",
-            "fff5d70331ff11f0"
+            "bb9bc16f6494a1b9"
         ],
         [
             "vehicles/redbull/redbull_suspension_R.jbeam",
-            "2e2f2f68da0b5d54"
+            "189bbfa616f2740b"
         ],
         [
             "vehicles/redbull/redbull_transaxle.jbeam",

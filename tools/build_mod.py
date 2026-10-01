@@ -102,7 +102,18 @@ def main():
                     help="test build: only Baseline and the test-car variants (fix_* / steer_* / rear_* / test_* / drift_* / hub_*)")
     ap.add_argument("--stamp", action="store_true",
                     help="name the zip <mod>_YYYYMMDD-HHMMSS.zip instead of <mod>.zip")
+    ap.add_argument("--no-check", action="store_true",
+                    help="skip tools/check_mod.py (by default a build with model errors is refused)")
     args = ap.parse_args()
+
+    if not args.no_check:
+        import subprocess
+        res = subprocess.run([sys.executable, os.path.join(REPO, "tools", "check_mod.py"), "--mod", args.mod],
+                             cwd=REPO, capture_output=True, text=True)
+        print(res.stdout.strip().splitlines()[-1] if res.stdout.strip() else res.stderr.strip())
+        if res.returncode != 0:
+            print("\n".join(l for l in res.stdout.splitlines() if l.startswith("ERROR")))
+            sys.exit("check_mod.py found errors: not building (--no-check to build anyway)")
 
     files = list_files(mod_dirs(args.mod))
     if args.no_variants:

@@ -1576,6 +1576,35 @@ def migrations():
     travel_stops()
     brake_misc()
     front_fix_vars()
+    references()
+
+# Broken references inherited from the F4, found by tools/check_mod.py:
+# the front spindles take their input from devices no part defines
+# (wheelaxleFL / FR: undriven wheels are root devices, input "dummy"); the
+# springs' beamPrecompression reads $rideheight_F / _R, which no part
+# defines (precompressionRange overrides it; 1 = no precompression); the
+# fuel cell's mainTank and fuel nodes name a beam "fuelTank" that did not
+# exist (now ft1-rt4l, in the tank's "fuelTank" break group; its beams are
+# unbreakable, as in the F4, so behaviour is unchanged).
+def references():
+    import re
+    f = f"{V}/redbull_suspension_F.jbeam"
+    for w in ("FL", "FR"):
+        je.set_all(f, r'\["shaft", "spindle%s", "(?:wheelaxle%s|dummy)", [01],' % (w, w), '["shaft", "spindle%s", "dummy", 0,' % w)
+    for a in ("F", "R"):
+        g = f"{V}/redbull_suspension_{a}.jbeam"
+        text, n = re.subn(r'("name":"spring_%s[RL]", "beamPrecompression":)(?:"\$=\$rideheight_%s"|1)' % (a, a),
+                          lambda m: m.group(1) + "1", je._read(g))
+        if n != 2:
+            raise ValueError(f"{g}: the two spring rows not found")
+        je._write(g, text)
+    f = f"{V}/redbull_fueltank.jbeam"
+    text = je._read(f)
+    text, n = re.subn(r'\["ft1","rt4l"(?:, \{"name":"fuelTank"\})?\]', '["ft1","rt4l", {"name":"fuelTank"}]', text)
+    if n != 1:
+        raise ValueError("fuel tank beam ft1-rt4l not found")
+    je._write(f, text)
+
 
 # Round 14: the replay showed the rear toe growing with throttle (2.3 ->
 # 5.9 deg per side). The drive-torque reaction (DRIVE_REACTION) puts each
