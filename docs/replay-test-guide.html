@@ -1,0 +1,59 @@
+<!doctype html><html><head><meta charset="utf-8"><title>RB14 replay test guide</title>
+<style>
+@page { size: A4; margin: 11mm 12mm; }
+body { font-family: "DejaVu Sans", Arial, sans-serif; font-size: 8.6pt; color:#111; margin:0; }
+h1 { font-size: 15pt; margin: 0 0 1mm 0; }
+.sub { color:#444; margin-bottom: 2.5mm; }
+h2 { font-size: 10.5pt; margin: 3mm 0 1.2mm 0; background:#1f2a44; color:#fff; padding:1mm 2mm; }
+table { width:100%; border-collapse: collapse; }
+th, td { border: 0.3mm solid #999; padding: 1mm 1.4mm; vertical-align: top; text-align:left; }
+th { background:#e6e9f0; }
+td.n { width: 5mm; text-align:center; font-weight:bold; }
+td.do { width: 47%; }
+td.ok { width: 7mm; }
+ul { margin: 0.5mm 0 0 0; padding-left: 4.5mm; }
+li { margin: 0.3mm 0; }
+.rules { border: 0.3mm solid #999; padding: 1.5mm 2mm; }
+.notes { margin-top:2.5mm; }
+.line { border-bottom: 0.3mm solid #999; height: 5.5mm; }
+</style></head><body>
+<h1>RB14 replay test guide</h1>
+<div class="sub">Record these as BeamNG replays (.rpl) and add them to the repo: <code>tools/rb14/replay_analysis.py</code> reads them.</div>
+<div class="rules"><b>For every recording</b>
+<ul>
+<li><b>Stop for 3 s between tests</b> - the analysis splits the replay at standstills.</li>
+<li><b>Clean inputs:</b> throttle fully on or off, brake fully on, steering held steady. Partial inputs blur the numbers.</li>
+<li><b>Both directions</b> for every cornering test (left, then right).</li>
+<li><b>Hands off the steering on straights</b> after a turn: centre it and leave it - a small correction hides the drift we are measuring.</li>
+<li><b>Write down</b> the car configuration and controller (wheel / pad / keyboard). Keep each replay to ~2-3 min (one replay per block below).</li>
+<li>Big flat area (gridmap is fine); the longest straight you have for the top-speed runs (3 km+).</li>
+</ul></div>
+
+<h2>Replay A: straight-line tests</h2>
+<table><tr><th>#</th><th>What to do</th><th>What it tells us</th><th>Done</th></tr>
+<tr><td class="n">1</td><td class="do"><b>Spawn and wait 10 s</b> without touching anything.</td><td>Spawns stably? Real wheel alignment at rest (it showed the 3.7&deg; rear toe), ride height.</td><td class="ok"></td></tr>
+<tr><td class="n">2</td><td class="do"><b>Standing start, full throttle</b>, steering centred, through the gears until the speed stops rising.</td><td>0-100/200/300 km/h, acceleration at each speed, real top speed, gear changes, traction control.</td><td class="ok"></td></tr>
+<tr><td class="n">3</td><td class="do">Then <b>lift off and coast</b> - no brake, no throttle - down to ~100 km/h.</td><td><b>Most useful part.</b> Coast-down separates air drag (grows with speed&sup2;) from rolling / scrub losses (constant): pins down the ~3 kN of extra drag.</td><td class="ok"></td></tr>
+<tr><td class="n">4</td><td class="do">Accelerate to ~300 km/h, then <b>full brake</b> to a stop, steering centred.</td><td>Braking g at each speed, brake balance, lock-ups, pull under braking.</td><td class="ok"></td></tr>
+<tr><td class="n">5</td><td class="do"><b>Repeat 2 with DRS open.</b></td><td>DRS gain at top speed.</td><td class="ok"></td></tr>
+<tr><td class="n">6</td><td class="do"><b>Hold a steady ~150 km/h for 10 s</b>, steering centred.</td><td>Does it track straight before any cornering? (reference for the drift)</td><td class="ok"></td></tr>
+</table>
+
+<h2>Replay B: low-speed cornering (~60-100 km/h)</h2>
+<table><tr><th>#</th><th>What to do</th><th>What it tells us</th><th>Done</th></tr>
+<tr><td class="n">7</td><td class="do"><b>Steady circle, left.</b> Fixed steering angle, raise speed slowly over ~15 s until it slides. Then <b>straighten, centre the wheel, drive straight 5 s</b>.</td><td>Low-speed grip limit, understeer / oversteer, drift after the corner (current complaint).</td><td class="ok"></td></tr>
+<tr><td class="n">8</td><td class="do"><b>The same, right.</b></td><td>Left / right comparison.</td><td class="ok"></td></tr>
+<tr><td class="n">9</td><td class="do"><b>Hairpin, left:</b> brake hard into a tight turn, full throttle on the exit, then 5 s straight with the steering centred.</td><td>Traction out of slow corners, wheel judder, rear-axle steer, recentring.</td><td class="ok"></td></tr>
+<tr><td class="n">10</td><td class="do"><b>Hairpin, right.</b></td><td>The same, other side.</td><td class="ok"></td></tr>
+</table>
+
+<h2>Replay C: high-speed cornering (~180-250 km/h)</h2>
+<table><tr><th>#</th><th>What to do</th><th>What it tells us</th><th>Done</th></tr>
+<tr><td class="n">11</td><td class="do"><b>Long fast sweep, left</b>, steady steering ~5 s at high speed, then 5 s straight with the steering centred.</td><td>High-speed grip with downforce, front-wheel wobble, front-wing movement, ride height under load.</td><td class="ok"></td></tr>
+<tr><td class="n">12</td><td class="do"><b>The same, right.</b></td><td>Left / right comparison.</td><td class="ok"></td></tr>
+<tr><td class="n">13</td><td class="do"><b>Quick lane changes at ~150 km/h:</b> sharp left-right-left flick, then hold straight.</td><td>Steering response and damping; do the wheels or wing wobble after a quick input?</td><td class="ok"></td></tr>
+</table>
+
+<div class="notes"><b>Car / configuration:</b> ______________________ &nbsp; <b>Controller:</b> ____________ &nbsp; <b>Map:</b> ______________
+<div class="line"></div><div class="line"></div></div>
+</body></html>
