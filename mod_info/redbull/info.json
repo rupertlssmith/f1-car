@@ -98,24 +98,36 @@
             "49c81b4e7d82bf4e"
         ],
         [
-            "vehicles/redbull/info_steer_1.json",
-            "ff67a542ae775979"
+            "vehicles/redbull/info_rear_1.json",
+            "234e59b2e7cbe536"
         ],
         [
-            "vehicles/redbull/info_steer_2.json",
-            "1c2178133b6e9181"
+            "vehicles/redbull/info_rear_2.json",
+            "2c5493eafb80c777"
         ],
         [
-            "vehicles/redbull/info_steer_3.json",
-            "8063b4c776b3adce"
+            "vehicles/redbull/info_rear_3.json",
+            "740db8a37ffc65df"
         ],
         [
-            "vehicles/redbull/info_steer_4.json",
-            "89009c5d858333ce"
+            "vehicles/redbull/info_rear_4.json",
+            "2e5e210b1e3faa56"
         ],
         [
-            "vehicles/redbull/info_steer_5.json",
-            "54978fee1ed3adbe"
+            "vehicles/redbull/info_rear_5.json",
+            "e0a9da44996910c6"
+        ],
+        [
+            "vehicles/redbull/info_rear_6.json",
+            "5dd293abd53dd27c"
+        ],
+        [
+            "vehicles/redbull/info_rear_7.json",
+            "abb4189cafe6e30b"
+        ],
+        [
+            "vehicles/redbull/info_rear_8.json",
+            "7839ab1e4e8abc13"
         ],
         [
             "vehicles/redbull/inputmaps/keyboard.json",
@@ -240,6 +252,70 @@
         [
             "vehicles/redbull/rb14_toro_rosso_steering_wheel_d_b.color.png",
             "55a4f2125d238660"
+        ],
+        [
+            "vehicles/redbull/rear_1.jpg",
+            "c283a8f0f46bb976"
+        ],
+        [
+            "vehicles/redbull/rear_1.pc",
+            "d1255463dc2b5e5c"
+        ],
+        [
+            "vehicles/redbull/rear_2.jpg",
+            "cf1b3711c44588fa"
+        ],
+        [
+            "vehicles/redbull/rear_2.pc",
+            "22485849ba452841"
+        ],
+        [
+            "vehicles/redbull/rear_3.jpg",
+            "41267ab560e312e4"
+        ],
+        [
+            "vehicles/redbull/rear_3.pc",
+            "c23eb268c794f5e2"
+        ],
+        [
+            "vehicles/redbull/rear_4.jpg",
+            "621991ed83ca6ae5"
+        ],
+        [
+            "vehicles/redbull/rear_4.pc",
+            "172f80185b15ff5b"
+        ],
+        [
+            "vehicles/redbull/rear_5.jpg",
+            "64b94144f8331895"
+        ],
+        [
+            "vehicles/redbull/rear_5.pc",
+            "27f7140fab32362f"
+        ],
+        [
+            "vehicles/redbull/rear_6.jpg",
+            "0eb33a53da1b53ab"
+        ],
+        [
+            "vehicles/redbull/rear_6.pc",
+            "43b614c8681b2389"
+        ],
+        [
+            "vehicles/redbull/rear_7.jpg",
+            "3b595f0a28b85617"
+        ],
+        [
+            "vehicles/redbull/rear_7.pc",
+            "aa4de06aa009da6a"
+        ],
+        [
+            "vehicles/redbull/rear_8.jpg",
+            "77d56eedc3f2c9f1"
+        ],
+        [
+            "vehicles/redbull/rear_8.pc",
+            "88ada3683f07d950"
         ],
         [
             "vehicles/redbull/redbull.dae",
@@ -403,7 +479,7 @@
         ],
         [
             "vehicles/redbull/redbull_suspension_R.jbeam",
-            "fc2a6dd9cd419dd1"
+            "3ab5a27ebc4d218d"
         ],
         [
             "vehicles/redbull/redbull_transaxle.jbeam",
@@ -436,46 +512,6 @@
         [
             "vehicles/redbull/screens.materials.json",
             "7aa4f99352164a06"
-        ],
-        [
-            "vehicles/redbull/steer_1.jpg",
-            "18669c22b76b64c6"
-        ],
-        [
-            "vehicles/redbull/steer_1.pc",
-            "686e76ac6fa5c2f4"
-        ],
-        [
-            "vehicles/redbull/steer_2.jpg",
-            "9a6bc9b97311b669"
-        ],
-        [
-            "vehicles/redbull/steer_2.pc",
-            "f029c5abce18e31e"
-        ],
-        [
-            "vehicles/redbull/steer_3.jpg",
-            "fc8a82c554b04c70"
-        ],
-        [
-            "vehicles/redbull/steer_3.pc",
-            "b55ead0ed546831b"
-        ],
-        [
-            "vehicles/redbull/steer_4.jpg",
-            "e74bc144cd765213"
-        ],
-        [
-            "vehicles/redbull/steer_4.pc",
-            "933c06803075a40a"
-        ],
-        [
-            "vehicles/redbull/steer_5.jpg",
-            "1e735b5fc1e1d4d5"
-        ],
-        [
-            "vehicles/redbull/steer_5.pc",
-            "82178edf207f8750"
         ]
     ]
 }

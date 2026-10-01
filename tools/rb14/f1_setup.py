@@ -572,6 +572,11 @@ def suspension():
 ALIGN = {"camber_F": -3.2, "camber_R": -1.8, "toe_F": -0.10, "toe_R": 0.40}   # rear toe-in 0.25 -> 0.40 (round 7: rear too loose)
 
 
+# rear toe slider: wide enough for the round-14 in-game correction (the
+# replay measured ~3.3 deg more rear toe-in than this model predicts)
+REAR_TOE_RANGE = (0.95, 1.06)
+
+
 def _alignment():
     fF, fR = f"{V}/redbull_suspension_F.jbeam", f"{V}/redbull_suspension_R.jbeam"
     # toe variables next to camber/caster, and the links they act on
@@ -580,11 +585,18 @@ def _alignment():
         if '["$toe_%s"' % a not in text:
             i = text.index(anchor)
             j = text.index("\r\n", i) + 2
-            lo, hi = (0.995, 1.005) if a == "F" else (0.98, 1.02)     # about +-1.7 deg either way
+            lo, hi = (0.995, 1.005) if a == "F" else REAR_TOE_RANGE
             text = text[:j] + ('        ["$toe_%s", "range", "", "Wheel Alignment", 1.0, %s, %s, "Toe Adjust", '
                                '"Adjusts the toe angle (lower: more toe-in)", {"subCategory":"%s"}],\r\n'
                                % (a, lo, hi, "Front" if a == "F" else "Rear")) + text[j:]
             je._write(f, text)
+    import re
+    text = je._read(fR)
+    text, n = re.subn(r'(\["\$toe_R", "range", "", "Wheel Alignment", [\d.]+, )[\d.]+, [\d.]+,',
+                      lambda m: m.group(1) + "%s, %s," % REAR_TOE_RANGE, text)
+    if n != 1:
+        raise ValueError("rear toe variable not found")
+    je._write(fR, text)
     je.set_all(fF, r'"beamPrecompression":"\$=\$camber_F\*(?:0\.995|\$toe_F)"', '"beamPrecompression":"$=$camber_F*$toe_F"')
     text = je._read(fR)
     import re
@@ -1466,8 +1478,56 @@ def migrations():
     brake_misc()
     front_fix_vars()
 
+# Round 14: the replay showed the rear toe growing with throttle (2.3 ->
+# 5.9 deg per side). The drive-torque reaction (DRIVE_REACTION) puts each
+# rear wheel's second arm on the engine node across the car; this
+# alternative rear wheel-data part ("Gearbox Torque Reaction") keeps both
+# arms on the wheel's own side -- the gearbox front-lower node (12 kg with
+# its ballast) and the engine's upper front node -- for a test car to
+# compare. It is a copy of redbull_wheeldata_R (the rear pressureWheels)
+# made after every other edit (remove_alt_parts() takes it out first, so
+# re-running is exact).
+ALT_REACTION = {"R": ("rdiff", "rx1r", "e3r"), "L": ("rdiff", "rx1l", "e3l")}
+ALT_PART = "redbull_wheeldata_R_gbx"
+ALT_OF = "redbull_wheeldata_R"
+
+
+def remove_alt_parts():
+    import re
+    f = f"{V}/redbull_suspension_R.jbeam"
+    text = je._read(f)
+    text = re.sub(r'"%s"\s*:\s*\{.*?(?=\r?\n"[A-Za-z0-9_]+"\s*:\s*\{|\r?\n\}\s*$)' % ALT_PART, "", text, flags=re.S)
+    text = re.sub(r'(\r\n){3,}', "\r\n\r\n", text)
+    je._write(f, text)
+
+
+def alt_parts():
+    import re
+    f = f"{V}/redbull_suspension_R.jbeam"
+    text = je._read(f)
+    a, b = _part_block(text, ALT_OF)
+    block = text[a:b].rstrip()
+    if not block.endswith(","):
+        block += ","
+    block = block.replace('"%s"' % ALT_OF, '"%s"' % ALT_PART, 1)
+    block, n = re.subn(r'("information"\s*:\s*\{[^}]*?"name"\s*:\s*")[^"]*"', lambda m: m.group(1) + 'Rear Wheel Data (Gearbox Torque Reaction)"', block, count=1, flags=re.S)
+    if n != 1:
+        raise ValueError("alt rear part: information name not found")
+    for side in ("R", "L"):
+        c, a1, a2 = ALT_REACTION[side]
+        block, n = re.subn(r'(\["R%s", "wheel_R%s"[^\]]*?"torqueCoupling:":")[^"]*(", "torqueArm:":")[^"]*(",\s*"torqueArm2:":")[^"]*"' % (side, side),
+                           lambda m: m.group(1) + c + m.group(2) + a1 + m.group(3) + a2 + '"', block)
+        if n != 1:
+            raise ValueError(f"alt rear part: wheel R{side} row not found")
+    text = text[:b].rstrip("\r\n") + ("" if text[:b].rstrip().endswith(",") else ",") + "\r\n" + block + "\r\n" + text[b:].lstrip("\r\n")
+    je._write(f, text)
+    import jbeam
+    jbeam.load(f)     # still valid
+
+
 if __name__ == "__main__":
     os.chdir(REPO)
+    remove_alt_parts()
     migrations()
     stiffness()
     torque_paths()
@@ -1484,6 +1544,7 @@ if __name__ == "__main__":
     aero()
     hybrid()
     ground_effect()
+    alt_parts()
     configs()
     check_stability()
     print("applied: mass, wheels, tyres, fuel, suspension, power unit, gearbox, brakes, ERS/DRS")

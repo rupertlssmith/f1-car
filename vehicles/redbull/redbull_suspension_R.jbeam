@@ -19,7 +19,7 @@
     "variables": [
         ["name", "type", "unit", "category", "default", "min", "max", "title", "description"],
         ["$camber_R", "range", "", "Wheel Alignment", 0.9974, 0.97, 1.03, "Camber Adjust", "Adjusts the wheel camber angles", {"subCategory":"Rear"}],
-        ["$toe_R", "range", "", "Wheel Alignment", 0.9928, 0.98, 1.02, "Toe Adjust", "Adjusts the toe angle (lower: more toe-in)", {"subCategory":"Rear"}],
+        ["$toe_R", "range", "", "Wheel Alignment", 0.9928, 0.95, 1.06, "Toe Adjust", "Adjusts the toe angle (lower: more toe-in)", {"subCategory":"Rear"}],
     ],
     "flexbodies": [
          ["mesh", "[group]:", "nonFlexMaterials"],
@@ -356,6 +356,51 @@
         ["shaft", "spindleRR", "wheelaxleRR", 1, {"connectedWheel":"RR", "breakTriggerBeam":"axle_RR", "uiName":"Rear Right Axle", "friction":1.22, "dynamicFriction":0.0031, "electricsName":"wheelaxleRR"}],
     ],
 },
+"redbull_wheeldata_R_gbx": {
+    "information":{
+        "authors":"LucasBE",
+        "name":"Rear Wheel Data (Gearbox Torque Reaction)",
+        "value":0,
+    },
+    "slotType" : "redbull_wheeldata_R",
+    "pressureWheels": [
+        ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+        //rear
+        {"selfCollision":true},
+        {"collision":true},
+        {"triangleCollision":true},
+        {"hubcapBreakGroup":"hubcap_RR"},
+        {"hubcapGroup":"hubcap_RR"},
+        {"axleBeams":["axle_RR"]},
+        ["RR", "wheel_RR", "tire_RR", "rw1rr", "rw1r", 9999, "rh3r", 1, {"torqueCoupling:":"rdiff", "torqueArm:":"rx1r", "torqueArm2:":"e3r"}],
+        {"hubcapBreakGroup":"hubcap_RL"},
+        {"hubcapGroup":"hubcap_RL"},
+        {"axleBeams":["axle_RL"]},
+        ["RL", "wheel_RL", "tire_RL", "rw1ll", "rw1l", 9999, "rh3l", -1, {"torqueCoupling:":"rdiff", "torqueArm:":"rx1l", "torqueArm2:":"e3l"}],
+        {"selfCollision":true},
+        {"axleBeams":[]},{"disableMeshBreaking":false,"disableTriangleBreaking":false},
+        {"hubcapBreakGroup":""},
+        {"hubcapGroup":""},
+        {"enableHubcaps":false},
+        {"enableTireLbeams":false},
+        {"enableTreadReinfBeams":false},
+        {"enableTireReinfBeams":false},
+        {"enableTreadReinfBeams":false},
+        {"enableTirePeripheryReinfBeams":false},
+        {"loadSensitivitySlope":""},
+        {"noLoadCoef":""},
+        {"fullLoadCoef":""},
+        {"frictionCoef":""},
+        {"slidingFrictionCoef":""},
+        {"softnessCoef":0.5},
+        {"treadCoef":1.0},
+    ],
+    "powertrain" : [
+        ["type", "name", "inputName", "inputIndex"],
+        ["shaft", "spindleRL", "wheelaxleRL", 1, {"connectedWheel":"RL", "breakTriggerBeam":"axle_RL", "uiName":"Rear Left Axle", "friction":1.22, "dynamicFriction":0.0031, "electricsName":"wheelaxleRL"}],
+        ["shaft", "spindleRR", "wheelaxleRR", 1, {"connectedWheel":"RR", "breakTriggerBeam":"axle_RR", "uiName":"Rear Right Axle", "friction":1.22, "dynamicFriction":0.0031, "electricsName":"wheelaxleRR"}],
+    ],
+},
 "redbull_coilover_R": {
     "information":{
         "authors":"LucasBE",
@@ -571,7 +616,6 @@
           {"beamSpring":150000,"beamDamp":50},
           ["rbrr","rs2r"],
           ["rbrl","rs2l"],
-
 
           {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
     ],

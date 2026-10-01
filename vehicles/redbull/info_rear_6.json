@@ -1,0 +1,13 @@
+{
+  "Config Type": "Custom",
+  "Configuration": "Rear Fix 6 · Toe fixed + freer diff",
+  "Description": "Rear Fix test car 6: 1 and 4 together. Everything else is Baseline (toe_R 1.0329, camber_R 0.991, lsdlockcoef_R 0.1, lsdpreload_R 20, lsdlockcoefrev_R 0.06). Passes every offline check.",
+  "Drivetrain": "RWD",
+  "Fuel Type": "Gasoline",
+  "Induction Type": "Turbo",
+  "Propulsion": "Hybrid",
+  "Transmission": "Sequential",
+  "Off-Road Score": 0,
+  "Population": 0,
+  "Value": 12000000
+}

@@ -1,0 +1,13 @@
+{
+  "Config Type": "Custom",
+  "Configuration": "Rear Fix 4 · Freer differential",
+  "Description": "Rear Fix test car 4: power lock 0.10 (0.20), preload 20 Nm (60), coast lock 0.06 (0.12): the rear drive torque stayed lopsided after corners. Everything else is Baseline (lsdlockcoef_R 0.1, lsdpreload_R 20, lsdlockcoefrev_R 0.06). Passes every offline check.",
+  "Drivetrain": "RWD",
+  "Fuel Type": "Gasoline",
+  "Induction Type": "Turbo",
+  "Propulsion": "Hybrid",
+  "Transmission": "Sequential",
+  "Off-Road Score": 0,
+  "Population": 0,
+  "Value": 12000000
+}

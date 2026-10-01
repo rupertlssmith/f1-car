@@ -14,8 +14,12 @@ was 1.78 and fine, round 11 1.83 and broke), tyres = stiffness per kg vs the F4'
 
 | Car | Tries | stiffness | damped | corner | tyres | spawns? | judder? |
 |---|---|---|---|---|---|---|---|
-| `steer_1` More caster | caster at the top of its range (1.025): more trail, so a stronger self-centring pull from the tyres | 1.67 | 1.82 | 1.77 | 0.69 | | |
-| `steer_2` Slight toe-in | front toe from 0.09 deg out to 0.12 deg in: toe-out leaves the wheels with no preference for straight ahead, toe-in pulls them back to it | 1.67 | 1.82 | 1.77 | 0.69 | | |
-| `steer_3` Light steering damper | the steering-damper beams at the uprights at 0.3x: less resistance to the wheels swinging back to centre | 1.67 | 1.82 | 1.77 | 0.69 | | |
-| `steer_4` Stiffer front tyres | front tyre carcass 1.45x (Baseline 1.3x): the stiffer tyres of Front Fix 4 already helped the centring | 1.67 | 1.82 | 1.77 | 0.77 | | |
-| `steer_5` Caster + toe-in + FFB | more caster, slight toe-in (0.1 deg) and 30 % more force feedback, so the steering wheel itself is pushed back to centre harder | 1.67 | 1.82 | 1.77 | 0.69 | | |
+| `steer_1` More caster | caster at the top of its range (1.025): more trail, so a stronger self-centring pull from the tyres | 1.67 | 1.82 | 1.77 | 0.69 | yes | worse wobble than Baseline |
+| `steer_2` Slight toe-in | front toe from 0.09 deg out to 0.12 deg in: toe-out leaves the wheels with no preference for straight ahead, toe-in pulls them back to it | 1.67 | 1.82 | 1.77 | 0.69 | yes | worse wobble than Baseline |
+| `steer_3` Light steering damper | the steering-damper beams at the uprights at 0.3x: less resistance to the wheels swinging back to centre | 1.67 | 1.82 | 1.77 | 0.69 | yes | worse wobble than Baseline |
+| `steer_4` Stiffer front tyres | front tyre carcass 1.45x (Baseline 1.3x): the stiffer tyres of Front Fix 4 already helped the centring | 1.67 | 1.82 | 1.77 | 0.77 | yes | worse wobble than Baseline |
+| `steer_5` Caster + toe-in + FFB | more caster, slight toe-in (0.1 deg) and 30 % more force feedback, so the steering wheel itself is pushed back to centre harder | 1.67 | 1.82 | 1.77 | 0.69 | yes | worse wobble than Baseline |
+
+**Result (round 14):** Baseline (Front Fix 4) stayed best; every Steering Fix car had
+more steering wobble. The round-13 replay then showed the cause is at the rear
+axle, not the steering -- see `plans/rear-fixes.md`.

@@ -2,14 +2,16 @@
   "format": 2,
   "mainPartName": "redbull",
   "model": "redbull",
-  "parts": {},
+  "parts": {
+    "redbull_wheeldata_R": "redbull_wheeldata_R_gbx"
+  },
   "vars": {
     "$arb_spring_F": 260000,
     "$arb_spring_R": 110000,
     "$brakebias": 0.58,
     "$brakestrength": 1,
     "$camber_F": 0.985,
-    "$camber_R": 0.9974,
+    "$camber_R": 0.991,
     "$caster_F": 1.018,
     "$damp_bump_F": 14000,
     "$damp_bump_R": 19000,
@@ -31,8 +33,8 @@
     "$springheight_R": 0,
     "$tirepressure_F": 21,
     "$tirepressure_R": 19.5,
-    "$toe_F": 0.9985,
-    "$toe_R": 0.9928,
+    "$toe_F": 0.9991,
+    "$toe_R": 1.0329,
     "$wing_angle_B": 3,
     "$wing_angle_F": -3,
     "$wing_angle_R": 8

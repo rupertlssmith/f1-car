@@ -518,6 +518,19 @@ Every config: 1.9 g at low speed, 5-6 g braking from 300 km/h.
     caps the top speed near ~270 km/h instead of the modelled 323. Rear
     toe-in scrub is a likely part of it. Peaks: 3.3 g lateral, 3.4 g
     braking (brake pedal only ~50 %).
+- **Round 14 (rear-axle variants):** Baseline unchanged (Front Fix 4). From
+  the round-13 replay: rear toe 3.7 deg per side at rest (model 0.4), up to
+  5.9 under power, rear axle steering the car after hard turns, ~3 kN of
+  extra scrub / rolling resistance. The rear toe slider (`$toe_R`, which
+  shortens the upper link rx3-rh4 and so moves camber too) now spans
+  0.95-1.06; toe / camber settings are solved together to keep camber at
+  -1.8 deg. New alternative part `redbull_wheeldata_R_gbx` (made by
+  `alt_parts()`): rear drive-torque reaction on the wheel's own side
+  (gearbox rx1 + engine e3) instead of the engine node across the car.
+  Eight *Rear Fix* cars: toe fixed (~0.3 deg in game), toe half-fixed,
+  gearbox reaction, freer diff, and their combinations; all inside every
+  offline check (the drive-reaction change itself can't be checked
+  offline). Test sheet `plans/rear-fixes.md`.
 - **Rear tyre clearance:** the rear floor / diffuser edge nodes sat 20-50 mm
   inside the 405 mm rear tyres' inner face; moved ~8 cm inboard (aero
   factors re-solved for the smaller floor).

@@ -1,0 +1,13 @@
+{
+  "Config Type": "Custom",
+  "Configuration": "Rear Fix 5 · Toe fixed + gearbox reaction",
+  "Description": "Rear Fix test car 5: 1 and 3 together. Everything else is Baseline (toe_R 1.0329, camber_R 0.991, part redbull_wheeldata_R_gbx). Passes every offline check.",
+  "Drivetrain": "RWD",
+  "Fuel Type": "Gasoline",
+  "Induction Type": "Turbo",
+  "Propulsion": "Hybrid",
+  "Transmission": "Sequential",
+  "Off-Road Score": 0,
+  "Population": 0,
+  "Value": 12000000
+}

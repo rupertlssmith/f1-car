@@ -1,0 +1,13 @@
+{
+  "Config Type": "Custom",
+  "Configuration": "Rear Fix 2 · Rear toe half-fixed",
+  "Description": "Rear Fix test car 2: the same towards ~1.8 deg per side, in case the game-vs-model toe offset is not constant. Everything else is Baseline (toe_R 1.0151, camber_R 0.9938). Passes every offline check.",
+  "Drivetrain": "RWD",
+  "Fuel Type": "Gasoline",
+  "Induction Type": "Turbo",
+  "Propulsion": "Hybrid",
+  "Transmission": "Sequential",
+  "Off-Road Score": 0,
+  "Population": 0,
+  "Value": 12000000
+}
