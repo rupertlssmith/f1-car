@@ -596,6 +596,28 @@ Every config: 1.9 g at low speed, 5-6 g braking from 300 km/h.
   hubs 5x, rear links 1.2x, driveshaft play 3x, droop room 2x, gearbox
   torque reaction, rear toe reset; 7 = all (hubs 4x). Sheet
   `plans/drift-fixes.md`.
+- **Round 18 (hub-fix cars):** replayTurns (Baseline, sensors) traced the
+  drift to the rear hub: rear toe follows the axle height at ~0.17 deg/mm
+  (offline model 0.007), the axle nodes shift 2-4 mm on the upright as the
+  wheel compresses (toe vs hub_in_rh4 r = 0.97), and after a turn the inner
+  wheel's toe lags its height ~1-1.5 s, 0.6-0.8 deg of net rear steer. Not
+  drive torque, driveshaft stops, droop stop, upright links, rear-structure
+  yaw or a left / right height difference. New tuning variables (Baseline
+  off): `$rear_hub_beam` (the 8 axle-to-upright beams), `$rear_brace` (new
+  1.5 kg nodes rh6 / rh7 ahead of / behind the axle on each upright, rigid to
+  rh1 / rh3 / rh4 at 3 MN/m, braced to both axle nodes at x 6 MN/m; the
+  nodes are in Baseline too, +3 kg per rear corner from the ballast),
+  `$rear_toe_brace` (torsion bar: outer axle node about the upright's
+  rh1 -> rh3 edge, x 100 kNm/rad; about the 77 mm rw1 -> rh1 axis it went
+  over the solver limit at 100 kNm/rad), and `$rear_corner_mass` (kg per rear
+  corner moved from the engine ballast to the axle / upright / brace nodes,
+  which the stiffer steps need: the axle and upright nodes are the limiting
+  modes; moving it from the rim's hub nodes made those the limit instead).
+  Hub Fix 1-4 axle beams 1.25 / 1.5 / 2 / 2.5x, 5-8 bracing 0.5 / 1 / 1.5 / 2,
+  9-11 toe brace 200 / 400 / 600k, 12 corner mass only (control), 13-15
+  combined medium / strong / max, 16 strong + more toe-in, 17 / 18 static
+  rear toe +-0.6 deg. 4, 8, 11 and 15 are just over the stiffness target
+  (1.68-1.72). Sheet `plans/hub-fixes.md`.
 - **Rear tyre clearance:** the rear floor / diffuser edge nodes sat 20-50 mm
   inside the 405 mm rear tyres' inner face; moved ~8 cm inboard (aero
   factors re-solved for the smaller floor).

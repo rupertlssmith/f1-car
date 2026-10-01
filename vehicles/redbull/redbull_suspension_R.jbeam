@@ -46,19 +46,25 @@
          //rear hub
          {"nodeWeight":6.0},
          {"group":["redbull_hub_R","redbull_lowerarm_R","redbull_pushrod_R"]},
-         ["rh1r",-0.6845, 2.0293, 0.265, {"nodeWeight":5}],
-         ["rh1l", 0.6845, 2.0293, 0.265, {"nodeWeight":5}],
+         ["rh1r",-0.6845, 2.0293, 0.265, {"nodeWeight":"$=5+0.1*$rear_corner_mass"}],
+         ["rh1l", 0.6845, 2.0293, 0.265, {"nodeWeight":"$=5+0.1*$rear_corner_mass"}],
          //
          {"nodeWeight":4.5},
          {"group":["redbull_hub_R","redbull_upperarm_R"]},
-         ["rh3r",-0.6188, 2.107, 0.4397, {"nodeWeight":4}],
-         ["rh3l", 0.6188, 2.107, 0.4397, {"nodeWeight":4}],
-         ["rh4r",-0.6188, 1.8952, 0.4411, {"nodeWeight":4}],
-         ["rh4l", 0.6188, 1.8952, 0.4411, {"nodeWeight":4}],
+         ["rh3r",-0.6188, 2.107, 0.4397, {"nodeWeight":"$=4+0.1*$rear_corner_mass"}],
+         ["rh3l", 0.6188, 2.107, 0.4397, {"nodeWeight":"$=4+0.1*$rear_corner_mass"}],
+         ["rh4r",-0.6188, 1.8952, 0.4411, {"nodeWeight":"$=4+0.1*$rear_corner_mass"}],
+         ["rh4l", 0.6188, 1.8952, 0.4411, {"nodeWeight":"$=4+0.1*$rear_corner_mass"}],
          {"nodeWeight":2.5},
          {"group":"redbull_hub_R"},
          //["rh5r",-0.76, 1.12, 0.28],
          //["rh5l", 0.76, 1.12, 0.28],
+         //hub fix (round 18): upright brace nodes ahead of / behind the axle
+         ["rh6r", -0.6320, 2.1500, 0.3100, {"nodeWeight":"$=1.5+0.1*$rear_corner_mass", "collision":false, "selfCollision":false}],
+         ["rh7r", -0.6320, 1.9100, 0.3100, {"nodeWeight":"$=1.5+0.1*$rear_corner_mass", "collision":false, "selfCollision":false}],
+         ["rh6l", 0.6320, 2.1500, 0.3100, {"nodeWeight":"$=1.5+0.1*$rear_corner_mass", "collision":false, "selfCollision":false}],
+         ["rh7l", 0.6320, 1.9100, 0.3100, {"nodeWeight":"$=1.5+0.1*$rear_corner_mass", "collision":false, "selfCollision":false}],
+         //hub fix end
          {"group":""},
          
          //rockers
@@ -82,6 +88,11 @@
         {"spring":"$=50000*$rear_toe_stiff", "damp":0, "deform":140000, "strength":400000},
         ["rw1rr", "rw1r", "rh3r", "rh4r"],
         ["rw1ll", "rw1l", "rh3l", "rh4l"],
+        //hub fix (round 18): toe brace, outer axle node about the upright's rh1 -> rh3 edge x $rear_toe_brace
+        {"spring":"$=100000*$rear_toe_brace", "damp":0, "deform":2000000, "strength":4000000},
+        ["rw1rr", "rh1r", "rh3r", "rh4r"],
+        ["rw1ll", "rh1l", "rh3l", "rh4l"],
+        //hub fix end
     ],
     "beams": [
           ["id1:", "id2:"],
@@ -165,7 +176,7 @@
 
           //attach to wheel
           {"optional":true},
-          {"beamSpring":"$=6000000*$rear_link_stiff","beamDamp":600},
+          {"beamSpring":"$=6000000*$rear_link_stiff*$rear_hub_beam","beamDamp":600},
           {"beamDeform":540600,"beamStrength":4800600},
           {"breakGroup":"wheel_RR"},
           ["rh1r","rw1r", {"name":"axle_RR"}],
@@ -190,6 +201,18 @@
           ["rh5l","rw1ll", {"beamSpring":3501000,"beamDamp":125}],
           {"breakGroup":""},
           {"optional":false},
+          //hub fix (round 18): brace nodes rigid on the upright; braces to the axle nodes x $rear_brace
+          {"beamDeform":540600,"beamStrength":4800600},
+          {"beamSpring":"$=3000000*$rear_link_stiff","beamDamp":200},
+          ["rh6r","rh1r"],["rh6r","rh3r"],["rh6r","rh4r"],["rh7r","rh1r"],["rh7r","rh3r"],["rh7r","rh4r"],
+          ["rh6l","rh1l"],["rh6l","rh3l"],["rh6l","rh4l"],["rh7l","rh1l"],["rh7l","rh3l"],["rh7l","rh4l"],
+          {"optional":true},
+          {"beamSpring":"$=6000000*$rear_brace","beamDamp":"$=200*$rear_brace"},
+          {"breakGroup":"wheel_RR"},["rh6r","rw1r"],["rh6r","rw1rr"],["rh7r","rw1r"],["rh7r","rw1rr"],
+          {"breakGroup":"wheel_RL"},["rh6l","rw1l"],["rh6l","rw1ll"],["rh7l","rw1l"],["rh7l","rw1ll"],
+          {"breakGroup":""},
+          {"optional":false},
+          //hub fix end
 
           //lower arm
           {"deformLimitExpansion":1.5},
@@ -517,9 +540,9 @@
           {"beamDeform":80000,"beamStrength":800000,"deformLimitExpansion":1.2},
           {"beamSpring":"$spring_R","beamDamp":0},
           //To change the base ride height, edit the springheight_R offset in the expression.
-          ["rh1r","rs1", {"breakGroup":"lowerarm_RR","name":"spring_RR", "beamPrecompression":"$=$rideheight_R","precompressionRange":"$=(($springheight_R + 0.01)*(0.5739*$spring_R + $heave_spring_R/0.5739) + 6095.0)/$spring_R",
+          ["rh1r","rs1", {"breakGroup":"lowerarm_RR","name":"spring_RR", "beamPrecompression":"$=$rideheight_R","precompressionRange":"$=(($springheight_R + 0.01)*(0.5739*$spring_R + $heave_spring_R/0.5739) + 6027.0)/$spring_R",
               "soundFile":"event:>Vehicle>Suspension>car_modn_med_01>spring_compress_01","colorFactor":0.4,"attackFactor":60,"volumeFactor":1.6,"decayFactor":40,"noiseFactor":0.01,"pitchFactor":1.0,"maxStress":4300}],
-          ["rh1l","rs1", {"breakGroup":"lowerarm_RL","name":"spring_RL", "beamPrecompression":"$=$rideheight_R","precompressionRange":"$=(($springheight_R + 0.01)*(0.5739*$spring_R + $heave_spring_R/0.5739) + 6095.0)/$spring_R",
+          ["rh1l","rs1", {"breakGroup":"lowerarm_RL","name":"spring_RL", "beamPrecompression":"$=$rideheight_R","precompressionRange":"$=(($springheight_R + 0.01)*(0.5739*$spring_R + $heave_spring_R/0.5739) + 6027.0)/$spring_R",
               "soundFile":"event:>Vehicle>Suspension>car_modn_med_01>spring_compress_01","colorFactor":0.4,"attackFactor":60,"volumeFactor":1.6,"decayFactor":40,"noiseFactor":0.01,"pitchFactor":1.0,"maxStress":4300}],
           //damper
           {"beamPrecompression":1, "beamType":"|BOUNDED", "beamLongBound":1, "beamShortBound":1},

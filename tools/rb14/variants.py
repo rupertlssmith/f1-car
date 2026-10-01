@@ -27,38 +27,49 @@ import f1_setup as fs  # noqa: E402
 V = "vehicles/redbull"
 
 
-PREFIX, LABEL, SHEET = "drift", "Drift Fix", "plans/drift-fixes.md"
-GBX = {"redbull_wheeldata_R": "redbull_wheeldata_R_gbx"}
-FIXES = [   # (short name, suspect + what it changes, sensors that show it, {vars}, {parts})
-    ("Stiff rear hubs", "the hub shifting on its upright: rear hub toe torsion bar 5x (the most the gates allow)",
-     "sn_R?_hub_* (axle node to upright distances), sn_R?_toe", {"$rear_toe_stiff": 5}, {}),
-    ("Stiffer rear links", "the six upright-to-gearbox links stretching: 1.2x stiffer (1.5x goes over the "
-     "solver limits)", "sn_R?_link_*", {"$rear_link_stiff": 1.2}, {}),
-    ("Driveshaft play", "the driveshaft end stops pushing the inner axle node: 3x the plunge before the stops "
-     "(+-15 % of its length)", "sn_R?_shaft (base stops at +-33 mm)", {"$halfshaft_play": 3}, {}),
-    ("Rear droop room", "the unloaded inner wheel reaching its droop stop: 2x the droop travel",
-     "sn_R?_spring, sn_R?_in_z / out_z", {"$rear_droop": 2}, {}),
-    ("Gearbox torque reaction", "the drive-torque reaction pushing the axle: reaction on the wheel's own side "
-     "of the gearbox (Rear Fix 3's part)", "sn_R?_in_y / out_y (fore-aft), sn_R?_toe", {}, GBX),
-    ("Rear toe reset", "the 3-4 deg rear toe-in itself: toe / camber links reset for ~0.3 deg per side",
-     "sn_R?_toe at rest and on the straights", {"$toe_R": 1.0329, "$camber_R": 0.991}, {}),
+PREFIX, LABEL, SHEET = "hub", "Hub Fix", "plans/hub-fixes.md"
+CHECK = "sn_R?_hub_* (axle node to upright, mm) and the toe vs in_z slope in the SENSORS section"
+M = "$rear_corner_mass"
+FIXES = [   # (short name, what it changes, {vars}); graded, safest first per fix
+    ("Axle beams 1.25x", "the 8 axle-node-to-upright beams 1.25x stiffer", {"$rear_hub_beam": 1.25}),
+    ("Axle beams 1.5x", "axle beams 1.5x (+4 kg per rear corner, from the engine ballast, to stay stable)",
+     {"$rear_hub_beam": 1.5, M: 4}),
+    ("Axle beams 2x", "axle beams 2x (+8 kg per rear corner)", {"$rear_hub_beam": 2, M: 8}),
+    ("Axle beams 2.5x", "axle beams 2.5x (+12 kg per rear corner; just over the stiffness target)",
+     {"$rear_hub_beam": 2.5, M: 12}),
+    ("Hub bracing 0.5", "brace beams from new nodes ahead of / behind the axle on the upright to both axle "
+     "nodes, at 0.5x the upright-link stiffness", {"$rear_brace": 0.5}),
+    ("Hub bracing 1", "bracing at 1x (+6 kg per rear corner)", {"$rear_brace": 1, M: 6}),
+    ("Hub bracing 1.5", "bracing at 1.5x (+10 kg per rear corner)", {"$rear_brace": 1.5, M: 10}),
+    ("Hub bracing 2", "bracing at 2x (+12 kg per rear corner; just over the stiffness target)",
+     {"$rear_brace": 2, M: 12}),
+    ("Toe brace 200k", "torsion bar holding the outer axle node against toe about the upright, 200 kNm/rad",
+     {"$rear_toe_brace": 2}),
+    ("Toe brace 400k", "toe brace 400 kNm/rad", {"$rear_toe_brace": 4}),
+    ("Toe brace 600k", "toe brace 600 kNm/rad (+8 kg per rear corner; just over the stiffness target)",
+     {"$rear_toe_brace": 6, M: 8}),
+    ("Corner mass only", "control: +12 kg per rear corner and nothing else (to tell the mass from the fixes)",
+     {M: 12}),
+    ("Combined medium", "axle beams 1.5x + bracing 1 + toe brace 400k (+8 kg per corner)",
+     {"$rear_hub_beam": 1.5, "$rear_brace": 1, "$rear_toe_brace": 4, M: 8}),
+    ("Combined strong", "axle beams 2x + bracing 1 + toe brace 400k (+12 kg per corner)",
+     {"$rear_hub_beam": 2, "$rear_brace": 1, "$rear_toe_brace": 4, M: 12}),
+    ("Combined max", "axle beams 2x + bracing 1.5 + toe brace 600k (+12 kg per corner; over the stiffness target)",
+     {"$rear_hub_beam": 2, "$rear_brace": 1.5, "$rear_toe_brace": 6, M: 12}),
+    ("Strong + more toe-in", "Combined strong with ~0.6 deg more static rear toe-in (offline model), in case the "
+     "stiffer hub takes away the toe-in the soft hub gave at rest", {"$rear_hub_beam": 2, "$rear_brace": 1,
+                                                                    "$rear_toe_brace": 4, M: 12, "$toe_R": 0.9855}),
+    ("More rear toe-in", "static rear toe-in only: ~0.6 deg more per side (offline model)", {"$toe_R": 0.9855}),
+    ("Less rear toe-in", "static rear toe-in only: ~0.6 deg less per side (offline model)", {"$toe_R": 1.0}),
 ]
 
 
 def variants(b):
-    """(title, what it tries, {vars}, {slot: part}). Round 17: one car per
-    suspect for the post-corner drift (the inner rear wheel losing ~3 deg of
-    toe-in and holding it ~2 s), each measurable with the redbullSensors
-    values in a replay; then all of them (hub torsion 4x there: 5x with the
-    rest goes over the stiffness target)."""
-    out = [(name, tries + "; check: " + sens, over, parts) for name, tries, sens, over, parts in FIXES]
-    allv, allp = {}, {}
-    for _, _, _, o, p in FIXES:
-        allv.update(o)
-        allp.update(p)
-    allv["$rear_toe_stiff"] = 4
-    out.append(("All drift fixes", "1-6 together (hub torsion 4x)", allv, allp))
-    return out
+    """(title, what it tries, {vars}, {slot: part}). Round 18: the rear axle
+    nodes shift 2-4 mm on the upright as the wheel compresses and the toe
+    follows (replayTurns); graded stiffer axle beams, new bracing, a toe
+    brace, combinations, and two static-toe cars."""
+    return [(name, tries + "; check: " + CHECK, over, {}) for name, tries, over in FIXES]
 
 
 def gates(v):
@@ -103,28 +114,32 @@ def thumbnail(label, path):
 
 def main():
     os.chdir(REPO)
-    for pre in ("fix", "steer", "rear", "test", "drift"):  # earlier rounds' test cars too
+    for pre in ("fix", "steer", "rear", "test", "drift", "hub"):  # earlier rounds' test cars too
         for f in glob.glob(f"{V}/{pre}_*") + glob.glob(f"{V}/info_{pre}_*"):
             os.remove(f)
     base = json.load(open(f"{V}/baseline.pc"))
     base_info = json.load(open(f"{V}/info_baseline.json"))
     bv = {k: float(x) for k, x in base["vars"].items()}
-    sheet = ["# Drift-fix test cars (round 17)", "",
+    sheet = ["# Hub-fix test cars (round 18)", "",
              "The problem: after a hard turn, with the steering centred, the car keeps turning",
-             "the other way for ~2.5-4.5 s. In the round-16 replays the inner rear wheel loses",
-             "~3 deg of toe-in in the turn and holds it ~1.5-2 s after the steering is centred;",
-             "nothing in the offline model explains it. Baseline is round 16's Test 05 (engine",
-             "+12 %). Every car now carries virtual sensors (lua/controller/redbullSensors.lua)",
-             "recorded in replays; each fix below targets one suspect and names the sensors that",
-             "show whether it moved. In the game: *Drift Fix N · ...*.", "",
-             "Test drive per car (one short replay, ~1 min, big open area): three hard left turns",
-             "at speed, each followed by straightening up and holding the wheel centred 5-6 s;",
-             "then three hard right turns the same way. Then `python3 tools/rb14/replay_analysis.py",
-             "<replay>` -- its SENSORS section lists, per turn, the inner rear wheel's sensors",
-             "that are still off while the car drifts.", "",
-             "| # | Fix | Suspect / change | Sensors |", "|---|---|---|---|"] + [
-             "| %d | %s | %s | %s |" % (i + 1, n, w, s) for i, (n, w, s, _, _) in enumerate(FIXES)] + [
-             "| %d | All drift fixes | 1-6 together (hub torsion 4x) | all |" % (len(FIXES) + 1), "",
+             "the other way for ~2.5-5 s. The round-17 sensors (replayTurns, Baseline) show why:",
+             "the rear toe follows the rear axle height at ~0.17 deg per mm (the offline model:",
+             "0.007), because the axle nodes shift 2-4 mm on the upright as the wheel compresses;",
+             "after a turn the inner wheel's toe lags its height ~1-1.5 s, 0.6-0.8 deg of net rear",
+             "steer. These cars stiffen the hub on the upright three ways, each in graded steps:",
+             "the axle beams themselves, new bracing (two nodes on each upright, ahead of and",
+             "behind the axle, braced to both axle nodes) and a toe brace (torsion bar). The",
+             "stiffer steps need more mass at the rear corner to stay under the 2 kHz solver",
+             "limit; it comes out of the engine ballast (same total weight), and car 12 has the",
+             "mass alone as a control. Baseline is unchanged except for the brace nodes (+3 kg per",
+             "rear corner, unbraced, taken from the ballast). In the game: *Hub Fix N · ...*.", "",
+             "Test drive per car (one short replay): three hard left turns at speed, each followed",
+             "by straightening up and holding the wheel centred 5-6 s; then three hard right turns.",
+             "Then `python3 tools/rb14/replay_analysis.py <replay>`: the SENSORS section gives the",
+             "hub_* movement and the toe vs in_z slope (Baseline ~0.17 deg/mm); a fix that works",
+             "brings both down and the post-turn yaw with them.", "",
+             "| # | Fix | Change |", "|---|---|---|"] + [
+             "| %d | %s | %s |" % (i + 1, n, w) for i, (n, w, _) in enumerate(FIXES)] + ["",
              "Offline checks: stiffness = highest omega*dt (target <= %.2f), damped = with"
              % fs.MAX_OMEGA_DT,
              "damping (<= %.2f), corner = wheel-corner modes with damping (<= %.2f; round 10"

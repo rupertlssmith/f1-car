@@ -1,0 +1,13 @@
+{
+  "Config Type": "Custom",
+  "Configuration": "Hub Fix 04 · Axle beams 2.5x",
+  "Description": "Hub Fix test car 4: axle beams 2.5x (+12 kg per rear corner; just over the stiffness target); check: sn_R?_hub_* (axle node to upright, mm) and the toe vs in_z slope in the SENSORS section. Everything else is Baseline (rear_hub_beam 2.5, rear_corner_mass 12). Over an offline limit (stiffness 1.69 > 1.67): may break at spawn.",
+  "Drivetrain": "RWD",
+  "Fuel Type": "Gasoline",
+  "Induction Type": "Turbo",
+  "Propulsion": "Hybrid",
+  "Transmission": "Sequential",
+  "Off-Road Score": 0,
+  "Population": 0,
+  "Value": 12000000
+}

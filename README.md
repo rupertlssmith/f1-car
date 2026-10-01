@@ -84,9 +84,9 @@ every replay; `python3 tools/rb14/replay_analysis.py <replay>.rpl` reports them.
 
 The test build (`python3 tools/build_mod.py --test`) carries the current
 round's **test cars**, listed as *Test NN · ...*: one per fix, then the fixes
-combined; see the round's sheet in `plans/` (now `plans/drift-fixes.md`).
+combined; see the round's sheet in `plans/` (now `plans/hub-fixes.md`).
 Their settings are ordinary tuning variables (Suspension > Rear Hub Toe
-Stiffness, Aerodynamics > DRS Model, Engine > Engine Power / Torque Map Slip,
+Stiffness / Rear Axle Beams / Rear Hub Bracing / Rear Toe Brace / Rear Corner Mass Shift, Aerodynamics > DRS Model, Engine > Engine Power / Torque Map Slip,
 Brakes > Brake Force Multiplier / Low-Speed Brake Modulation), so any car can
 be set the same way in the tuning menu.
 

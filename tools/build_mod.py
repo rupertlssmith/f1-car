@@ -15,7 +15,7 @@ folder all load, and the game shows the configurations of every one --
 delete them.) --stamp adds the timestamp back for keeping archive copies.
 
 --test packs a test build: only Baseline and the test-car variants
-(fix_* / steer_* / rear_* / test_* / drift_*), without the other setups (Low / High Downforce, Aggressive).
+(fix_* / steer_* / rear_* / test_* / drift_* / hub_*), without the other setups (Low / High Downforce, Aggressive).
 
 The manifest's "hashes" list (xxHash64 of every file under vehicles/) is
 regenerated for the files actually packed, so it never goes stale.
@@ -97,21 +97,21 @@ def main():
     ap.add_argument("--update-manifest", action="store_true",
                     help="write the regenerated hashes back to mod_info/<mod>/info.json")
     ap.add_argument("--no-variants", action="store_true",
-                    help="leave out the test-car variants (fix_* / steer_* / rear_* / test_* / drift_*, tools/rb14/variants.py)")
+                    help="leave out the test-car variants (fix_* / steer_* / rear_* / test_* / drift_* / hub_*, tools/rb14/variants.py)")
     ap.add_argument("--test", action="store_true",
-                    help="test build: only Baseline and the test-car variants (fix_* / steer_* / rear_* / test_* / drift_*)")
+                    help="test build: only Baseline and the test-car variants (fix_* / steer_* / rear_* / test_* / drift_* / hub_*)")
     ap.add_argument("--stamp", action="store_true",
                     help="name the zip <mod>_YYYYMMDD-HHMMSS.zip instead of <mod>.zip")
     args = ap.parse_args()
 
     files = list_files(mod_dirs(args.mod))
     if args.no_variants:
-        files = [f for f in files if not os.path.basename(f).startswith(("fix_", "info_fix_", "steer_", "info_steer_", "rear_", "info_rear_", "test_", "info_test_", "drift_", "info_drift_"))]
+        files = [f for f in files if not os.path.basename(f).startswith(("fix_", "info_fix_", "steer_", "info_steer_", "rear_", "info_rear_", "test_", "info_test_", "drift_", "info_drift_", "hub_", "info_hub_"))]
     if args.test:
         # a configuration is <name>.pc + <name>.jpg/.png + info_<name>.json
         vdir = f"vehicles/{args.mod}/"
         configs = {os.path.basename(f)[:-3] for f in files if f.startswith(vdir) and f.endswith(".pc")}
-        keep = {c for c in configs if c == "baseline" or c.startswith(("fix_", "steer_", "rear_", "test_", "drift_"))}
+        keep = {c for c in configs if c == "baseline" or c.startswith(("fix_", "steer_", "rear_", "test_", "drift_", "hub_"))}
 
         def config_of(f):
             if not f.startswith(vdir) or "/" in f[len(vdir):]:

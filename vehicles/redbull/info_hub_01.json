@@ -1,0 +1,13 @@
+{
+  "Config Type": "Custom",
+  "Configuration": "Hub Fix 01 · Axle beams 1.25x",
+  "Description": "Hub Fix test car 1: the 8 axle-node-to-upright beams 1.25x stiffer; check: sn_R?_hub_* (axle node to upright, mm) and the toe vs in_z slope in the SENSORS section. Everything else is Baseline (rear_hub_beam 1.25). Passes every offline check.",
+  "Drivetrain": "RWD",
+  "Fuel Type": "Gasoline",
+  "Induction Type": "Turbo",
+  "Propulsion": "Hybrid",
+  "Transmission": "Sequential",
+  "Off-Road Score": 0,
+  "Population": 0,
+  "Value": 12000000
+}

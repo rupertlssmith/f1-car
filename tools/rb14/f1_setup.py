@@ -63,7 +63,7 @@ def mass():
     weights(f"{V}/redbull_suspension_F.jbeam", {
         "fh1r": 5, "fh1l": 5, "fh2r": 1, "fh2l": 1, "fh3r": UPRIGHT_F, "fh3l": UPRIGHT_F, "fh4r": 4, "fh4l": 4, "fh5r": UPRIGHT_F, "fh5l": UPRIGHT_F})
     weights(f"{V}/redbull_suspension_R.jbeam", {
-        "rh1r": 5, "rh1l": 5, "rh3r": 4, "rh3l": 4, "rh4r": 4, "rh4l": 4})
+        **{n + s: "$=%g+%g*$rear_corner_mass" % (w, REAR_CORNER_SHARE[n]) for n, w in (("rh1", 5), ("rh3", 4), ("rh4", 4)) for s in "rl"}})
     weights(f"{V}/redbull_suspension_F.jbeam", {"fh6r": 6.5, "fh6l": 6.5})  # steering rack ends (stiff rack: see stiffness())
     # chassis nodes that carry very stiff beams keep enough mass for the
     # 2 kHz solver (see stiffness() below)
@@ -112,6 +112,10 @@ def ballast():
     new = {n: round(BALLAST_BASE[n][1] + w * xF / sF, 2) for n, w in BALLAST_F.items()}
     new.update({n: round(BALLAST_BASE[n][1] + w * xR / sR, 2) for n, w in BALLAST_R.items()})
     put(new)
+    # $rear_corner_mass (round 18; default 0): kg per rear wheel moved from the
+    # engine-sump ballast to the rear corner (REAR_CORNER_SHARE), so stiffer
+    # rear hub beams stay under the solver limit at the same total mass
+    put({n: "$=%g-$rear_corner_mass" % new[n] for n in ("e2r", "e2l")})
     print("ballast: front %.1f kg, rear %.1f kg" % (xF, xR))
 
 
@@ -483,7 +487,9 @@ def wheels():
         je.set_all(f"{W}/redbull_wheels_{a}_13.jbeam", r'\{"hubWidth":[\d.]+\}', '{"hubWidth":%s}' % HUB_WIDTH[a])
     # axle nodes of the wheel parts: 3 kg each (were 5)
     for f in (f"{W}/redbull_wheels_F_13.jbeam", f"{W}/redbull_wheels_R_13.jbeam"):
-        je.set_all(f, r'\{"nodeWeight":[\d.]+\}', '{"nodeWeight":%s}' % WHEEL_AXLE_WEIGHT)
+        # (rear: + a share of $rear_corner_mass, from the engine ballast; round 18)
+        aw = WHEEL_AXLE_WEIGHT if "_F_" in f else '"$=%s+%g*$rear_corner_mass"' % (WHEEL_AXLE_WEIGHT, REAR_CORNER_SHARE["rw1"])
+        je.set_all(f, r'\{"nodeWeight":(?:[\d.]+|"[^"]*")\}', '{"nodeWeight":%s}' % aw)
         # rims + hubs + discs: 32 hub nodes x 0.35 kg = 11 kg per wheel (were 0.55)
         w = '"$=%s-$upright_mass_F/32"' % HUB_NODE_WEIGHT if "_F_" in f else HUB_NODE_WEIGHT
         je.set_all(f, r'\{"hubNodeWeight":(?:[\d.]+|"[^"]*")\}', '{"hubNodeWeight":%s}' % w)
@@ -1044,6 +1050,15 @@ ROUND16_VARS = [
      '"Rear wheel droop before the hard stop, x the base (~50 mm)", {"stepDis":0.1, "subCategory":"Rear"}'),
     ("$halfshaft_play", '"x", "Differentials", 1, 1, 4, "Driveshaft Plunge", '
      '"Rear driveshaft plunge before its end stops, x the base (+-5 % of its length)", {"stepDis":0.5, "subCategory":"Rear"}'),
+    # round 18 (the rear hub shifting on its upright: rear_hub_fix())
+    ("$rear_hub_beam", '"x", "Suspension", 1, 1, 4, "Rear Axle Beams", '
+     '"Stiffness of the beams holding the rear axle nodes to the upright, x the base", {"stepDis":0.25, "subCategory":"Rear"}'),
+    ("$rear_brace", '"x", "Suspension", 0, 0, 2, "Rear Hub Bracing", '
+     '"Extra beams from fore / aft brace nodes on the rear upright to the axle, x the upright links", {"stepDis":0.25, "subCategory":"Rear"}'),
+    ("$rear_corner_mass", '"kg", "Suspension", 0, 0, 12, "Rear Corner Mass Shift", '
+     '"kg per rear wheel moved from the engine ballast to its axle and upright nodes (same total; lets stiffer hub beams stay stable)", {"stepDis":0.5, "subCategory":"Rear"}'),
+    ("$rear_toe_brace", '"x", "Suspension", 0, 0, 10, "Rear Toe Brace", '
+     '"Torsion bar holding the rear axle line against toe about the upright, x 100 kNm/rad", {"stepDis":0.5, "subCategory":"Rear"}'),
 ]
 
 
@@ -1571,6 +1586,88 @@ def migrations():
 # compare. It is a copy of redbull_wheeldata_R (the rear pressureWheels)
 # made after every other edit (remove_alt_parts() takes it out first, so
 # re-running is exact).
+# Round 18: replayTurns shows the rear axle nodes shifting 2-4 mm on the
+# upright as the wheel compresses (toe follows axle height at ~0.17 deg/mm,
+# lagging it ~1-1.5 s after a turn). Three graded fixes, all tuning
+# variables (Baseline: off / x1): $rear_hub_beam scales the eight axle-node-to-
+# upright beams; $rear_brace adds a brace node ahead of and behind the axle
+# on each upright (HUB_BRACE_NODES, rigid to rh1 / rh3 / rh4) with beams to
+# both axle nodes; $rear_toe_brace adds a torsion bar about the near-vertical
+# rw1 -> rh1 axis, which resists toe directly. The block sits between
+# HUB_FIX markers so a re-run removes it before stiffness() counts the
+# F4's beam rows.
+HUB_FIX_BEGIN, HUB_FIX_END = "//hub fix (round 18)", "//hub fix end"
+HUB_BRACE_NODES = {"rh6": (-0.632, 2.15, 0.31), "rh7": (-0.632, 1.91, 0.31)}   # right side; x mirrored
+# brace nodes (+3 kg unsprung per rear corner; ballast() takes it back)
+# and their mounts on the upright: 6 MN/m on 1.5 kg was over the solver
+# limit (omega*dt 1.97), 3 MN/m with less damping is under it
+HUB_BRACE_WEIGHT = 1.5
+# $rear_corner_mass (kg per rear wheel, default 0) comes out of the engine
+# ballast (ballast()) and goes to these nodes (share each): the stiffer hub
+# variants need it to stay under the solver limit
+REAR_CORNER_SHARE = {"rw1": 0.25, "rh1": 0.1, "rh3": 0.1, "rh4": 0.1, "rh6": 0.1, "rh7": 0.1}
+HUB_FRAME_SPRING = 3000000
+HUB_FRAME_DAMP = 200
+
+
+def remove_rear_hub_fix():
+    import re
+    f = f"{V}/redbull_suspension_R.jbeam"
+    text = je._read(f)
+    text = re.sub(r'[ \t]*%s.*?%s\r?\n' % (re.escape(HUB_FIX_BEGIN), re.escape(HUB_FIX_END)), "", text, flags=re.S)
+    text = text.replace('"$=6000000*$rear_link_stiff*$rear_hub_beam"', '"$=6000000*$rear_link_stiff"')
+    je._write(f, text)
+
+
+def rear_hub_fix():
+    import re
+    f = f"{V}/redbull_suspension_R.jbeam"
+    text = je._read(f)
+    a, b = _part_block(text, "redbull_suspension_R")
+    block = text[a:b]
+    # axle-node beams (the "attach to wheel" option row, after stiffness())
+    block, n = re.subn(r'(//attach to wheel\r\n\s*\{"optional":true\},\r\n\s*\{"beamSpring":)"\$=6000000\*\$rear_link_stiff"',
+                       lambda m: m.group(1) + '"$=6000000*$rear_link_stiff*$rear_hub_beam"', block)
+    if n != 1:
+        raise ValueError("rear hub fix: axle beam row not found")
+    E = "\r\n"
+    sides = (("r", "", -1), ("l", "l", 1))
+    nodes = [" " * 9 + HUB_FIX_BEGIN + ": upright brace nodes ahead of / behind the axle"]
+    for s, _, sign in sides:
+        for nd, (x, y, z) in HUB_BRACE_NODES.items():
+            nodes.append(' ' * 9 + '["%s%s", %.4f, %.4f, %.4f, {"nodeWeight":"$=%g+%g*$rear_corner_mass", "collision":false, "selfCollision":false}],'
+                         % (nd, s, -x * sign if sign > 0 else x, y, z, HUB_BRACE_WEIGHT, REAR_CORNER_SHARE[nd]))
+    nodes.append(" " * 9 + HUB_FIX_END)
+    k = block.index('//["rh5l"')
+    k = block.index("\n", k) + 1
+    block = block[:k] + E.join(nodes) + E + block[k:]
+    beams = [" " * 10 + HUB_FIX_BEGIN + ": brace nodes rigid on the upright; braces to the axle nodes x $rear_brace",
+             " " * 10 + '{"beamDeform":540600,"beamStrength":4800600},',
+             " " * 10 + '{"beamSpring":"$=%d*$rear_link_stiff","beamDamp":%d},' % (HUB_FRAME_SPRING, HUB_FRAME_DAMP)]
+    for s, _, _ in sides:
+        beams.append(" " * 10 + "".join('["%s%s","%s%s"],' % (p, s, q, s) for p, q in (
+            ("rh6", "rh1"), ("rh6", "rh3"), ("rh6", "rh4"), ("rh7", "rh1"), ("rh7", "rh3"), ("rh7", "rh4"))))
+    beams += [" " * 10 + '{"optional":true},',
+              " " * 10 + '{"beamSpring":"$=6000000*$rear_brace","beamDamp":"$=200*$rear_brace"},']
+    for s, w, _ in sides:
+        beams.append(" " * 10 + '{"breakGroup":"wheel_R%s"},' % s.upper()
+                     + "".join('["%s%s","%s"],' % (p, s, q) for p in ("rh6", "rh7") for q in ("rw1" + s, "rw1" + s + s)))
+    beams += [" " * 10 + '{"breakGroup":""},', " " * 10 + '{"optional":false},', " " * 10 + HUB_FIX_END]
+    k = block.index('//attach to wheel')
+    k = block.index('{"optional":false},', k)
+    k = block.index("\n", k) + 1
+    block = block[:k] + E.join(beams) + E + block[k:]
+    tb = [" " * 8 + HUB_FIX_BEGIN + ": toe brace, outer axle node about the upright's rh1 -> rh3 edge x $rear_toe_brace",
+          " " * 8 + '{"spring":"$=100000*$rear_toe_brace", "damp":0, "deform":2000000, "strength":4000000},',
+          " " * 8 + '["rw1rr", "rh1r", "rh3r", "rh4r"],',
+          " " * 8 + '["rw1ll", "rh1l", "rh3l", "rh4l"],',
+          " " * 8 + HUB_FIX_END]
+    k = block.index('["rw1ll", "rw1l", "rh3l", "rh4l"],')
+    k = block.index("\n", k) + 1
+    block = block[:k] + E.join(tb) + E + block[k:]
+    je._write(f, text[:a] + block + text[b:])
+
+
 ALT_REACTION = {"R": ("rdiff", "rx1r", "e3r"), "L": ("rdiff", "rx1l", "e3l")}
 ALT_PART = "redbull_wheeldata_R_gbx"
 ALT_OF = "redbull_wheeldata_R"
@@ -1612,10 +1709,12 @@ def alt_parts():
 if __name__ == "__main__":
     os.chdir(REPO)
     remove_alt_parts()
+    remove_rear_hub_fix()
     round16_vars()
     migrations()
     stiffness()
     torque_paths()
+    rear_hub_fix()
     wheels()
     tyres()
     fuel()

@@ -21,7 +21,7 @@
         {"collision":true},
         {"selfCollision":true},
         //rear wheels
-        {"nodeWeight":4.5},
+        {"nodeWeight":"$=4.5+0.25*$rear_corner_mass"},
         {"nodeMaterial":"|NM_METAL"},
         {"chemEnergy":200,"burnRate":0.5,"flashPoint":300,"smokePoint":200,"selfIgnition":0,"specHeat":1},
         {"frictionCoef":0.5},
@@ -90,7 +90,7 @@
         {"collision":true},
         {"selfCollision":true},
         //rear wheels
-        {"nodeWeight":4.5},
+        {"nodeWeight":"$=4.5+0.25*$rear_corner_mass"},
         {"nodeMaterial":"|NM_METAL"},
         {"chemEnergy":200,"burnRate":0.5,"flashPoint":300,"smokePoint":200,"selfIgnition":0,"specHeat":1},
         {"frictionCoef":0.5},
