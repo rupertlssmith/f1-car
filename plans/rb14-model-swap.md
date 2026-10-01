@@ -47,6 +47,7 @@ the renders, which use headless Blender.
 | `tools/rb14/f1_setup.py` | Milestone 4: turns the re-fitted F4 physics into the 2018 F1 setup (mass, tyres, suspension, alignment, power unit, gearbox, diff, brakes, aero, ERS/DRS, ride-height floor, the four configs). Sets absolute values, calibrating against `setup_report.py`, so it is safe to re-run |
 | `tools/rb14/setup_report.py` | Offline setup sheet read from the jbeam the way the game merges it: mass and balance, a linear spring-network model of each axle (wheel/heave/roll rates, ride frequency, static sag), flat-plate aero by part (and with DRS open), torque/power, gearing, a straight-line launch sim, tyre-limited lateral and braking g. `--config <name>` for a `.pc` |
 | `tools/rb14/jbeam_edit.py` | Format-preserving (CRLF, comments) jbeam text edits used by `f1_setup.py` |
+| `tools/rb14/replay_analysis.py` | Reads a BeamNG replay (`.rpl`: Ogg stream of MessagePack frames with JSON electrics / sensors / powertrain) and reports performance (acceleration, rear-wheel power, implied resistance, peak g) and steering (front / rear wheel angles from the steering check, rear toe, yaw rate after hard turns). `--csv` dumps the per-frame series. Needs `msgpack` |
 | `tools/rb14/variants.py` | Front-fix test cars (`fix_*.pc`, "Front Fix N · ..." in the game), safest first, each run through the offline checks; test sheet `plans/front-fixes.md`. `build_mod.py --test` packs only Baseline + these; `--no-variants` leaves them out. (The earlier setup sweeps are recorded in `plans/sweeps-archive.md`.) |
 | `tools/rb14/test_controllers.lua` | Runs the ERS, DRS and ground-effect Lua controllers against stubbed BeamNG globals (`luajit tools/rb14/test_controllers.lua`) |
 
@@ -496,6 +497,27 @@ Every config: 1.9 g at low speed, 5-6 g braking from 300 km/h.
   light steering damper (0.3x); stiffer front tyres (1.45x); caster +
   toe-in + 30 % more force feedback. Results in `plans/front-fixes.md`,
   new sheet `plans/steering-fixes.md`.
+- **Round 13 replay (`f1 stearing.rpl`, Baseline = Front Fix 4, gridmap,
+  34 s; `tools/rb14/replay_analysis.py`):** the steering-fix cars all had
+  more wobble than Baseline. From the replay:
+  - *Steering:* after each hard left turn the input and the front wheels
+    are back at centre (front net +0.1 deg), but the car yaws right at
+    6-8 deg/s for ~4 s; before any hard turn it tracks straight (-0.2
+    deg/s). During that time the rear axle is not straight: net rear steer
+    up to +2.35 deg after turn 1 (decays in 2.8 s), and the rear drive
+    torque is lopsided (RR up to ~1.8x RL; even before the turns).
+  - *Rear toe:* 3.7 deg toe-in per side at rest, 2.3-5.9 under power
+    (offline model: 0.4) -- the rear axle steers with load and drive
+    torque. Tyre temperatures are constant (thermals inactive) and the
+    pressures equal left / right, so the tyres are not the cause.
+  - *Performance:* full throttle, rear-wheel drive power 570-590 kW above
+    160 km/h (engine ~600-620 kW); acceleration 0.84-0.90 g at 80-160 km/h
+    (torque map trimming, traction-limited), 0.74 g at 160-200, 0.42 g at
+    200-240. That leaves ~3-3.6 kN of resistance beyond the modelled drag at
+    every speed (speed-independent: rolling / scrub, not aero) -- which
+    caps the top speed near ~270 km/h instead of the modelled 323. Rear
+    toe-in scrub is a likely part of it. Peaks: 3.3 g lateral, 3.4 g
+    braking (brake pedal only ~50 %).
 - **Rear tyre clearance:** the rear floor / diffuser edge nodes sat 20-50 mm
   inside the 405 mm rear tyres' inner face; moved ~8 cm inboard (aero
   factors re-solved for the smaller floor).
