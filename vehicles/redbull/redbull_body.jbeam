@@ -195,7 +195,7 @@
          //mid tub
          {"nodeWeight":4.5},
          ["mt1r",-0.33, -0.3504, 0.216, {"group":["redbull_body","redbull_radduct_R"], "nodeWeight":8}],
-         ["mt1",  0.0, -0.3504, 0.1122, {"nodeWeight":10.62}],
+         ["mt1",  0.0, -0.3504, 0.1122, {"nodeWeight":10.65}],
          ["mt1l", 0.33, -0.3504, 0.216, {"group":["redbull_body","redbull_radduct_L"], "nodeWeight":8}],
 
          {"nodeWeight":5.0},
@@ -212,8 +212,8 @@
          {"group":["redbull_body","redbull_lowermounts_F"]},
          ["fx1r",-0.2324, -1.5942, 0.2553, {"nodeWeight":6.0}],
          ["fx1l", 0.2324, -1.5942, 0.2553, {"nodeWeight":6.0}],
-         ["fx2r",-0.2568, -1.0482, 0.2636, {"nodeWeight":6.12}],
-         ["fx2l", 0.2568, -1.0482, 0.2636, {"nodeWeight":6.12}],
+         ["fx2r",-0.2568, -1.0482, 0.2636, {"nodeWeight":6.15}],
+         ["fx2l", 0.2568, -1.0482, 0.2636, {"nodeWeight":6.15}],
          //upper
          {"nodeWeight":5.5},
          {"group":["redbull_body","redbull_uppermounts_F"]},

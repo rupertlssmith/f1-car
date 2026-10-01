@@ -78,14 +78,6 @@
             "799b57836467d4ce"
         ],
         [
-            "vehicles/redbull/aggressive.jpg",
-            "63565a5465637b96"
-        ],
-        [
-            "vehicles/redbull/aggressive.pc",
-            "3a97fc51320a47ab"
-        ],
-        [
             "vehicles/redbull/baseline.jpg",
             "87ed47ff71a1f69c"
         ],
@@ -98,104 +90,36 @@
             "87ed47ff71a1f69c"
         ],
         [
-            "vehicles/redbull/fix_1.jpg",
-            "022b27fa83ea0cb8"
-        ],
-        [
-            "vehicles/redbull/fix_1.pc",
-            "f5f24233ab29f0f2"
-        ],
-        [
-            "vehicles/redbull/fix_2.jpg",
-            "45223569372fe6e3"
-        ],
-        [
-            "vehicles/redbull/fix_2.pc",
-            "343bd1725d6ecc82"
-        ],
-        [
-            "vehicles/redbull/fix_3.jpg",
-            "f404833976156e00"
-        ],
-        [
-            "vehicles/redbull/fix_3.pc",
-            "5be6cc47cd8222dc"
-        ],
-        [
-            "vehicles/redbull/fix_4.jpg",
-            "472be37d1936c2df"
-        ],
-        [
-            "vehicles/redbull/fix_4.pc",
-            "370bb0a4b955d44f"
-        ],
-        [
-            "vehicles/redbull/fix_5.jpg",
-            "2b23d20654285af3"
-        ],
-        [
-            "vehicles/redbull/fix_5.pc",
-            "b7322ccc30e7cc42"
-        ],
-        [
-            "vehicles/redbull/highdf.jpg",
-            "8903a12d1cd09e00"
-        ],
-        [
-            "vehicles/redbull/highdf.pc",
-            "4e2281b2630f5dd6"
-        ],
-        [
             "vehicles/redbull/info.json",
             "9a209c9b572cd879"
-        ],
-        [
-            "vehicles/redbull/info_aggressive.json",
-            "11ae912c6922e464"
         ],
         [
             "vehicles/redbull/info_baseline.json",
             "49c81b4e7d82bf4e"
         ],
         [
-            "vehicles/redbull/info_fix_1.json",
-            "0e8e6f208d3fb347"
+            "vehicles/redbull/info_steer_1.json",
+            "ff67a542ae775979"
         ],
         [
-            "vehicles/redbull/info_fix_2.json",
-            "46d644ea70735f0c"
+            "vehicles/redbull/info_steer_2.json",
+            "1c2178133b6e9181"
         ],
         [
-            "vehicles/redbull/info_fix_3.json",
-            "4ac6e1733252abda"
+            "vehicles/redbull/info_steer_3.json",
+            "8063b4c776b3adce"
         ],
         [
-            "vehicles/redbull/info_fix_4.json",
-            "0d75f8963e2e80d9"
+            "vehicles/redbull/info_steer_4.json",
+            "89009c5d858333ce"
         ],
         [
-            "vehicles/redbull/info_fix_5.json",
-            "e68271070852debf"
-        ],
-        [
-            "vehicles/redbull/info_highdf.json",
-            "d6bd5512a5ab7c8d"
-        ],
-        [
-            "vehicles/redbull/info_lowdf.json",
-            "4de203e768323d1c"
+            "vehicles/redbull/info_steer_5.json",
+            "54978fee1ed3adbe"
         ],
         [
             "vehicles/redbull/inputmaps/keyboard.json",
             "20dc9b260cb76d8a"
-        ],
-        [
-            "vehicles/redbull/lowdf.jpg",
-            "65c6a01adf7f3b5c"
-        ],
-        [
-            "vehicles/redbull/lowdf.pc",
-            "fdbd15da0ffacac7"
         ],
         [
             "vehicles/redbull/lua/controller/flyBrakeBias.lua",
@@ -335,7 +259,7 @@
         ],
         [
             "vehicles/redbull/redbull_body.jbeam",
-            "0c7a845ededdcb97"
+            "317a7ef063523de9"
         ],
         [
             "vehicles/redbull/redbull_brakes.jbeam",
@@ -371,7 +295,7 @@
         ],
         [
             "vehicles/redbull/redbull_engine.jbeam",
-            "465a3e695f233b14"
+            "b1cc954f30d8428d"
         ],
         [
             "vehicles/redbull/redbull_engine_ao.data.dds",
@@ -475,7 +399,7 @@
         ],
         [
             "vehicles/redbull/redbull_suspension_F.jbeam",
-            "144ee9f9cfeb0db1"
+            "fff5d70331ff11f0"
         ],
         [
             "vehicles/redbull/redbull_suspension_R.jbeam",
@@ -483,7 +407,7 @@
         ],
         [
             "vehicles/redbull/redbull_transaxle.jbeam",
-            "b62394fb935eef03"
+            "33d1da6e2f1b5cf2"
         ],
         [
             "vehicles/redbull/redbull_wing_F.jbeam",
@@ -512,6 +436,46 @@
         [
             "vehicles/redbull/screens.materials.json",
             "7aa4f99352164a06"
+        ],
+        [
+            "vehicles/redbull/steer_1.jpg",
+            "18669c22b76b64c6"
+        ],
+        [
+            "vehicles/redbull/steer_1.pc",
+            "686e76ac6fa5c2f4"
+        ],
+        [
+            "vehicles/redbull/steer_2.jpg",
+            "9a6bc9b97311b669"
+        ],
+        [
+            "vehicles/redbull/steer_2.pc",
+            "f029c5abce18e31e"
+        ],
+        [
+            "vehicles/redbull/steer_3.jpg",
+            "fc8a82c554b04c70"
+        ],
+        [
+            "vehicles/redbull/steer_3.pc",
+            "b55ead0ed546831b"
+        ],
+        [
+            "vehicles/redbull/steer_4.jpg",
+            "e74bc144cd765213"
+        ],
+        [
+            "vehicles/redbull/steer_4.pc",
+            "933c06803075a40a"
+        ],
+        [
+            "vehicles/redbull/steer_5.jpg",
+            "1e735b5fc1e1d4d5"
+        ],
+        [
+            "vehicles/redbull/steer_5.pc",
+            "82178edf207f8750"
         ]
     ]
 }

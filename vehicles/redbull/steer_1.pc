@@ -10,7 +10,7 @@
     "$brakestrength": 1,
     "$camber_F": 0.985,
     "$camber_R": 0.9974,
-    "$caster_F": 1.018,
+    "$caster_F": 1.025,
     "$damp_bump_F": 14000,
     "$damp_bump_R": 19000,
     "$damp_rebound_F": 24000,
@@ -33,8 +33,6 @@
     "$tirepressure_R": 19.5,
     "$toe_F": 0.9991,
     "$toe_R": 0.9928,
-    "$tyre_carcass_F": 1.3,
-    "$upright_mass_F": 2,
     "$wing_angle_B": 3,
     "$wing_angle_F": -3,
     "$wing_angle_R": 8

@@ -129,13 +129,17 @@ def ballast():
 # (the arms stay ~30x stiffer than the suspension, so handling barely
 # changes). Chassis and gearbox nodes get mass instead, paid for by the
 # plank ballast (solved in ballast()).
-MAX_OMEGA_DT = float(os.environ.get("RB14_MAX_OMEGA_DT", 1.65))
+MAX_OMEGA_DT = float(os.environ.get("RB14_MAX_OMEGA_DT", 1.67))   # round 13: Front Fix 4 at 1.67 was the best car in game
 # With damping (setup_report: sqrt((omega*dt)^2 + 2*gamma), limit 2): the F4
 # peaks at 1.97 (crash box); round 9's rear wing at 2.01 shook itself off.
 MAX_DAMPED = 1.85
 # Wheel-corner modes (axle, upright, hub, tyre nodes) with damping: round 10
-# (1.78) was fine, round 11's 1.83 broke the front suspension at spawn.
-MAX_DAMPED_CORNER = 1.78
+# (1.78) was fine, round 11's 1.83 broke the front suspension at spawn,
+# round 12's Front Fix 5 at 1.82 spawned fine -> the limit is 1.82.
+# Blind spot: Front Fix 3 (front dampers 40 % firmer, 500 Hz-filtered
+# beams) blew up at spawn and no version of this model shows it -- keep the
+# front dampers at their Baseline values in test cars.
+MAX_DAMPED_CORNER = 1.82
 CORNER_NODES = ("fw1", "rw1", "fh", "rh", "_hub", "_tyre")
 HUB_SPRING_SCALE = 0.65                      # hub beams vs the F4's (hub nodes 0.45 vs 0.55 kg; 0.8 put the wheel axles at 1.73, round 11)
 HUB_NODE_WEIGHT = 0.45                       # kg x 32 per rim (was 0.35; F4 0.55)
@@ -307,6 +311,18 @@ STEER_WHEEL_LOCK = 170          # steering-wheel degrees at full lock (F4 230)
 
 
 def steering():
+    import re
+    # steering-damper beams (upright -> chassis, the F4's): x the tuning
+    # variable $steer_damper_F (default 1; round 13 steering variants)
+    f = f"{V}/redbull_suspension_F.jbeam"
+    text = je._read(f)
+    a, b = _part_block(text, "redbull_steering")
+    block = text[a:b]
+    block, n1 = re.subn(r'\{"beamDamp":(?:25|"\$=25\*\$steer_damper_F")\}', '{"beamDamp":"$=25*$steer_damper_F"}', block)
+    block, n2 = re.subn(r'"beamDampFast":(?:500|"\$=500\*\$steer_damper_F")', '"beamDampFast":"$=500*$steer_damper_F"', block)
+    if (n1, n2) != (1, 8):
+        raise ValueError(f"steering damper rows: {n1}, {n2}")
+    je._write(f, text[:a] + block + text[b:])
     import setup_report as sr
     import numpy as np
     v = sr.Vehicle("redbull", None)
@@ -1407,15 +1423,17 @@ def brake_misc():
 
 
 # Round 12: front-wheel fix variables (tuning menu, Front Suspension /
-# Wheels); the defaults are the round-10 car, the fix_*.pc variants
-# (tools/rb14/variants.py) set them.
+# Wheels). Round 13: the defaults are Front Fix 4 -- the best car in the
+# round-12 test (tyres 1.3x, 2 kg per corner from the rim to the upright).
 FRONT_FIX_VARS = [
-    '["$tyre_carcass_F", "range", "x", "Wheels", 1.0, 1.0, 1.8, "Front Tire Carcass Stiffness", '
+    '["$tyre_carcass_F", "range", "x", "Wheels", 1.3, 1.0, 1.8, "Front Tire Carcass Stiffness", '
     '"Tread and sidewall stiffness of the front tires, x the base tire", {"stepDis":0.05, "subCategory":"Front"}]',
     '["$carrier_damp_F", "range", "N/m/s", "Suspension", %d, 300, 1500, "Front Upright Damping", '
     '"Damping of the front wheel carriers (wheel judder)", {"stepDis":50, "subCategory":"Front"}]' % CARRIER_DAMP,
-    '["$upright_mass_F", "range", "kg", "Suspension", 0, 0, 5, "Front Upright Mass Shift", '
+    '["$upright_mass_F", "range", "kg", "Suspension", 2, 0, 5, "Front Upright Mass Shift", '
     '"Mass moved from each front rim to its upright (same corner weight)", {"stepDis":0.5, "subCategory":"Front"}]',
+    '["$steer_damper_F", "range", "x", "Suspension", 1.0, 0.2, 2.0, "Steering Damper", '
+    '"Damping of the steering motion at the front uprights, x the base", {"stepDis":0.1, "subCategory":"Front"}]',
 ]
 
 
@@ -1425,7 +1443,7 @@ def front_fix_vars():
     text = je._read(f)
     a, b = _part_block(text, "redbull_suspension_F")
     block = text[a:b]
-    block = re.sub(r'        \["\$(?:tyre_carcass_F|carrier_damp_F|upright_mass_F)".*\r\n', "", block)
+    block = re.sub(r'        \["\$(?:tyre_carcass_F|carrier_damp_F|upright_mass_F|steer_damper_F)".*\r\n', "", block)
     i = block.index('        ["$toe_F"')
     i = block.index("\r\n", i) + 2
     block = block[:i] + "".join("        %s,\r\n" % r for r in FRONT_FIX_VARS) + block[i:]

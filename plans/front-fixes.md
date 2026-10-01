@@ -13,8 +13,17 @@ was 1.78 and fine, round 11 1.83 and broke), tyres = stiffness per kg vs the F4'
 
 | Car | Tries | stiffness | damped | corner | tyres | spawns? | judder? |
 |---|---|---|---|---|---|---|---|
-| `fix_1` Stiffer tyres | front tire carcass 1.3x -- less tyre squirm; inside every limit | 1.64 | 1.82 | 1.77 | 0.69 | | |
-| `fix_2` Much stiffer tyres | front tire carcass 1.6x (0.85x the F4's stiffness per kg); inside every limit | 1.64 | 1.82 | 1.77 | 0.85 | | |
-| `fix_3` Stiff tyres + wheel-hop dampers | carcass 1.3x and the front dampers 40 % firmer (bump / rebound), to hold the wheel against hop; the dampers are low-pass filtered, which the offline check can't see | 1.64 | 1.82 | 1.77 | 0.69 | | |
-| `fix_4` Stiff tyres + heavier uprights | carcass 1.3x and 2 kg per corner moved from the rim to the upright -- RISKIER: puts the rims just over the stiffness target | 1.67 | 1.82 | 1.77 | 0.69 | | |
-| `fix_5` Much stiffer tyres + upright damping | carcass 1.6x and front upright damping 800 (round 11 broke at 900) -- RISKIEST: over the wheel-corner damping limit | 1.64 | 1.82 | 1.81 | 0.85 | | |
+| `fix_1` Stiffer tyres | front tire carcass 1.3x -- less tyre squirm; inside every limit | 1.64 | 1.82 | 1.77 | 0.69 | yes | bad: lots of wheel wobble |
+| `fix_2` Much stiffer tyres | front tire carcass 1.6x (0.85x the F4's stiffness per kg); inside every limit | 1.64 | 1.82 | 1.77 | 0.85 | yes | OK, but the tyres still wobble quite a bit in hard turns |
+| `fix_3` Stiff tyres + wheel-hop dampers | carcass 1.3x and the front dampers 40 % firmer (bump / rebound), to hold the wheel against hop; the dampers are low-pass filtered, which the offline check can't see | 1.64 | 1.82 | 1.77 | 0.69 | **no -- blew up** | - |
+| `fix_4` Stiff tyres + heavier uprights | carcass 1.3x and 2 kg per corner moved from the rim to the upright -- RISKIER: puts the rims just over the stiffness target | 1.67 | 1.82 | 1.77 | 0.69 | yes | **best**: very little wobble; steering centring a lot better (still not perfect) -> Baseline in round 13 |
+| `fix_5` Much stiffer tyres + upright damping | carcass 1.6x and front upright damping 800 (round 11 broke at 900) -- RISKIEST: over the wheel-corner damping limit | 1.64 | 1.82 | 1.81 | 0.85 | yes | bad: lots of wheel wobble |
+
+Baseline (round 10 car) also spawned but had a lot of wheel wobble.
+
+**Result (round 13):** Front Fix 4 became Baseline: `$tyre_carcass_F` 1.3,
+`$upright_mass_F` 2 as the jbeam defaults. Gates recalibrated: undamped
+stiffness target 1.67 (Fix 4), wheel-corner damping limit 1.82 (Fix 5 at 1.82
+spawned, round 11 at 1.83 broke). Front Fix 3's blow-up (firmer front dampers)
+is not explained by the offline model; front dampers stay at Baseline in test
+cars.

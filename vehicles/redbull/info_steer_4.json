@@ -1,0 +1,13 @@
+{
+  "Config Type": "Custom",
+  "Configuration": "Steering Fix 4 · Stiffer front tyres",
+  "Description": "Steering Fix test car 4: front tyre carcass 1.45x (Baseline 1.3x): the stiffer tyres of Front Fix 4 already helped the centring. Everything else is Baseline (tyre_carcass_F 1.45). Passes every offline check.",
+  "Drivetrain": "RWD",
+  "Fuel Type": "Gasoline",
+  "Induction Type": "Turbo",
+  "Propulsion": "Hybrid",
+  "Transmission": "Sequential",
+  "Off-Road Score": 0,
+  "Population": 0,
+  "Value": 12000000
+}

@@ -483,6 +483,19 @@ Every config: 1.9 g at low speed, 5-6 g braking from 300 km/h.
   mods folder and all loaded -- the likely reason the removed sweep cars
   still showed in the game). `--test`: Baseline + the Front Fix cars only.
   The removed sweeps are recorded in `plans/sweeps-archive.md`.
+- **Round 13 (test results: Front Fix 4 best, 3 blew up; steering still
+  doesn't quite re-centre after hard turning):** Front Fix 4 is the new
+  Baseline (tyre carcass 1.3x, 2 kg per front corner from the rim to the
+  upright, as jbeam defaults). Gates recalibrated from the results:
+  undamped target 1.67, wheel-corner damping limit 1.82. Firmer front
+  dampers (Fix 3) blew up and no version of the model shows why (a 500 Hz
+  filter attenuation model scored Fix 3 the same as Fix 5, which spawned),
+  so they stay out of test cars. New variable `$steer_damper_F` (the
+  steering-damper beams at the uprights). Five *Steering Fix* cars, all
+  inside every check: more caster; slight toe-in (+0.12 deg, was -0.09);
+  light steering damper (0.3x); stiffer front tyres (1.45x); caster +
+  toe-in + 30 % more force feedback. Results in `plans/front-fixes.md`,
+  new sheet `plans/steering-fixes.md`.
 - **Rear tyre clearance:** the rear floor / diffuser edge nodes sat 20-50 mm
   inside the 405 mm rear tyres' inner face; moved ~8 cm inboard (aero
   factors re-solved for the smaller floor).

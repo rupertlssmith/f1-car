@@ -1,0 +1,13 @@
+{
+  "Config Type": "Custom",
+  "Configuration": "Steering Fix 1 · More caster",
+  "Description": "Steering Fix test car 1: caster at the top of its range (1.025): more trail, so a stronger self-centring pull from the tyres. Everything else is Baseline (caster_F 1.025). Passes every offline check.",
+  "Drivetrain": "RWD",
+  "Fuel Type": "Gasoline",
+  "Induction Type": "Turbo",
+  "Propulsion": "Hybrid",
+  "Transmission": "Sequential",
+  "Off-Road Score": 0,
+  "Population": 0,
+  "Value": 12000000
+}

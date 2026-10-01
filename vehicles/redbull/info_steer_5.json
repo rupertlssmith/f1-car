@@ -1,0 +1,13 @@
+{
+  "Config Type": "Custom",
+  "Configuration": "Steering Fix 5 · Caster + toe-in + FFB",
+  "Description": "Steering Fix test car 5: more caster, slight toe-in (0.1 deg) and 30 % more force feedback, so the steering wheel itself is pushed back to centre harder. Everything else is Baseline (caster_F 1.025, toe_F 0.99825, ffbstrength 1.3). Passes every offline check.",
+  "Drivetrain": "RWD",
+  "Fuel Type": "Gasoline",
+  "Induction Type": "Turbo",
+  "Propulsion": "Hybrid",
+  "Transmission": "Sequential",
+  "Off-Road Score": 0,
+  "Population": 0,
+  "Value": 12000000
+}

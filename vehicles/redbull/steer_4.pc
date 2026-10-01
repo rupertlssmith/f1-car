@@ -33,7 +33,7 @@
     "$tirepressure_R": 19.5,
     "$toe_F": 0.9991,
     "$toe_R": 0.9928,
-    "$tyre_carcass_F": 1.3,
+    "$tyre_carcass_F": 1.45,
     "$wing_angle_B": 3,
     "$wing_angle_F": -3,
     "$wing_angle_R": 8
