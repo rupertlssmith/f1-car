@@ -792,27 +792,20 @@ def main():
         print(f"aero {spd:3d} km/h  downforce {a['down']:7.0f} N ({a['down'] / (mr['total'] * G):.2f} x weight)"
               f"  drag {a['drag']:6.0f} N  L/D {a['down'] / max(a['drag'], 1):.2f}  front {a['front'] * 100:.0f}%")
     q300 = 0.5 * RHO * (300 / 3.6) ** 2
-    # DRS: extend the hydros driven by electrics.values.drs and redo the aero
-    drs_hydros = [r for _, r in v.section("hydros") if r.get("inputSource") == "drs"]
-    if drs_hydros:
-        saved = {k: p.copy() for k, p in v.pos.items()}
-        moved = {}
-        for r in drs_hydros:
-            a, b = r["id1:"], r["id2:"]
-            new = v.pos[a] + (v.pos[b] - v.pos[a]) * (1 + v.val(r.get("factor"), 0))
-            moved[b] = new - v.pos[b]
-            v.pos[b] = new
-        # the centre node between a moved r/l pair follows them (in game the
-        # wing's beams carry it along)
-        for n in list(moved):
-            c = n[:-1]
-            if n.endswith("r") and c + "l" in moved and c in v.pos:
-                v.pos[c] = v.pos[c] + (moved[n] + moved[c + "l"]) / 2
-        drs, _ = aero_report(v)
-        v.pos = saved
+    # DRS (round 19): the flap's hydros only move the flap (no aero
+    # triangles); the effect is the drsThrust force pair on the gearbox,
+    # full at 300 km/h and ~ speed^2: forward = less drag, up = less downforce
+    thr = [r for _, r in v.section("thrusters") if r.get("control") == "drsThrust"]
+    if thr:
+        f = np.zeros(3)
+        for r in thr:
+            a_, b_ = v.pos[r["id1:"]], v.pos[r["id2:"]]
+            f += (a_ - b_) / np.linalg.norm(a_ - b_) * v.val(r.get("factor"), 0)
+        drs = {k: {**x, "drag": x["drag"] + f[1] * (k / 300) ** 2, "down": x["down"] - f[2] * (k / 300) ** 2}
+               for k, x in aero.items()}
         d = drs[300]
         print(f"aero DRS open, 300 km/h: downforce {d['down']:.0f} N ({(d['down'] / aero[300]['down'] - 1) * 100:+.0f}%)"
-              f"  drag {d['drag']:.0f} N ({(d['drag'] / aero[300]['drag'] - 1) * 100:+.0f}%)  front {d['front'] * 100:.0f}%")
+              f"  drag {d['drag']:.0f} N ({(d['drag'] / aero[300]['drag'] - 1) * 100:+.0f}%)")
         pt_drs = powertrain_report(v, mr, {**aero, 200: {**aero[200], "drag": drs[200]["drag"]}}, gripR)
         print(f"top speed with DRS open: {pt_drs['top']:.0f} km/h")
     print(f"aero coefficients  ClA {aero[300]['down'] / q300:.2f} m^2  CdA {aero[300]['drag'] / q300:.2f} m^2")

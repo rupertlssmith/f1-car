@@ -972,6 +972,8 @@ def aero():
     for part, fac in AERO.items():
         f = f"{V}/redbull_{AERO_FILES[part]}.jbeam"
         orig = open(f"vehicles/fr04/fr04_{AERO_FILES[part]}.jbeam", encoding="utf-8", newline="").read()
+        if part == "redbull_body":      # the halo's triangles are in the redbull_halo part (halo_part())
+            orig = re.sub(r'        //halo\r\n        \{"dragCoef":[\d.]+\},.*?(?=        //hoop)', "", orig, flags=re.S)
         a0, b0 = _part_block(orig, part.replace("redbull", "fr04"))
         text = je._read(f)
         a, b = _part_block(text, part)
@@ -1016,7 +1018,7 @@ def hybrid():
             text = text[:k] + '        ["%s"],\r\n' % action + text[k:]
     je._write(m, text)
     round16_vars()
-    drs_hydros()
+    drs_flap()
 
 
 def round16_vars():
@@ -1039,8 +1041,6 @@ def round16_vars():
 ROUND16_VARS = [
     ("$rear_toe_stiff", '"x", "Suspension", 1, 1, 6, "Rear Hub Toe Stiffness", '
      '"Stiffness of the rear hubs against toe (axle line vs upright), x the base", {"stepDis":0.5, "subCategory":"Rear"}'),
-    ("$drs_model", '"", "Aerodynamics", 0, 0, 1, "DRS Model", '
-     '"0: DRS tilts the upper wing; 1: wing stays put, DRS acts as forces (less drag and downforce)", {"stepDis":1}'),
     ("$pu_power", '"x", "Engine", 1.12, 0.8, 1.25, "Engine Power", "Combustion engine torque, x the base (MGU-K unchanged)", {"stepDis":0.01}'),
     ("$brake_map", '"", "Brakes", 0, 0, 1, "Low-Speed Brake Modulation", '
      '"1: eases the brakes at low speed like a driver modulating the pedal (less lock-up)", {"stepDis":1}'),
@@ -1066,60 +1066,129 @@ ROUND16_VARS = [
 ]
 
 
-# DRS: the rear wing's leading-edge nodes hang from the endplates by stiff
-# beams; the two near-vertical ones per side (rep2/rep3 -> rwg1) are dropped
-# and the rep1 -> rwg1 beam becomes a hydro that lengthens with
-# electrics.values.drs, lifting the leading edge until the upper wing is
-# about flat (rotating about its trailing edge, which stays fixed).
-DRS_LIFT = 0.060        # m the leading edge rises when open
+# DRS (round 19): the RB14's DRS flap is its own mesh (build_model.py,
+# redbull_wing_R_flap) on its own nodes (FLAP_NODES: leading edge drf1,
+# trailing edge drf2; right / centre / left). The trailing edge is the
+# hinge, held to the endplates and the main plane; a hydro from each
+# endplate's lower node (rep2) to the leading edge lengthens with
+# electrics.values.drs and swings the leading edge up by DRS_FLAP_ANGLE
+# about the hinge, opening the slot as on the real car. The main plane stays
+# put (its leading edge is fixed to the endplates again, as in the F4).
+# The flap carries no aero triangles: the main wing's aero covers the whole
+# wing and the DRS effect is the calibrated force pair below (thrusters on
+# the gearbox: forward = less drag, up = less rear downforce, x (speed /
+# 300 km/h)^2 via electrics.values.drsThrust from redbullDRS.lua).
+# Rounds 15-18 offered $drs_model 0 (hydros tilting the whole wing) and 1
+# (forces); the flap replaces both.
+DRS_FLAP_ANGLE = 26.0          # deg the flap turns when open (~55 mm at the leading edge)
+FLAP_LE = (2.401, 0.879)       # (y, z) of the flap's leading / trailing edge at the
+FLAP_TE = (2.505, 0.962)       # default wing angle (8 deg), from the RB14 mesh
+FLAP_X = 0.43
+FLAP_NODE_WEIGHT = 0.5
+WING_PIVOT_R = (2.5674, 0.9421)  # the wing flexbodies' pivot (wing angle setting)
+FLAP_BEGIN, FLAP_END = "//DRS flap (round 19, f1_setup.py)", "//DRS flap end"
 
 
-def drs_hydros():
+def _flap_pos(y, z):
+    """jbeam coordinates of a flap point, turned about the wing pivot with
+    the wing angle setting like the wing mesh (small-angle form)."""
+    yp, zp = WING_PIVOT_R
+    d = "(($wing_angle_R-8)*0.0174533)"
+    return ('"$=%.4f-%s*%.4f"' % (y, d, z - zp), '"$=%.4f+%s*%.4f"' % (z, d, y - yp))
+
+
+def drs_flap():
     import re
     import numpy as np
-    import setup_report as sr
     f = f"{V}/redbull_wing_R.jbeam"
     text = je._read(f)
-    for side in "rl":
-        # remove the vertical attachments of the leading edge (idempotent)
-        for anchor in ("rep1", "rep2", "rep3"):
-            text = re.sub(r'          \["%s%s","rwg1%s"\],\r\n' % (anchor, side, side), "", text)
+    text = re.sub(r'[ \t]*%s.*?%s\r\n' % (re.escape(FLAP_BEGIN), re.escape(FLAP_END)), "", text, flags=re.S)
+    E = "\r\n"
+    # main plane: leading edge fixed to the endplates again (F4 beams)
+    for s_ in "rl":
+        text = re.sub(r'          \["rep[123]%s","rwg1%s"\],\r\n' % (s_, s_), "", text)
+        k = text.index('          ["rep4%s","rwg1%s"],' % (s_, s_))
+        text = text[:k] + "".join('          ["rep%d%s","rwg1%s"],\r\n' % (i, s_, s_) for i in (1, 2, 3)) + text[k:]
+    # nodes
+    rows = [" " * 9 + FLAP_BEGIN, " " * 9 + '{"nodeWeight":%g},' % FLAP_NODE_WEIGHT,
+            " " * 9 + '{"selfCollision":false},', " " * 9 + '{"group":"redbull_wing_R_flap"},']
+    for n, (y, z) in (("drf1", FLAP_LE), ("drf2", FLAP_TE)):
+        py, pz = _flap_pos(y, z)
+        for s_, x in (("r", -FLAP_X), ("", 0.0), ("l", FLAP_X)):
+            rows.append(" " * 9 + '["%s%s", %.3f, %s, %s],' % (n, s_, x, py, pz))
+    rows += [" " * 9 + '{"selfCollision":true},', " " * 9 + FLAP_END]
+    k = text.index("         //--BEAM WING--")
+    text = text[:k] + E.join(rows) + E + text[k:]
+    # beams: the flap frame, and its trailing edge (hinge) held to the wing
+    beams = [" " * 10 + FLAP_BEGIN,
+             " " * 10 + '{"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},',
+             " " * 10 + '{"beamSpring":603000, "beamDamp":60},',       # (spaced: rear_wing() matches the F4's rows)
+             " " * 10 + '{"beamDeform":130140, "beamStrength":"FLT_MAX"},',
+             " " * 10 + '{"breakGroup":""},']
+    frame = [("drf1r", "drf2r"), ("drf1", "drf2"), ("drf1l", "drf2l"), ("drf1r", "drf1"), ("drf1", "drf1l"),
+             ("drf2r", "drf2"), ("drf2", "drf2l"), ("drf1r", "drf2"), ("drf2r", "drf1"), ("drf1l", "drf2"),
+             ("drf2l", "drf1"), ("drf1r", "drf1l"), ("drf2r", "drf2l")]
+    beams.append(" " * 10 + "".join('["%s","%s"],' % b for b in frame))
+    beams.append(" " * 10 + '{"beamSpring":600300,"beamDamp":50,"beamDeform":"FLT_MAX","beamStrength":20000},')
+    for s_ in "rl":
+        beams.append(" " * 10 + '{"breakGroup":"endplates_R%s"},' % s_.upper()
+                     + "".join('["drf2%s","%s"],' % (s_, n) for n in ("rep3" + s_, "rep4" + s_, "rwg1" + s_, "rwg2" + s_)))
+    beams.append(" " * 10 + '{"breakGroup":""},' + '["drf2","rwg1"],["drf2","rwg2"],')
+    beams.append(" " * 10 + FLAP_END)
+    k = text.index("          //--REAR WING ENDPLATES--")
+    text = text[:k] + E.join(beams) + E + text[k:]
+    # hydros: rep2 -> leading edge; factor from the hinge rotation
+    import setup_report as sr
+    je._write(f, text)
     v = sr.Vehicle("redbull", None)
+    th = np.radians(DRS_FLAP_ANGLE)
     rows = []
-    for side in "rl":
-        a, b = v.pos["rep1" + side], v.pos["rwg1" + side]
-        L0 = np.linalg.norm(b - a)
-        L1 = np.linalg.norm(b + np.array([0, 0, DRS_LIFT]) - a)
-        rows.append('        ["rep1%s","rwg1%s", {"factor":"$=%.4f*(1-$drs_model)", "inputSource":"drs", "inputFactor":1, "inRate":4, "outRate":4, '
-                    '"beamSpring":2001000, "beamDamp":40, "beamDeform":"FLT_MAX", "beamStrength":20000, "breakGroup":"endplates_R%s"}],\r\n'
-                    % (side, side, (L1 - L0) / L0, side.upper()))
-    # every setting inline: option rows would carry on into the steering
-    # hydro of a later part
+    for s_ in "rl":
+        a, le, te = v.pos["rep2" + s_], v.pos["drf1" + s_], v.pos["drf2" + s_]
+        r = le - te
+        # leading edge up = rotation about the hinge (x axis) taking -y to +z
+        y2 = r[1] * np.cos(th) - r[2] * np.sin(th)
+        z2 = r[1] * np.sin(th) * -1 + r[2] * np.cos(th)
+        le2 = te + np.array([r[0], y2, z2])
+        if le2[2] < le[2]:
+            le2 = te + np.array([r[0], r[1] * np.cos(th) + r[2] * np.sin(th), r[1] * np.sin(th) + r[2] * np.cos(th)])
+        L0, L1 = np.linalg.norm(le - a), np.linalg.norm(le2 - a)
+        rows.append('        ["rep2%s","drf1%s", {"factor":%.4f, "inputSource":"drs", "inputFactor":1, "inRate":5, "outRate":5, '
+                    '"beamSpring":600000, "beamDamp":40, "beamDeform":"FLT_MAX", "beamStrength":20000, "breakGroup":"endplates_R%s"}],\r\n'
+                    % (s_, s_, (L1 - L0) / L0, s_.upper()))
+        lift = le2[2] - le[2]
+    text = je._read(f)
     block = ('    "hydros": [\r\n'
              '        ["id1:", "id2:"],\r\n'
-             '        //DRS: lifts the leading edge (see tools/rb14/f1_setup.py)\r\n' + "".join(rows) +
-             '    ],\r\n')
+             '        //DRS: swings the flap\'s leading edge up about its trailing edge (see tools/rb14/f1_setup.py)\r\n'
+             + "".join(rows) + '    ],\r\n')
     text = re.sub(r'    "hydros": \[\r\n        \["id1:", "id2:"\],\r\n        //DRS.*?    \],\r\n', "", text, flags=re.S)
     k = text.index('    "triangles": [')
     text = text[:k] + block + text[k:]
-    # $drs_model 1 (round 16): the wing stays put -- the RB14 wing mesh is
-    # one piece (main plane, flap, pillar), so tilting its leading edge
-    # lifted the whole wing and pulled the pillar off the car. The DRS
-    # effect comes from thrusters on the gearbox instead: forward (less
-    # drag) and up (less rear downforce), x (speed / 300 km/h)^2 via
-    # electrics.values.drsThrust (lua/controller/redbullDRS.lua).
     fw, up = DRS_DRAG_300 / 2, DRS_DOWNFORCE_300 / 2
-    rows = "".join('        ["rx1%s", "rx2%s", "$=%d*$drs_model", "$=%d*$drs_model", "drsThrust"],\r\n'
-                   '        ["rx4%s", "rx2%s", "$=%d*$drs_model", "$=%d*$drs_model", "drsThrust"],\r\n'
-                   % (s, s, fw, fw * 1.6, s, s, up, up * 1.6) for s in "rl")
+    rows = "".join('        ["rx1%s", "rx2%s", %d, %d, "drsThrust"],\r\n'
+                   '        ["rx4%s", "rx2%s", %d, %d, "drsThrust"],\r\n'
+                   % (s_, s_, fw, fw * 1.6, s_, s_, up, up * 1.6) for s_ in "rl")
     block = ('    "thrusters": [\r\n'
              '        ["id1:", "id2:", "factor", "thrustLimit", "control"],\r\n'
-             '        //DRS as forces, $drs_model 1 (see tools/rb14/f1_setup.py): forward on rx2 = less drag, up = less downforce\r\n'
+             '        //DRS as forces (see tools/rb14/f1_setup.py): forward on rx2 = less drag, up = less downforce\r\n'
              + rows + '    ],\r\n')
     text = re.sub(r'    "thrusters": \[\r\n        \["id1:", "id2:", "factor", "thrustLimit", "control"\],\r\n        //DRS as forces.*?    \],\r\n', "", text, flags=re.S)
     k = text.index('    "triangles": [')
     text = text[:k] + block + text[k:]
+    # flexbodies: the flap with the wing's pivot; the RB14 has no beam wing
+    # (banned 2014-2021) and no separate wing pillar, so those F4 meshes go
+    # (their nodes and aero stay: the F4's lower wing stands in for the
+    # diffuser's share of the rear downforce the setup was calibrated with)
+    text = re.sub(r'         \["redbull_wing_R_flap".*\r\n', "", text)
+    k = text.index('["redbull_wing_B", ["redbull_wing_B"]')
+    k = text.rindex("\r\n", 0, k) + 2
+    text = text[:k] + ('         ["redbull_wing_R_flap", ["redbull_wing_R_flap"], [], {"pos":{"x": 0.0, "y":%.4f, "z":%.4f}, '
+                       '"rot":{"x":"$=$wing_angle_R-8", "y":0, "z":0}}],\r\n' % WING_PIVOT_R) + text[k:]
+    text = re.sub(r'(         )(\["redbull_wing_B", \["redbull_wing_B"\])', r'\1// rb14: no beam wing \2', text)
+    text = re.sub(r'(         )(\["redbull_wing_R_mounts", )', r'\1// rb14: no wing pillar \2', text)
     je._write(f, text)
+    print("DRS flap: opens %.0f deg, leading edge up %.0f mm" % (DRS_FLAP_ANGLE, lift * 1000))
 
 
 # DRS effect at 300 km/h on Baseline (setup_report "aero DRS open"):
@@ -1581,6 +1650,94 @@ def migrations():
     brake_misc()
     front_fix_vars()
     references()
+    halo_part()
+    exhaust_mesh()
+
+# Round 19: the halo is its own part (slot "redbull_halo" in the body, so a
+# configuration can leave it off) on its own nodes, placed on the RB14's
+# halo tube (HALO_NODES: pillar foot, pillar top, sides, rear legs). The F4's
+# halo nodes (halo / halor / halol) sat on the F4's halo: the rear pair 23 cm
+# behind the RB14 halo's legs, so the mesh bent off its nodes. Their beams
+# and collision triangles move out of the body with them; halorr / haloll
+# (roll structure) stay, and the roll-hoop top node joins the roll hoop's
+# mesh group. Runs once on the F4-derived body (idempotent).
+HALO_NODES = {      # name: (x, y, z, kg); r/l pairs mirror x
+    "halof": (0.0, -0.74, 0.72, 1.0), "halo": (0.0, -0.46, 0.89, 1.0),
+    "halor": (-0.29, -0.22, 0.86, 1.0), "halobr": (-0.31, 0.03, 0.83, 1.0)}
+HALO_SPRING = 1500000       # N/m: 6 kg of halo nodes (a real halo is ~7 kg) within the solver limit
+HALO_BEAMS = [("halof", "halo"), ("halo", "halor"), ("halo", "halol"), ("halor", "halol"), ("halor", "halobr"),
+              ("halol", "halobl"), ("halor", "halobl"), ("halol", "halobr"), ("halo", "halobr"), ("halo", "halobl"),
+              ("halof", "mt3"), ("halof", "mt1r"), ("halof", "mt1l"), ("halof", "mt2r"), ("halof", "mt2l"),
+              ("halo", "mt3"), ("halo", "mt2r"), ("halo", "mt2l"), ("halor", "mt2r"), ("halol", "mt2l"),
+              ("halor", "rt4r"), ("halol", "rt4l"), ("halobr", "rt4r"), ("halobl", "rt4l"), ("halobr", "mt2r"),
+              ("halobl", "mt2l"), ("halobr", "halorr"), ("halobl", "haloll"), ("halobr", "rt2r"), ("halobl", "rt2l"),
+              ("halobr", "rt3r"), ("halobl", "rt3l")]
+HALO_TRIS = [("halo", "halol", "halor"), ("halor", "halol", "halobl"), ("halor", "halobl", "halobr"),
+             ("halo", "halof", "mt2l"), ("halo", "mt2r", "halof")]
+
+
+def exhaust_mesh():
+    """Round 19: the RB14's own exhaust (tailpipe and wastegate pipes) is the
+    exhaust part's mesh (build_model.py); the F4 one was dropped. It runs
+    along the centre over the gearbox, so it hangs on the engine's and the
+    gearbox's nodes (the F4 exhaust nodes are 0.7 m away)."""
+    je.set_all(f"{V}/redbull_exhaust.jbeam",
+               r'(?:// rb14: no mesh )?\["redbull_exhaust", \["redbull_exhaust","redbull_engine"\]\],|\["redbull_exhaust", \["redbull_engine","redbull_transaxle"\]\],',
+               '["redbull_exhaust", ["redbull_engine","redbull_transaxle"]],')
+
+
+def halo_part():
+    import re
+    f = f"{V}/redbull_body.jbeam"
+    text = je._read(f)
+    # out of the body: the F4 halo nodes, their beams and triangles, the mesh
+    text = re.sub(r'         \["halo[rl]?",[^\]]*\],?[^\r\n]*\r\n', "", text)
+    text = text.replace('         {"group":["redbull_halo"]},\r\n', "")
+    text = re.sub(r'(         //roll hoop\r\n         \{"nodeWeight":3\.5\},\r\n)(?!         \{"group")',
+                  r'\1         {"group":["redbull_rollhoop"]},\r\n', text)
+    text = re.sub(r'(\["(?:mt2[rl]|mt3|halo(?:rr|ll))",[^\]]*"group":\[[^\]]*?), ?"redbull_halo"', r"\1", text)
+    text = text.replace('         ["redbull_halo", ["redbull_halo"]],\r\n', "")
+    a = text.find("          //halo\r\n")
+    if a >= 0:
+        b = text.index("          //spring mount node", a)
+        text = text[:a] + "          //halo: the redbull_halo part (round 19)\r\n\r\n" + text[b:]
+    m = re.search(r'        //halo\r\n        \{"dragCoef":[\d.]+\},', text)
+    a = m.start() if m else -1
+    if a >= 0:
+        b = text.index("        //hoop", a)
+        text = text[:a] + text[b:]
+    if '["redbull_halo","redbull_halo", "Halo"]' not in text:
+        k = text.index('        ["redbull_steer","redbull_steer", "Steering Wheel"],')
+        text = text[:k] + '        ["redbull_halo","redbull_halo", "Halo"],\r\n' + text[k:]
+    # the halo part
+    text = re.sub(r'\r\n"redbull_halo":\s*\{.*?(?=\r\n"[A-Za-z0-9_]+"\s*:\s*\{|\r\n\}\s*$)', "", text, flags=re.S)
+    nodes = []
+    for n, (x, y, z, w) in HALO_NODES.items():
+        sides = ((n, x),) if x == 0 else ((n, x), (n[:-1] + "l", -x))
+        for name, xx in sides:
+            nodes.append('         ["%s", %.3f, %.3f, %.3f, {"nodeWeight":%g}],' % (name, xx, y, z, w))
+    beams = "".join('["%s","%s"],' % b for b in HALO_BEAMS)
+    tris = "".join('["%s", "%s", "%s"],' % t for t in HALO_TRIS)
+    part = ('\r\n"redbull_halo": {\r\n'
+            '    "information":{\r\n        "authors":"redbull mod (RB14 conversion)",\r\n        "name":"Halo",\r\n        "value":2500,\r\n    },\r\n'
+            '    "slotType" : "redbull_halo",\r\n'
+            '    "flexbodies":[\r\n        ["mesh", "[group]:", "nonFlexMaterials"],\r\n        ["redbull_halo", ["redbull_halo"]],\r\n    ],\r\n'
+            '    "nodes":[\r\n         ["id", "posX", "posY", "posZ"],\r\n'
+            '         //on the RB14 halo tube: pillar foot, pillar top, sides, rear legs (f1_setup.py)\r\n'
+            '         {"collision":true},\r\n         {"selfCollision":true},\r\n         {"nodeMaterial":"|NM_METAL"},\r\n'
+            '         {"frictionCoef":0.5},\r\n         {"group":"redbull_halo"},\r\n' + "\r\n".join(nodes) + '\r\n'
+            '         {"group":""},\r\n    ],\r\n'
+            '    "beams":[\r\n          ["id1:", "id2:"],\r\n'
+            '          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},\r\n'
+            '          {"beamSpring":%d, "beamDamp":80},\r\n          {"beamDeform":120000,"beamStrength":"FLT_MAX"},\r\n' % HALO_SPRING +
+            '          {"deformLimitExpansion":2.0},\r\n          ' + beams + '\r\n          {"deformLimitExpansion":""},\r\n    ],\r\n'
+            '    "triangles":[\r\n        ["id1:", "id2:", "id3:"],\r\n        {"triangleType":"NORMALTYPE"},\r\n'
+            '        {"dragCoef":8},\r\n        {"group":"redbull_halo"},\r\n        {"groundModel":"metal"},\r\n        ' + tris +
+            '\r\n        {"group":""},\r\n    ],\r\n},')
+    k = text.rindex("\r\n}")
+    text = text[:k].rstrip() + part + text[k:]
+    je._write(f, text)
+
 
 # Broken references inherited from the F4, found by tools/check_mod.py:
 # the front spindles take their input from devices no part defines

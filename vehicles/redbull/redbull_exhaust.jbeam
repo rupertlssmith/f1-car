@@ -8,7 +8,7 @@
     "slotType" : "redbull_exhaust",
     "flexbodies":[
         ["mesh", "[group]:","nonFlexMaterials"],
-        // rb14: no mesh ["redbull_exhaust", ["redbull_exhaust","redbull_engine"]],
+        ["redbull_exhaust", ["redbull_engine","redbull_transaxle"]],
     ],
     "soundConfigExhaust": {
         "$+lowShelfGain":13,

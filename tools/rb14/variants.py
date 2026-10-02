@@ -27,49 +27,16 @@ import f1_setup as fs  # noqa: E402
 V = "vehicles/redbull"
 
 
-PREFIX, LABEL, SHEET = "hub", "Hub Fix", "plans/hub-fixes.md"
-CHECK = "sn_R?_hub_* (axle node to upright, mm) and the toe vs in_z slope in the SENSORS section"
-M = "$rear_corner_mass"
-FIXES = [   # (short name, what it changes, {vars}); graded, safest first per fix
-    ("Axle beams 1.25x", "the 8 axle-node-to-upright beams 1.25x stiffer", {"$rear_hub_beam": 1.25}),
-    ("Axle beams 1.5x", "axle beams 1.5x (+4 kg per rear corner, from the engine ballast, to stay stable)",
-     {"$rear_hub_beam": 1.5, M: 4}),
-    ("Axle beams 2x", "axle beams 2x (+8 kg per rear corner)", {"$rear_hub_beam": 2, M: 8}),
-    ("Axle beams 2.5x", "axle beams 2.5x (+12 kg per rear corner; just over the stiffness target)",
-     {"$rear_hub_beam": 2.5, M: 12}),
-    ("Hub bracing 0.5", "brace beams from new nodes ahead of / behind the axle on the upright to both axle "
-     "nodes, at 0.5x the upright-link stiffness", {"$rear_brace": 0.5}),
-    ("Hub bracing 1", "bracing at 1x (+6 kg per rear corner)", {"$rear_brace": 1, M: 6}),
-    ("Hub bracing 1.5", "bracing at 1.5x (+10 kg per rear corner)", {"$rear_brace": 1.5, M: 10}),
-    ("Hub bracing 2", "bracing at 2x (+12 kg per rear corner; just over the stiffness target)",
-     {"$rear_brace": 2, M: 12}),
-    ("Toe brace 200k", "torsion bar holding the outer axle node against toe about the upright, 200 kNm/rad",
-     {"$rear_toe_brace": 2}),
-    ("Toe brace 400k", "toe brace 400 kNm/rad", {"$rear_toe_brace": 4}),
-    ("Toe brace 600k", "toe brace 600 kNm/rad (+8 kg per rear corner; just over the stiffness target)",
-     {"$rear_toe_brace": 6, M: 8}),
-    ("Corner mass only", "control: +12 kg per rear corner and nothing else (to tell the mass from the fixes)",
-     {M: 12}),
-    ("Combined medium", "axle beams 1.5x + bracing 1 + toe brace 400k (+8 kg per corner)",
-     {"$rear_hub_beam": 1.5, "$rear_brace": 1, "$rear_toe_brace": 4, M: 8}),
-    ("Combined strong", "axle beams 2x + bracing 1 + toe brace 400k (+12 kg per corner)",
-     {"$rear_hub_beam": 2, "$rear_brace": 1, "$rear_toe_brace": 4, M: 12}),
-    ("Combined max", "axle beams 2x + bracing 1.5 + toe brace 600k (+12 kg per corner; over the stiffness target)",
-     {"$rear_hub_beam": 2, "$rear_brace": 1.5, "$rear_toe_brace": 6, M: 12}),
-    ("Strong + more toe-in", "Combined strong with ~0.6 deg more static rear toe-in (offline model), in case the "
-     "stiffer hub takes away the toe-in the soft hub gave at rest", {"$rear_hub_beam": 2, "$rear_brace": 1,
-                                                                    "$rear_toe_brace": 4, M: 12, "$toe_R": 0.9855}),
-    ("More rear toe-in", "static rear toe-in only: ~0.6 deg more per side (offline model)", {"$toe_R": 0.9855}),
-    ("Less rear toe-in", "static rear toe-in only: ~0.6 deg less per side (offline model)", {"$toe_R": 1.0}),
+PREFIX, LABEL, SHEET = "test", "Test", "plans/round19-tests.md"
+FIXES = [   # (short name, what it changes, {vars}, {slot: part})
+    ("No halo", "Baseline (round 18's Hub Fix 15) without the halo: its part (mesh, 6 kg of nodes, beams and "
+     "collision triangles) left off", {}, {"redbull_halo": ""}),
 ]
 
 
 def variants(b):
-    """(title, what it tries, {vars}, {slot: part}). Round 18: the rear axle
-    nodes shift 2-4 mm on the upright as the wheel compresses and the toe
-    follows (replayTurns); graded stiffer axle beams, new bracing, a toe
-    brace, combinations, and two static-toe cars."""
-    return [(name, tries + "; check: " + CHECK, over, {}) for name, tries, over in FIXES]
+    """(title, what it tries, {vars}, {slot: part}). Round 19: one car."""
+    return [(name, tries, over, parts) for name, tries, over, parts in FIXES]
 
 
 def gates(v):
@@ -120,26 +87,12 @@ def main():
     base = json.load(open(f"{V}/baseline.pc"))
     base_info = json.load(open(f"{V}/info_baseline.json"))
     bv = {k: float(x) for k, x in base["vars"].items()}
-    sheet = ["# Hub-fix test cars (round 18)", "",
-             "The problem: after a hard turn, with the steering centred, the car keeps turning",
-             "the other way for ~2.5-5 s. The round-17 sensors (replayTurns, Baseline) show why:",
-             "the rear toe follows the rear axle height at ~0.17 deg per mm (the offline model:",
-             "0.007), because the axle nodes shift 2-4 mm on the upright as the wheel compresses;",
-             "after a turn the inner wheel's toe lags its height ~1-1.5 s, 0.6-0.8 deg of net rear",
-             "steer. These cars stiffen the hub on the upright three ways, each in graded steps:",
-             "the axle beams themselves, new bracing (two nodes on each upright, ahead of and",
-             "behind the axle, braced to both axle nodes) and a toe brace (torsion bar). The",
-             "stiffer steps need more mass at the rear corner to stay under the 2 kHz solver",
-             "limit; it comes out of the engine ballast (same total weight), and car 12 has the",
-             "mass alone as a control. Baseline is unchanged except for the brace nodes (+3 kg per",
-             "rear corner, unbraced, taken from the ballast). In the game: *Hub Fix N · ...*.", "",
-             "Test drive per car (one short replay): three hard left turns at speed, each followed",
-             "by straightening up and holding the wheel centred 5-6 s; then three hard right turns.",
-             "Then `python3 tools/rb14/replay_analysis.py <replay>`: the SENSORS section gives the",
-             "hub_* movement and the toe vs in_z slope (Baseline ~0.17 deg/mm); a fix that works",
-             "brings both down and the post-turn yaw with them.", "",
-             "| # | Fix | Change |", "|---|---|---|"] + [
-             "| %d | %s | %s |" % (i + 1, n, w) for i, (n, w, _) in enumerate(FIXES)] + ["",
+    sheet = ["# Round 19 test cars", "",
+             "Baseline is round 18's Hub Fix 15 (Combined max). This round re-cut the body panels",
+             "along the RB14's real panel lines (with lips on every cut edge), made the DRS flap a",
+             "hinged part of its own, and moved the halo into its own part. In the game: *Test N · ...*.", "",
+             "| # | Car | Change |", "|---|---|---|"] + [
+             "| %d | %s | %s |" % (i + 1, n, w) for i, (n, w, _, _) in enumerate(FIXES)] + ["",
              "Offline checks: stiffness = highest omega*dt (target <= %.2f), damped = with"
              % fs.MAX_OMEGA_DT,
              "damping (<= %.2f), corner = wheel-corner modes with damping (<= %.2f; round 10"
@@ -159,8 +112,8 @@ def main():
         risk = ("Passes every offline check." if not g["over"] else
                 "Over an offline limit (%s): may break at spawn." % "; ".join(g["over"]))
         ui = f"{LABEL} {n:02d} · {title}"
-        changed = ", ".join([f"{k.lstrip('$')} {x:g}" for k, x in over.items()] + [f"part {p}" for p in parts.values()])
-        desc = f"{LABEL} test car {n}: {tries}. Everything else is Baseline ({changed}). {risk}"
+        changed = ", ".join([f"{k.lstrip('$')} {x:g}" for k, x in over.items()] + [f"part {p}" if p else f"no {slot}" for slot, p in parts.items()])
+        desc = f"{LABEL} car {n}: {tries}. Everything else is Baseline ({changed}). {risk}"
         info = {**base_info, "Config Type": "Custom", "Configuration": ui, "Description": desc}
         with open(f"{V}/info_{name}.json", "w", newline="\n") as fh:
             json.dump(info, fh, indent=2, ensure_ascii=False)

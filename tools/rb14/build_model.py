@@ -10,11 +10,13 @@ Writes  vehicles/redbull/redbull.dae         body, aero, suspension, cockpit
         vehicles/common/redbull_wheels/redbull_wheels.dae   rims and tyres
         vehicles/common/redbull_wheels/rb14_wheels.materials.json + textures
 
-The RB14 comes as one mesh split by material, not by component, so faces are
-assigned to BeamNG parts by position rules (PARTS below). Part names are the
-F4's flexbody/prop names, so the existing jbeam picks them up unchanged:
-nose and wings still break off, sidepods and engine cover are separate
-panels, and so on.
+The RB14 comes as one mesh split by material, not by component. Loose pieces
+that are one component (suspension members, uprights, wing elements, the
+DRS flap, the exhaust...) go to their part whole (classify_piece); the
+continuous body skin is sliced exactly along the panel lines and given a
+lip on every cut edge (panels.py). Part names are the F4's flexbody/prop
+names, so the existing jbeam picks them up unchanged: nose and wings still
+break off, sidepods and engine cover are separate panels, and so on.
 
 The F4's internals that the RB14 model does not have (engine, gearbox,
 radiators, springs, anti-roll bars, pedals, steering rack...) are kept, moved
@@ -38,6 +40,7 @@ import dae  # noqa: E402
 import fitmap  # noqa: E402
 import glb  # noqa: E402
 import materials  # noqa: E402
+import panels  # noqa: E402
 
 SRC_GLB = "redbull/source/rb14.glb"
 SRC_F4 = "vehicles/fr04/F4.dae"
@@ -53,7 +56,8 @@ WHEEL_CENTRE = {"F": np.array([0.7925, -1.5247, 0.3377]), "R": np.array([0.789, 
 # relative to the pivot. Values are the F4 pivots moved through fitmap.
 WING_PIVOT_F4 = {"redbull_wing_F": (0.0, -1.9694, 0.1382),
                  "redbull_wing_R": (0.0, 2.1941, 0.8839),
-                 "redbull_wing_B": (0.0, 1.9247, 0.4955)}
+                 "redbull_wing_B": (0.0, 1.9247, 0.4955),
+                 "redbull_wing_R_flap": (0.0, 2.1941, 0.8839)}
 # Steering wheel prop: rotates about its node origin.
 STEER_ORIGIN = np.array([0.0, -0.366, 0.585])
 
@@ -92,6 +96,25 @@ def classify_piece(mat, lo, hi, pc):
     rules. lo/hi/pc: piece bounds and centroid (x already centred)."""
     alo, ahi = min(abs(lo[0]), abs(hi[0])) if lo[0] * hi[0] > 0 else 0.0, max(abs(lo[0]), abs(hi[0]))
     span = hi - lo
+    # rear wing (round 19): the DRS flap, the main plane and its centre pod,
+    # and the endplates' lower strakes are separate pieces in the RB14
+    if lo[1] >= 2.39 and lo[2] >= 0.84 and hi[2] <= 0.99 and ahi <= 0.47:
+        return "redbull_wing_R_flap"
+    if lo[1] >= 2.14 and lo[2] >= 0.76 and hi[1] <= 2.46 and hi[2] <= 0.90:
+        return "redbull_wing_R"
+    if lo[1] >= 2.14 and lo[2] >= 0.76 and ahi <= 0.02:
+        return "redbull_wing_R"                     # DRS actuator pod
+    if alo >= 0.38 and ahi <= 0.44 and lo[1] >= 2.30 and hi[2] < 0.60:
+        return "redbull_endplate_R" + side(pc[0])
+    # exhaust tailpipe and wastegate pipes
+    if mat == "redbull_detail" and ahi <= 0.11 and lo[1] >= 1.2 and hi[1] <= 2.3 and lo[2] >= 0.5 and hi[2] <= 0.68:
+        return "redbull_exhaust"
+    # front wing pylons belong to the nose
+    if ahi <= 0.08 and hi[1] <= -1.70 and lo[2] >= 0.15 and hi[2] <= 0.42 and lo[1] >= -2.6 and span[1] > 0.3:
+        return "redbull_nose"
+    # bargeboards and the vanes above them (floor)
+    if -1.15 <= lo[1] and hi[1] <= -0.30 and alo >= 0.20 and mat == "redbull_carbon1" and hi[2] <= 0.56:
+        return "redbull_floor"
     for axle, cy in (("F", -1.5247), ("R", 2.03)):
         # uprights, brake ducts: inside the wheel
         if alo > 0.40 and abs(lo[1] - cy) < 0.36 and abs(hi[1] - cy) < 0.36 and hi[2] < 0.58:
@@ -125,40 +148,6 @@ def classify_piece(mat, lo, hi, pc):
     return None
 
 
-def classify_face(c):
-    """Part for one face of a body panel, from its centroid."""
-    x, y, z = c
-    ax = abs(x)
-    if y < -1.93 and z < 0.33:                                  # front wing
-        return "redbull_endplate_F" + side(x) if ax > 0.83 else "redbull_wing_F"
-    if y < -1.60:
-        return "redbull_nose"
-    if y > 2.10 and z > 0.70:                                   # rear wing
-        return "redbull_endplate_R" + side(x) if ax > 0.35 else "redbull_wing_R"
-    if y > 2.20 and 0.35 < z < 0.62 and ax < 0.35:
-        return "redbull_wing_B"
-    if y > 2.20 and ax < 0.06 and 0.55 <= z <= 0.70:
-        return "redbull_wing_R_mounts"
-    floor_top = 0.16 + 0.03 * max(0.0, min(1.0, (y + 1.0) / 3.0))
-    if -1.20 < y < 2.45 and z < floor_top:
-        return "redbull_floor"
-    if -1.15 < y < -0.62 and ax > 0.36 and z < 0.55:           # bargeboards
-        return "redbull_floor"
-    if 1.55 < y < 2.45 and z < 0.34 and ax < 0.62:             # diffuser
-        return "redbull_floor"
-    # sidepods: outside the tub / engine cover, below the sidepod top
-    t = max(0.0, min(1.0, (y - 0.2) / 1.1))
-    w = 0.36 + (0.24 - 0.36) * t
-    ztop = 0.70 + (0.50 - 0.70) * t
-    if -0.75 < y < 1.45 and ax > w and z < ztop:
-        return ("redbull_sidepod_F" if y < -0.25 else "redbull_sidepod_R") + side(x)
-    if 0.10 < y < 0.62 and z > 0.93:
-        return "redbull_rollhoop"
-    if y > 0.05:
-        return "redbull_enginecover"
-    return "redbull_monocoque"
-
-
 # ------------------------------------------------------------ RB14 split
 
 def pieces_of(pos, tri):
@@ -187,48 +176,82 @@ def pieces_of(pos, tri):
     return roots[f[:, 0]]
 
 
+def is_front_wing(lo, hi):
+    """Loose pieces of the front wing assembly (elements and endplates)."""
+    alo = min(abs(lo[0]), abs(hi[0])) if lo[0] * hi[0] > 0 else 0.0
+    ahi = max(abs(lo[0]), abs(hi[0]))
+    return hi[1] <= -1.90 and hi[2] <= 0.34 and (ahi >= 0.30 or alo >= 0.30)
+
+
 def split_rb14(prims):
-    """{part: {material: (pos, nrm, uv) corner arrays}} for the RB14."""
-    out = {}
+    """{part: {material: (pos, nrm, uv) corner arrays}} for the RB14.
+
+    Loose pieces that are one component go to their part whole
+    (classify_piece). The rest -- the continuous body skin and the front
+    wing assembly -- is sliced exactly along the panel cuts (panels.py) and
+    assigned by region, and every cut edge gets a lip."""
+    soups = {}
+
+    def add(part, mat, P, N, U):
+        soups.setdefault(part, {}).setdefault(mat, []).append((P, N, U))
+
     for p in prims:
         mat = p["material"]
         pos = p["pos"] + np.array([X_SHIFT, 0, 0])
         tri = p["tri"]
-        corners_pos = pos[tri]                          # (m, 3, 3)
-        cent = corners_pos.mean(axis=1)
+        uv_all = p["uv"].copy()
+        uv_all[:, 1] = 1.0 - uv_all[:, 1]                # glTF -> Collada v
+        P, N, U = pos[tri], p["nrm"][tri], uv_all[tri]
+        cent = P.mean(axis=1)
         if mat in ("discs",):
             continue                                    # base-game brake meshes instead
         if mat in ("Tyre_thread", "tyre_side", "redbull_wheel_hub"):
             kind = "rim" if mat == "redbull_wheel_hub" else "tyre"
             parts = np.array([f"{kind}_{'F' if c[1] < 0.25 else 'R'}" if c[0] > 0 else "" for c in cent])
-        elif mat in STEER_MATS:
-            parts = np.full(len(tri), "redbull_steer", dtype=object)
-        elif mat in FIXED_MATS:
-            parts = np.full(len(tri), FIXED_MATS[mat], dtype=object)
-        else:
-            labels = pieces_of(pos, tri)
-            parts = np.empty(len(tri), dtype=object)
-            for lab in np.unique(labels):
-                sel = labels == lab
-                pts = corners_pos[sel].reshape(-1, 3)
-                part = classify_piece(mat, pts.min(0), pts.max(0), pts.mean(0))
-                if part:
-                    parts[sel] = part
-                else:
-                    idx = np.nonzero(sel)[0]
-                    for i in idx:
-                        parts[i] = classify_face(cent[i])
-        for part in set(parts):
-            if not part:
+            for part in set(parts) - {""}:
+                sel = parts == part
+                add(part, mat, P[sel], N[sel], U[sel])
+            continue
+        if mat in STEER_MATS:
+            add("redbull_steer", mat, P, N, U)
+            continue
+        if mat in FIXED_MATS:
+            add(FIXED_MATS[mat], mat, P, N, U)
+            continue
+        labels = pieces_of(pos, tri)
+        skin, wing = [], []
+        for lab in np.unique(labels):
+            sel = labels == lab
+            pts = P[sel].reshape(-1, 3)
+            lo, hi = pts.min(0), pts.max(0)
+            part = classify_piece(mat, lo, hi, pts.mean(0))
+            if part:
+                add(part, mat, P[sel], N[sel], U[sel])
+            elif is_front_wing(lo, hi):
+                wing.append(sel)
+            else:
+                skin.append(sel)
+        for sels, cuts, region in ((skin, panels.CUTS, panels.region), (wing, panels.WING_F_CUTS, panels.region_wing_F)):
+            if not sels:
                 continue
-            sel = parts == part
-            t = tri[sel].ravel()
-            uv = p["uv"][t].copy()
-            uv[:, 1] = 1.0 - uv[:, 1]                    # glTF -> Collada v
-            out.setdefault(part, {}).setdefault(mat, []).append((pos[t], p["nrm"][t], uv))
-    # merge the per-primitive chunks
-    return {part: {m: tuple(np.concatenate(a) for a in zip(*chunks)) for m, chunks in mats.items()}
-            for part, mats in out.items()}
+            sel = np.any(sels, axis=0)
+            sp, sn, su = panels.slice_all(P[sel], N[sel], U[sel], cuts, region)
+            parts = np.array([region(c) for c in sp.mean(axis=1)], dtype=object)
+            for part in set(parts):
+                s2 = parts == part
+                add(part, mat, sp[s2], sn[s2], su[s2])
+    soups = {part: {m: tuple(np.concatenate(a) for a in zip(*chunks)) for m, chunks in mats.items()}
+             for part, mats in soups.items()}
+    body = {part: mats for part, mats in soups.items() if not part.startswith(("rim_", "tyre_"))}
+    for part, mats in panels.lips(body).items():
+        for m, (P, N, U) in mats.items():
+            if m in soups[part]:
+                soups[part][m] = tuple(np.concatenate([a, b]) for a, b in zip(soups[part][m], (P, N, U)))
+            else:
+                soups[part][m] = (P, N, U)
+    # corner arrays -> flat per-corner arrays
+    return {part: {m: (P.reshape(-1, 3), N.reshape(-1, 3), U.reshape(-1, 2)) for m, (P, N, U) in mats.items()}
+            for part, mats in soups.items()}
 
 
 def to_mesh(name, mats, origin=np.zeros(3), node_origin=False):

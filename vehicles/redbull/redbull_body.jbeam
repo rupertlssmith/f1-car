@@ -25,6 +25,7 @@
         ["redbull_enginecover","redbull_enginecover", "Engine Cover"],
         ["redbull_suscover","redbull_suscover", "Suspension Cover"],
         //misc
+        ["redbull_halo","redbull_halo", "Halo"],
         ["redbull_steer","redbull_steer", "Steering Wheel"],
     ],
     "flexbodies":[
@@ -33,7 +34,6 @@
          ["redbull_monocoque", ["redbull_body"]],
          ["redbull_headrest", ["redbull_body"]],
          ["redbull_rollhoop", ["redbull_rollhoop"]],
-         ["redbull_halo", ["redbull_halo"]],
          // rb14: no mesh ["redbull_susmounts_F", ["redbull_body"]],
          ["redbull_brakecyls", ["redbull_body"]],
          ["redbull_mirror_R", ["redbull_body"]],
@@ -195,15 +195,15 @@
          //mid tub
          {"nodeWeight":4.5},
          ["mt1r",-0.33, -0.3504, 0.216, {"group":["redbull_body","redbull_radduct_R"], "nodeWeight":8}],
-         ["mt1",  0.0, -0.3504, 0.1122, {"nodeWeight":11.16}],
+         ["mt1",  0.0, -0.3504, 0.1122, {"nodeWeight":11.29}],
          ["mt1l", 0.33, -0.3504, 0.216, {"group":["redbull_body","redbull_radduct_L"], "nodeWeight":8}],
 
          {"nodeWeight":5.0},
-         ["mt2r",-0.33, -0.3504, 0.71, {"group":["redbull_body","redbull_tierod_inner","redbull_radduct_R","redbull_halo"], "nodeWeight":5}],
-         ["mt2l", 0.33, -0.3504, 0.71, {"group":["redbull_body","redbull_tierod_inner","redbull_radduct_L","redbull_halo"], "nodeWeight":5}],
+         ["mt2r",-0.33, -0.3504, 0.71, {"group":["redbull_body","redbull_tierod_inner","redbull_radduct_R"], "nodeWeight":5}],
+         ["mt2l", 0.33, -0.3504, 0.71, {"group":["redbull_body","redbull_tierod_inner","redbull_radduct_L"], "nodeWeight":5}],
          
          {"nodeWeight":6.0},
-         ["mt3", 0.0, -0.9097, 0.7017, {"group":["redbull_body","redbull_halo"], "nodeWeight":8}],
+         ["mt3", 0.0, -0.9097, 0.7017, {"group":["redbull_body"], "nodeWeight":8}],
 
          //front tub/suspension mounts
          {"nodeMaterial":"|NM_METAL"},
@@ -212,8 +212,8 @@
          {"group":["redbull_body","redbull_lowermounts_F"]},
          ["fx1r",-0.2324, -1.5942, 0.2553, {"nodeWeight":6.0}],
          ["fx1l", 0.2324, -1.5942, 0.2553, {"nodeWeight":6.0}],
-         ["fx2r",-0.2568, -1.0482, 0.2636, {"nodeWeight":6.66}],
-         ["fx2l", 0.2568, -1.0482, 0.2636, {"nodeWeight":6.66}],
+         ["fx2r",-0.2568, -1.0482, 0.2636, {"nodeWeight":6.79}],
+         ["fx2l", 0.2568, -1.0482, 0.2636, {"nodeWeight":6.79}],
          //upper
          {"nodeWeight":5.5},
          {"group":["redbull_body","redbull_uppermounts_F"]},
@@ -230,15 +230,12 @@
 
          //halo
          {"nodeWeight":1.5},
-         {"group":["redbull_halo"]},
-         ["halorr",-0.3996, 0.2872, 0.8412, {"nodeWeight":3.0, "group":["redbull_body","redbull_halo","redbull_rollhoop"]}],
-         ["halor",-0.319, -0.0936, 0.8689],
-         ["halo",  0.0, -0.315, 0.905, {"nodeWeight":2.0}],
-         ["halol", 0.319, -0.0936, 0.8689],
-         ["haloll", 0.3996, 0.2872, 0.8412, {"nodeWeight":3.0, "group":["redbull_body","redbull_halo","redbull_rollhoop"]}],
+         ["halorr",-0.3996, 0.2872, 0.8412, {"nodeWeight":3.0, "group":["redbull_body","redbull_rollhoop"]}],
+         ["haloll", 0.3996, 0.2872, 0.8412, {"nodeWeight":3.0, "group":["redbull_body","redbull_rollhoop"]}],
 
          //roll hoop
          {"nodeWeight":3.5},
+         {"group":["redbull_rollhoop"]},
          ["hoop", 0.0, 0.42, 1.18],
         ],
 
@@ -526,38 +523,7 @@
           ["mt3","mt1"],
           ["mt3","mt1r"],
 
-          //halo
-          {"beamDeform":120000,"beamStrength":"FLT_MAX"},
-          {"beamSpring":2501000, "beamDamp":125},
-          {"deformLimitExpansion":2.0},
-          ["halo","mt3"],
-          ["halo","mt2r"],
-          ["halo","mt2l"],
-          ["halo","halor"],
-          ["halo","halol"],
-
-          ["halor","mt2r"],
-          ["halor","rt4r"],
-          ["halol","mt2l"],
-          ["halol","rt4l"],
-
-          ["halor","halorr"],
-          ["halol","haloll"],
-          ["halor","haloll"],
-          ["halol","halorr"],
-          ["halol","halor"],
-
-          //halo rigids
-          {"beamSpring":2501000, "beamDamp":125},
-          ["halo","rt4r"],
-          ["halo","rt4l"],
-          ["halo","halorr"],
-          ["halo","haloll"],
-          
-          ["halo","rt3r"],
-          ["halo","rt3l"],
-          ["halo","mt1r"],
-          ["halo","mt1l"],
+          //halo: the redbull_halo part (round 19)
 
           //spring mount node
           {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
@@ -582,22 +548,6 @@
     "triangles":[
         ["id1:", "id2:", "id3:"],
         {"triangleType":"NORMALTYPE"},
-        //halo
-        {"dragCoef":8},
-        {"group":"redbull_halo"},
-        {"groundModel":"metal"},
-        ["halo", "halol", "halor"],
-        ["halor", "halol", "haloll"],
-        ["halor", "haloll", "halorr"],
-        ["halo", "mt3", "mt2l"],
-        ["halo", "mt2r", "mt3"],
-        ["halo", "halor", "mt2r"],
-        ["halol", "halo", "mt2l"],
-        ["halol", "mt2l", "rt4l"],
-        ["haloll", "halol", "rt4l"],
-        ["halor", "rt4r", "mt2r"],
-        ["halor", "halorr", "rt4r"],
-        
         //hoop
         {"dragCoef":16},
         {"group":"redbull_hoop"},
@@ -655,4 +605,50 @@
         {"triangleType":"NORMALTYPE"},
         ],
     },
+"redbull_halo": {
+    "information":{
+        "authors":"redbull mod (RB14 conversion)",
+        "name":"Halo",
+        "value":2500,
+    },
+    "slotType" : "redbull_halo",
+    "flexbodies":[
+        ["mesh", "[group]:", "nonFlexMaterials"],
+        ["redbull_halo", ["redbull_halo"]],
+    ],
+    "nodes":[
+         ["id", "posX", "posY", "posZ"],
+         //on the RB14 halo tube: pillar foot, pillar top, sides, rear legs (f1_setup.py)
+         {"collision":true},
+         {"selfCollision":true},
+         {"nodeMaterial":"|NM_METAL"},
+         {"frictionCoef":0.5},
+         {"group":"redbull_halo"},
+         ["halof", 0.000, -0.740, 0.720, {"nodeWeight":1}],
+         ["halo", 0.000, -0.460, 0.890, {"nodeWeight":1}],
+         ["halor", -0.290, -0.220, 0.860, {"nodeWeight":1}],
+         ["halol", 0.290, -0.220, 0.860, {"nodeWeight":1}],
+         ["halobr", -0.310, 0.030, 0.830, {"nodeWeight":1}],
+         ["halobl", 0.310, 0.030, 0.830, {"nodeWeight":1}],
+         {"group":""},
+    ],
+    "beams":[
+          ["id1:", "id2:"],
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
+          {"beamSpring":1500000, "beamDamp":80},
+          {"beamDeform":120000,"beamStrength":"FLT_MAX"},
+          {"deformLimitExpansion":2.0},
+          ["halof","halo"],["halo","halor"],["halo","halol"],["halor","halol"],["halor","halobr"],["halol","halobl"],["halor","halobl"],["halol","halobr"],["halo","halobr"],["halo","halobl"],["halof","mt3"],["halof","mt1r"],["halof","mt1l"],["halof","mt2r"],["halof","mt2l"],["halo","mt3"],["halo","mt2r"],["halo","mt2l"],["halor","mt2r"],["halol","mt2l"],["halor","rt4r"],["halol","rt4l"],["halobr","rt4r"],["halobl","rt4l"],["halobr","mt2r"],["halobl","mt2l"],["halobr","halorr"],["halobl","haloll"],["halobr","rt2r"],["halobl","rt2l"],["halobr","rt3r"],["halobl","rt3l"],
+          {"deformLimitExpansion":""},
+    ],
+    "triangles":[
+        ["id1:", "id2:", "id3:"],
+        {"triangleType":"NORMALTYPE"},
+        {"dragCoef":8},
+        {"group":"redbull_halo"},
+        {"groundModel":"metal"},
+        ["halo", "halol", "halor"],["halor", "halol", "halobl"],["halor", "halobl", "halobr"],["halo", "halof", "mt2l"],["halo", "mt2r", "halof"],
+        {"group":""},
+    ],
+},
 }

@@ -98,6 +98,10 @@
             "49c81b4e7d82bf4e"
         ],
         [
+            "vehicles/redbull/info_test_01.json",
+            "d5df4825e5509be0"
+        ],
+        [
             "vehicles/redbull/inputmaps/keyboard.json",
             "20dc9b260cb76d8a"
         ],
@@ -231,7 +235,7 @@
         ],
         [
             "vehicles/redbull/redbull.dae",
-            "410c388d8cb88e74"
+            "bba0b77a6e799280"
         ],
         [
             "vehicles/redbull/redbull.interaction.json",
@@ -239,7 +243,7 @@
         ],
         [
             "vehicles/redbull/redbull.jbeam",
-            "2c3ca7d89a0c280e"
+            "0cb18fd93b5951ac"
         ],
         [
             "vehicles/redbull/redbull_accessory.data.dds",
@@ -247,7 +251,7 @@
         ],
         [
             "vehicles/redbull/redbull_body.jbeam",
-            "9c6088cc6e79aa74"
+            "2d18444763d3c1ce"
         ],
         [
             "vehicles/redbull/redbull_brakes.jbeam",
@@ -283,7 +287,7 @@
         ],
         [
             "vehicles/redbull/redbull_engine.jbeam",
-            "99afe52ddc2bf041"
+            "913bdfb0787db3e3"
         ],
         [
             "vehicles/redbull/redbull_engine_ao.data.dds",
@@ -307,7 +311,7 @@
         ],
         [
             "vehicles/redbull/redbull_exhaust.jbeam",
-            "6b01983cc3c14b02"
+            "efa7f0bc02b91f79"
         ],
         [
             "vehicles/redbull/redbull_floor.jbeam",
@@ -395,7 +399,7 @@
         ],
         [
             "vehicles/redbull/redbull_transaxle.jbeam",
-            "e5704bcc454d7e76"
+            "a8d1d9d084942f15"
         ],
         [
             "vehicles/redbull/redbull_wing_F.jbeam",
@@ -403,7 +407,7 @@
         ],
         [
             "vehicles/redbull/redbull_wing_R.jbeam",
-            "bc897498d57f559d"
+            "e1e3a546f867ee0a"
         ],
         [
             "vehicles/redbull/screen/ReloadAlt-Light.ttf",
@@ -424,6 +428,14 @@
         [
             "vehicles/redbull/screens.materials.json",
             "7aa4f99352164a06"
+        ],
+        [
+            "vehicles/redbull/test_01.jpg",
+            "a0911066fde2690c"
+        ],
+        [
+            "vehicles/redbull/test_01.pc",
+            "fb48ab0652699621"
         ]
     ]
 }

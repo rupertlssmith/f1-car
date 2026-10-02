@@ -618,6 +618,40 @@ Every config: 1.9 g at low speed, 5-6 g braking from 300 km/h.
   combined medium / strong / max, 16 strong + more toe-in, 17 / 18 static
   rear toe +-0.6 deg. 4, 8, 11 and 15 are just over the stiffness target
   (1.68-1.72). Sheet `plans/hub-fixes.md`.
+- **Round 19 b (body panels, DRS flap, halo part):** the RB14 body is one
+  continuous skin; the old split gave each whole triangle to a part by its
+  centroid, so every panel edge was a ragged staircase, the engine cover took
+  the whole rear top body (and the halo's rear mounts), and the airbox top
+  was left floating when the cover came off. `tools/rb14/panels.py` now
+  slices the skin exactly along smooth cut surfaces placed on the RB14's own
+  panel lines (found as modelled grooves: the nose joint at y = -1.645, the
+  airbox panel 0.31 m either side of the centre ending at the seam y =
+  0.628, the sidepod inlet front, the floor junction), splits the triangles
+  that straddle them (interpolated normals and UVs), assigns by region, and
+  gives every cut edge a 7 mm inward carbon lip on both panels. Loose pieces
+  that are one component go whole: the DRS flap, the main plane and its
+  actuator pod, the endplate strakes, the exhaust (now the exhaust part's
+  mesh), the nose pylons, the bargeboards and their vanes (floor). Panels:
+  nose; front wing / endplates (|x| = 0.83); chassis to y = 0.10 (keeps the
+  halo's feet); airbox / roll hoop panel (stays on the chassis); engine
+  cover (behind the airbox and around it above the sidepods, back to the
+  gearbox); sidepods front (inlet mouth, to y = 0.20) and rear, below a seam
+  falling from 0.70 to 0.30 m; floor (+ bargeboards, diffuser, the floor
+  edge by the rear tyres). The RB14 has no beam wing (banned 2014-2021) or
+  separate wing pillar: those F4 meshes are gone (their nodes and aero stay).
+  Mesh 142k -> 171k triangles. **DRS:** the flap is its own flexbody on six
+  nodes (leading / trailing edge), hinged at the trailing edge to the
+  endplates and main plane; hydros from the endplates' lower nodes swing its
+  leading edge up 26 deg (54 mm) with the DRS key. The main plane is fixed
+  again; the DRS aero effect is the calibrated force pair (-15 % downforce,
+  -22 % drag at 300 km/h), always on ($drs_model is gone). **Halo:** its own
+  part (slot in the body) with six nodes on the RB14 tube (fit 0.31 -> 0.18
+  m), 6 kg, its beams and collision triangles; the F4 halo nodes went with
+  it. Test 01: Baseline without the halo. Flexbody node fit (check_mod
+  --fit) is better for the halo, rear wing, roll hoop and exhaust (on the
+  engine and gearbox nodes: 0.74 -> 0.32 m); the big panels still use the
+  F4's sparse panel nodes (0.37-0.47 m), a later job. The new flap (3 kg)
+  and halo (6 kg) nodes come out of the ballast: 733 kg dry as before.
 - **Round 19 (Hub Fix 15 is Baseline):** `$rear_hub_beam` 2, `$rear_brace`
   1.5, `$rear_toe_brace` 6, `$rear_corner_mass` 12 by default. The ballast is
   solved without the corner mass (which then comes out of the engine

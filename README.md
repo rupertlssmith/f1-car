@@ -87,12 +87,19 @@ and your top speed (km/h and mph) after each run. Virtual sensors
 every replay; `python3 tools/rb14/replay_analysis.py <replay>.rpl` reports them.
 
 The test build (`python3 tools/build_mod.py --test`) carries the current
-round's **test cars**, listed as *Test NN · ...*: one per fix, then the fixes
-combined; see the round's sheet in `plans/` (now `plans/hub-fixes.md`).
+round's **test cars**, listed as *Test NN · ...*; see the round's sheet in
+`plans/` (now `plans/round19-tests.md`: Baseline and *Test 01 · No halo*).
 Their settings are ordinary tuning variables (Suspension > Rear Hub Toe
-Stiffness / Rear Axle Beams / Rear Hub Bracing / Rear Toe Brace / Rear Corner Mass Shift, Aerodynamics > DRS Model, Engine > Engine Power / Torque Map Slip,
-Brakes > Brake Force Multiplier / Low-Speed Brake Modulation), so any car can
-be set the same way in the tuning menu.
+Stiffness / Rear Axle Beams / Rear Hub Bracing / Rear Toe Brace / Rear Corner
+Mass Shift, Engine > Engine Power / Torque Map Slip, Brakes > Brake Force
+Multiplier / Low-Speed Brake Modulation) or parts (Body > Halo), so any car
+can be set the same way in the tuning menu or the parts selector.
+
+**Body panels** come apart along the RB14's own panel lines (nose, front
+wing and endplates, chassis, airbox / roll hoop, engine cover, sidepods,
+floor, rear wing, endplates and DRS flap), each with a thin lip on its cut
+edges. The **DRS flap** is hinged at its trailing edge and swings open with
+the DRS key. The halo is its own part and can be left off.
 
 The setup numbers (mass, rates, aero, power, gearing) and how they were
 derived are in [`plans/rb14-model-swap.md`](plans/rb14-model-swap.md)

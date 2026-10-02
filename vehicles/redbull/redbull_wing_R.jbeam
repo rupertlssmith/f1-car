@@ -9,10 +9,11 @@
     "flexbodies": [
          ["mesh", "[group]:", "nonFlexMaterials"],
          {"deformGroup":"beam_wing_mounts", "deformMaterialBase":"redbull_main", "deformMaterialDamaged":"invis"},
-         ["redbull_wing_R_mounts", ["redbull_wingmounts_R","redbull_wing_B"]],
+         // rb14: no wing pillar ["redbull_wing_R_mounts", ["redbull_wingmounts_R","redbull_wing_B"]],
          {"deformGroup":""},
          ["redbull_wing_R", ["redbull_wing_R"], [], {"pos":{"x": 0.0, "y":2.5674, "z":0.9421}, "rot":{"x":"$=$wing_angle_R-8", "y":0, "z":0}}],
-         ["redbull_wing_B", ["redbull_wing_B"], [], {"pos":{"x": 0.0, "y":2.3382, "z":0.5701}, "rot":{"x":"$=$wing_angle_B-3", "y":0, "z":0}}],
+         ["redbull_wing_R_flap", ["redbull_wing_R_flap"], [], {"pos":{"x": 0.0, "y":2.5674, "z":0.9421}, "rot":{"x":"$=$wing_angle_R-8", "y":0, "z":0}}],
+         // rb14: no beam wing ["redbull_wing_B", ["redbull_wing_B"], [], {"pos":{"x": 0.0, "y":2.3382, "z":0.5701}, "rot":{"x":"$=$wing_angle_B-3", "y":0, "z":0}}],
          ["redbull_endplate_RR", ["redbull_endplate_RR"]],
          ["redbull_endplate_RL", ["redbull_endplate_RL"]],
     ],
@@ -56,6 +57,18 @@
          ["rwg2",  0.0, 2.5639, 0.9292],
          ["rwg2l", 0.466, 2.5639, 0.9292],
          
+         //DRS flap (round 19, f1_setup.py)
+         {"nodeWeight":0.5},
+         {"selfCollision":false},
+         {"group":"redbull_wing_R_flap"},
+         ["drf1r", -0.430, "$=2.4010-(($wing_angle_R-8)*0.0174533)*-0.0631", "$=0.8790+(($wing_angle_R-8)*0.0174533)*-0.1664"],
+         ["drf1", 0.000, "$=2.4010-(($wing_angle_R-8)*0.0174533)*-0.0631", "$=0.8790+(($wing_angle_R-8)*0.0174533)*-0.1664"],
+         ["drf1l", 0.430, "$=2.4010-(($wing_angle_R-8)*0.0174533)*-0.0631", "$=0.8790+(($wing_angle_R-8)*0.0174533)*-0.1664"],
+         ["drf2r", -0.430, "$=2.5050-(($wing_angle_R-8)*0.0174533)*0.0199", "$=0.9620+(($wing_angle_R-8)*0.0174533)*-0.0624"],
+         ["drf2", 0.000, "$=2.5050-(($wing_angle_R-8)*0.0174533)*0.0199", "$=0.9620+(($wing_angle_R-8)*0.0174533)*-0.0624"],
+         ["drf2l", 0.430, "$=2.5050-(($wing_angle_R-8)*0.0174533)*0.0199", "$=0.9620+(($wing_angle_R-8)*0.0174533)*-0.0624"],
+         {"selfCollision":true},
+         //DRS flap end
          //--BEAM WING--
          {"nodeWeight":0.8},
          {"group":"redbull_wing_B"},
@@ -208,6 +221,9 @@
           {"breakGroup":"endplates_RR"},
           {"beamSpring":600300,"beamDamp":50},
           {"beamDeform":"FLT_MAX","beamStrength":20000},
+          ["rep1r","rwg1r"],
+          ["rep2r","rwg1r"],
+          ["rep3r","rwg1r"],
           ["rep4r","rwg1r"],
           ["rep1r","rwg2r"],
           ["rep2r","rwg2r"],
@@ -226,6 +242,9 @@
           {"breakGroup":"endplates_RL"},
           {"beamSpring":450300,"beamDamp":50},
           {"beamDeform":"FLT_MAX","beamStrength":20000},
+          ["rep1l","rwg1l"],
+          ["rep2l","rwg1l"],
+          ["rep3l","rwg1l"],
           ["rep4l","rwg1l"],
           ["rep1l","rwg2l"],
           ["rep2l","rwg2l"],
@@ -266,6 +285,17 @@
           ["bwg2","rx2l"],
 
           
+          //DRS flap (round 19, f1_setup.py)
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+          {"beamSpring":603000, "beamDamp":60},
+          {"beamDeform":130140, "beamStrength":"FLT_MAX"},
+          {"breakGroup":""},
+          ["drf1r","drf2r"],["drf1","drf2"],["drf1l","drf2l"],["drf1r","drf1"],["drf1","drf1l"],["drf2r","drf2"],["drf2","drf2l"],["drf1r","drf2"],["drf2r","drf1"],["drf1l","drf2"],["drf2l","drf1"],["drf1r","drf1l"],["drf2r","drf2l"],
+          {"beamSpring":600300,"beamDamp":50,"beamDeform":"FLT_MAX","beamStrength":20000},
+          {"breakGroup":"endplates_RR"},["drf2r","rep3r"],["drf2r","rep4r"],["drf2r","rwg1r"],["drf2r","rwg2r"],
+          {"breakGroup":"endplates_RL"},["drf2l","rep3l"],["drf2l","rep4l"],["drf2l","rwg1l"],["drf2l","rwg2l"],
+          {"breakGroup":""},["drf2","rwg1"],["drf2","rwg2"],
+          //DRS flap end
           //--REAR WING ENDPLATES--
           {"optional":false}
           {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
@@ -303,17 +333,17 @@
     ],
     "hydros": [
         ["id1:", "id2:"],
-        //DRS: lifts the leading edge (see tools/rb14/f1_setup.py)
-        ["rep1r","rwg1r", {"factor":"$=0.1563*(1-$drs_model)", "inputSource":"drs", "inputFactor":1, "inRate":4, "outRate":4, "beamSpring":2001000, "beamDamp":40, "beamDeform":"FLT_MAX", "beamStrength":20000, "breakGroup":"endplates_RR"}],
-        ["rep1l","rwg1l", {"factor":"$=0.1563*(1-$drs_model)", "inputSource":"drs", "inputFactor":1, "inRate":4, "outRate":4, "beamSpring":2001000, "beamDamp":40, "beamDeform":"FLT_MAX", "beamStrength":20000, "breakGroup":"endplates_RL"}],
+        //DRS: swings the flap's leading edge up about its trailing edge (see tools/rb14/f1_setup.py)
+        ["rep2r","drf1r", {"factor":0.1096, "inputSource":"drs", "inputFactor":1, "inRate":5, "outRate":5, "beamSpring":600000, "beamDamp":40, "beamDeform":"FLT_MAX", "beamStrength":20000, "breakGroup":"endplates_RR"}],
+        ["rep2l","drf1l", {"factor":0.1096, "inputSource":"drs", "inputFactor":1, "inRate":5, "outRate":5, "beamSpring":600000, "beamDamp":40, "beamDeform":"FLT_MAX", "beamStrength":20000, "breakGroup":"endplates_RL"}],
     ],
     "thrusters": [
         ["id1:", "id2:", "factor", "thrustLimit", "control"],
-        //DRS as forces, $drs_model 1 (see tools/rb14/f1_setup.py): forward on rx2 = less drag, up = less downforce
-        ["rx1r", "rx2r", "$=640*$drs_model", "$=1024*$drs_model", "drsThrust"],
-        ["rx4r", "rx2r", "$=1570*$drs_model", "$=2512*$drs_model", "drsThrust"],
-        ["rx1l", "rx2l", "$=640*$drs_model", "$=1024*$drs_model", "drsThrust"],
-        ["rx4l", "rx2l", "$=1570*$drs_model", "$=2512*$drs_model", "drsThrust"],
+        //DRS as forces (see tools/rb14/f1_setup.py): forward on rx2 = less drag, up = less downforce
+        ["rx1r", "rx2r", 640, 1024, "drsThrust"],
+        ["rx4r", "rx2r", 1570, 2512, "drsThrust"],
+        ["rx1l", "rx2l", 640, 1024, "drsThrust"],
+        ["rx4l", "rx2l", 1570, 2512, "drsThrust"],
     ],
     "triangles": [
             ["id1:","id2:","id3:"],
