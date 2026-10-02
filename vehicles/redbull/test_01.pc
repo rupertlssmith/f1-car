@@ -3,7 +3,7 @@
   "mainPartName": "redbull",
   "model": "redbull",
   "parts": {
-    "redbull_halo": ""
+    "redbull_halo": "redbull_halo_cover"
   },
   "vars": {
     "$arb_spring_F": 260000,

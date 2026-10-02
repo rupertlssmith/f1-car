@@ -99,7 +99,7 @@
         ],
         [
             "vehicles/redbull/info_test_01.json",
-            "d5df4825e5509be0"
+            "ea9d9b2571b277d4"
         ],
         [
             "vehicles/redbull/inputmaps/keyboard.json",
@@ -235,7 +235,7 @@
         ],
         [
             "vehicles/redbull/redbull.dae",
-            "bba0b77a6e799280"
+            "19afa1603efa68a5"
         ],
         [
             "vehicles/redbull/redbull.interaction.json",
@@ -251,7 +251,7 @@
         ],
         [
             "vehicles/redbull/redbull_body.jbeam",
-            "2d18444763d3c1ce"
+            "9e43a108ff5a0993"
         ],
         [
             "vehicles/redbull/redbull_brakes.jbeam",
@@ -407,7 +407,7 @@
         ],
         [
             "vehicles/redbull/redbull_wing_R.jbeam",
-            "e1e3a546f867ee0a"
+            "961c6202fdccd5a4"
         ],
         [
             "vehicles/redbull/screen/ReloadAlt-Light.ttf",
@@ -435,7 +435,7 @@
         ],
         [
             "vehicles/redbull/test_01.pc",
-            "fb48ab0652699621"
+            "75af9849be81c82c"
         ]
     ]
 }

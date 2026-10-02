@@ -191,6 +191,17 @@ def split_rb14(prims):
     wing assembly -- is sliced exactly along the panel cuts (panels.py) and
     assigned by region, and every cut edge gets a lip."""
     soups = {}
+    halo = [p for p in prims if p["material"] == "halo"]
+    halo_pts = (halo[0]["pos"] + np.array([X_SHIFT, 0, 0])) if halo else np.zeros((0, 3))
+
+    def on_halo(pts, tol=0.02):
+        """every point within tol of the halo's surface (its decals)"""
+        if not len(halo_pts):
+            return False
+        d = np.full(len(pts), np.inf)
+        for k in range(0, len(halo_pts), 2000):
+            d = np.minimum(d, np.min(np.linalg.norm(pts[:, None, :] - halo_pts[None, k:k + 2000, :], axis=2), axis=1))
+        return bool(np.all(d < tol))
 
     def add(part, mat, P, N, U):
         soups.setdefault(part, {}).setdefault(mat, []).append((P, N, U))
@@ -225,6 +236,8 @@ def split_rb14(prims):
             pts = P[sel].reshape(-1, 3)
             lo, hi = pts.min(0), pts.max(0)
             part = classify_piece(mat, lo, hi, pts.mean(0))
+            if mat == "decals" and len(pts) < 2000 and on_halo(pts):
+                part = "redbull_halo"                   # the halo's own logos go with it
             if part:
                 add(part, mat, P[sel], N[sel], U[sel])
             elif is_front_wing(lo, hi):
@@ -242,7 +255,12 @@ def split_rb14(prims):
                 add(part, mat, sp[s2], sn[s2], su[s2])
     soups = {part: {m: tuple(np.concatenate(a) for a in zip(*chunks)) for m, chunks in mats.items()}
              for part, mats in soups.items()}
-    body = {part: mats for part, mats in soups.items() if not part.startswith(("rim_", "tyre_"))}
+    # without the halo: flush covers where its mounts were (panels.halo_cover)
+    mounts = {m: v for m, v in soups.get("redbull_halo", {}).items() if m not in ("halo", "decals", "redbull_detail")}
+    if mounts:
+        soups["redbull_halo_cover"] = panels.halo_cover(mounts)
+    body = {part: mats for part, mats in soups.items()
+            if not part.startswith(("rim_", "tyre_")) and part != "redbull_halo_cover"}
     for part, mats in panels.lips(body).items():
         for m, (P, N, U) in mats.items():
             if m in soups[part]:

@@ -29,8 +29,8 @@ V = "vehicles/redbull"
 
 PREFIX, LABEL, SHEET = "test", "Test", "plans/round19-tests.md"
 FIXES = [   # (short name, what it changes, {vars}, {slot: part})
-    ("No halo", "Baseline (round 18's Hub Fix 15) without the halo: its part (mesh, 6 kg of nodes, beams and "
-     "collision triangles) left off", {}, {"redbull_halo": ""}),
+    ("No halo", "Baseline (round 18's Hub Fix 15) without the halo: its part (mesh, mounts, logo, 6 kg of nodes, "
+     "beams and collision triangles) replaced by flush covers over the mounts", {}, {"redbull_halo": "redbull_halo_cover"}),
 ]
 
 

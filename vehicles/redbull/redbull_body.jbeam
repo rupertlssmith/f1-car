@@ -651,4 +651,16 @@
         {"group":""},
     ],
 },
+"redbull_halo_cover": {
+    "information":{
+        "authors":"redbull mod (RB14 conversion)",
+        "name":"No Halo (mount covers)",
+        "value":0,
+    },
+    "slotType" : "redbull_halo",
+    "flexbodies":[
+        ["mesh", "[group]:", "nonFlexMaterials"],
+        ["redbull_halo_cover", ["redbull_body"]],
+    ],
+},
 }

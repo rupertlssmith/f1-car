@@ -1,7 +1,7 @@
 {
   "Config Type": "Custom",
   "Configuration": "Test 01 · No halo",
-  "Description": "Test car 1: Baseline (round 18's Hub Fix 15) without the halo: its part (mesh, 6 kg of nodes, beams and collision triangles) left off. Everything else is Baseline (no redbull_halo). Passes every offline check.",
+  "Description": "Test car 1: Baseline (round 18's Hub Fix 15) without the halo: its part (mesh, mounts, logo, 6 kg of nodes, beams and collision triangles) replaced by flush covers over the mounts. Everything else is Baseline (part redbull_halo_cover). Passes every offline check.",
   "Drivetrain": "RWD",
   "Fuel Type": "Gasoline",
   "Induction Type": "Turbo",

@@ -618,6 +618,19 @@ Every config: 1.9 g at low speed, 5-6 g braking from 300 km/h.
   combined medium / strong / max, 16 strong + more toe-in, 17 / 18 static
   rear toe +-0.6 deg. 4, 8, 11 and 15 are just over the stiffness target
   (1.68-1.72). Sheet `plans/hub-fixes.md`.
+- **Round 19 c (fixes from the game):** the DRS flap flexed in the middle:
+  its six nodes lie nearly in one plane, so beams alone left the centre free
+  to move out of plane (a zero-stiffness mode in setup_report's FEM). Four
+  torsion bars across its centre chord, as on the main wing (80 kNm/rad):
+  10 N on each centre node now moves it 0.03 mm. The no-halo car showed the
+  halo's mounts (a plinth under the centre pillar, and a fairing on each
+  shoulder rising into a socket for the rear leg) and its TAG Heuer logo
+  floating. panels.py now cuts the mounts out of the body skin (the plinth
+  above the chassis deck; on the shoulders only what rises above the deck
+  beside the cockpit, y 0.0-0.30) into the halo's mesh, with every decal
+  lying on the halo; the slot's other option, redbull_halo_cover ("No Halo
+  (mount covers)"), carries the deck on flat over them (painted, the livery's
+  own UVs). Test 01 uses it.
 - **Round 19 b (body panels, DRS flap, halo part):** the RB14 body is one
   continuous skin; the old split gave each whole triangle to a part by its
   centroid, so every panel edge was a ragged staircase, the engine cover took

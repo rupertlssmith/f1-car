@@ -51,6 +51,20 @@ Z_AIRBOX = 0.50              # airbox panel: above this
 Y_SIDEPOD_END = 1.60         # sidepods end at the coke bottle
 AX_ENDPLATE_F = 0.83         # front wing / endplate joint
 
+# Halo mounts (round 19 c): the body skin rises into a plinth under the halo's
+# centre pillar and into a nozzle around each rear leg (with an open socket
+# for it). They go with the halo part; without the halo, halo_cover()
+# makes the flush covers that replace them.
+HALO_FRONT = dict(ax=0.03, y=(-0.80, -0.53))                  # plinth: above the chassis deck
+DECK_Z = lambda P: 0.6889 + 0.341 * P[..., 0] ** 2             # chassis deck there (fit, rms 1.6 mm)
+HALO_FRONT_Z = 0.003                                            # above the deck's own +-1.6 mm
+HALO_REAR = dict(ax=(0.262, 0.335), y=(0.0, 0.30))               # nozzles: above the shoulder deck
+# the shoulder deck beside the cockpit (top of the cockpit-side box, which
+# the halo's leg fairing rises out of), by y
+SHOULDER_DECK = [(0.00, 0.758), (0.02, 0.771), (0.04, 0.780), (0.06, 0.785), (0.10, 0.787), (0.14, 0.790),
+                 (0.20, 0.792), (0.30, 0.794)]
+HALO_REAR_Z = 0.002
+
 # name -> f(P) for P (..., 3); a cut is the surface f = 0
 CUTS = {
     "nose": lambda P: P[..., 1] - Y_NOSE,
@@ -65,6 +79,15 @@ CUTS = {
     "airbox_side": lambda P: np.abs(P[..., 0]) - AX_AIRBOX,
     "airbox_low": lambda P: P[..., 2] - Z_AIRBOX,
     "sidepod_end": lambda P: P[..., 1] - Y_SIDEPOD_END,
+    "halo_f_x": lambda P: np.abs(P[..., 0]) - HALO_FRONT["ax"],
+    "halo_f_y0": lambda P: P[..., 1] - HALO_FRONT["y"][0],
+    "halo_f_y1": lambda P: P[..., 1] - HALO_FRONT["y"][1],
+    "halo_f_z": lambda P: P[..., 2] - DECK_Z(P) - HALO_FRONT_Z,
+    "halo_r_ax0": lambda P: np.abs(P[..., 0]) - HALO_REAR["ax"][0],
+    "halo_r_ax1": lambda P: np.abs(P[..., 0]) - HALO_REAR["ax"][1],
+    "halo_r_y0": lambda P: P[..., 1] - HALO_REAR["y"][0],
+    "halo_r_y1": lambda P: P[..., 1] - HALO_REAR["y"][1],
+    "halo_r_z": lambda P: P[..., 2] - _interp(SHOULDER_DECK, P[..., 1]) - HALO_REAR_Z,
     "floor_edge_y": lambda P: P[..., 1] - Y_FLOOR_EDGE,
     "floor_edge_ax": lambda P: np.abs(P[..., 0]) - AX_FLOOR_EDGE,
     "floor_edge_z": lambda P: P[..., 2] - Z_FLOOR_EDGE,
@@ -82,6 +105,8 @@ def region(c):
     """Body panel for a (sliced) skin triangle with centroid c."""
     x, y, z = c
     ax = abs(x)
+    if halo_mount(c):
+        return "redbull_halo"
     if y < Y_NOSE:
         return "redbull_nose"
     if y > Y_FLOOR_FRONT and z < _interp(FLOOR_TOP, y):
@@ -99,6 +124,86 @@ def region(c):
     if y < Y_AIRBOX and ax < AX_AIRBOX and z > Z_AIRBOX:
         return "redbull_rollhoop"
     return "redbull_enginecover"
+
+
+def halo_mount(c):
+    x, y, z = c
+    ax = abs(x)
+    if ax < HALO_FRONT["ax"] and HALO_FRONT["y"][0] < y < HALO_FRONT["y"][1] and z > DECK_Z(np.asarray(c)) + HALO_FRONT_Z:
+        return "front"
+    if (HALO_REAR["ax"][0] < ax < HALO_REAR["ax"][1] and HALO_REAR["y"][0] < y < HALO_REAR["y"][1]
+            and z > _interp(SHOULDER_DECK, y) + HALO_REAR_Z):
+        return "rear"
+    return None
+
+
+def halo_cover(mounts):
+    """The no-halo covers over the halo mounts ({material: (P, N, U)} of the
+    mount skin, decals and details left out), as clean painted surfaces:
+
+    front -- a flat patch over the plinth's footprint, level with the deck;
+    rear  -- per side the shoulder deck (the cockpit-side box's top)
+             carried on flat over the leg fairing's footprint, out to the
+             fairing's outer wall, which stays up to deck height.
+
+    UVs come from the nearest mount vertex, so the livery carries on."""
+    P = np.concatenate([v[0] for m, v in mounts.items() if m == "redbull_paint"])
+    U = np.concatenate([v[2] for m, v in mounts.items() if m == "redbull_paint"])
+    Q, UQ = P.reshape(-1, 3), U.reshape(-1, 2)
+    tris = []
+
+    def uv_at(p):
+        d = (Q[:, 0] - p[0]) ** 2 + (Q[:, 1] - p[1]) ** 2 + 0.25 * (Q[:, 2] - p[2]) ** 2
+        return UQ[int(np.argmin(d))]
+
+    def grid(Z, X, Y, flip):
+        """triangles of a heightfield grid, facing up"""
+        for i in range(Z.shape[0] - 1):
+            for j in range(Z.shape[1] - 1):
+                a, b = (X[i, j], Y[i, j], Z[i, j]), (X[i + 1, j], Y[i + 1, j], Z[i + 1, j])
+                c, d = (X[i + 1, j + 1], Y[i + 1, j + 1], Z[i + 1, j + 1]), (X[i, j + 1], Y[i, j + 1], Z[i, j + 1])
+                for t in ((a, b, c), (a, c, d)):
+                    t = np.array(t)
+                    n = np.cross(t[1] - t[0], t[2] - t[0])
+                    if n[2] < 0:
+                        t = t[[0, 2, 1]]
+                    tris.append(t)
+
+    # front: flat over the plinth footprint
+    fy0, fy1 = HALO_FRONT["y"]
+    fx = HALO_FRONT["ax"]
+    X, Y = np.meshgrid(np.linspace(-fx, fx, 5), np.linspace(fy0, fy1, 14), indexing="ij")
+    Z = DECK_Z(np.stack([X, Y, 0 * X], -1)) + HALO_FRONT_Z + 0.0004
+    grid(Z, X, Y, False)
+    # rear: the shoulder deck carried on flat over each fairing's footprint,
+    # from the cockpit side out to the fairing's outer wall (which stays, up
+    # to deck height)
+    ax0 = HALO_REAR["ax"][0]
+    deck = lambda y: _interp(SHOULDER_DECK, y) + HALO_REAR_Z + 0.0004
+    for side in (-1, 1):
+        q = Q[(np.sign(Q[:, 0]) == side) & (np.abs(Q[:, 0]) > 0.2)]
+        if not len(q):
+            continue
+        # the footprint's outline: where the cut at deck height runs
+        cut = q[np.abs(q[:, 2] - (_interp(SHOULDER_DECK, q[:, 1]) + HALO_REAR_Z)) < 3e-4]
+        cut = cut[np.abs(cut[:, 0]) > ax0 + 0.01]               # the outer side (not the inner cut)
+        if not len(cut):
+            continue
+        yb = np.linspace(cut[:, 1].min(), cut[:, 1].max(), 40)
+        near = [np.abs(cut[np.abs(cut[:, 1] - b) < 0.006, 0]) for b in yb]
+        out = np.array([v.max() if len(v) else np.nan for v in near])
+        ok = ~np.isnan(out)
+        out = np.interp(yb, yb[ok], out[ok])
+        out = np.maximum(out + 0.003, ax0 + 0.004)              # a little onto the wall top
+        A = np.array([np.linspace(ax0, o, 6) for o in out]).T          # (6, len(yb))
+        Y = np.repeat(yb[None], 6, 0)
+        grid(deck(Y), side * A, Y, side < 0)
+    T = np.array(tris)
+    n = np.cross(T[:, 1] - T[:, 0], T[:, 2] - T[:, 0])
+    n /= np.maximum(np.linalg.norm(n, axis=1, keepdims=True), 1e-12)
+    N = np.repeat(n[:, None], 3, 1)
+    UV = np.array([[uv_at(p) for p in t] for t in T])
+    return {"redbull_paint": (T, N, UV)}
 
 
 def region_wing_F(c):
@@ -185,8 +290,9 @@ def lips(soups, depth=LIP_DEPTH):
                     edges.setdefault((min(ka, kb), max(ka, kb)), []).append((part, mat, t, a, b))
     out = {}
     for users in edges.values():
-        if len({u[0] for u in users}) < 2:
-            continue
+        parts = {u[0] for u in users}
+        if len(parts) < 2 or "redbull_halo" in parts:
+            continue                # halo mounts: covered by the halo or by its no-halo covers
         for part, mat, t, a, b in users:
             P, N, U = soups[part][mat]
             pa, pb = P[t, a], P[t, b]

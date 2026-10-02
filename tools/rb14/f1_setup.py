@@ -1085,6 +1085,7 @@ FLAP_LE = (2.401, 0.879)       # (y, z) of the flap's leading / trailing edge at
 FLAP_TE = (2.505, 0.962)       # default wing angle (8 deg), from the RB14 mesh
 FLAP_X = 0.43
 FLAP_NODE_WEIGHT = 0.5
+FLAP_TORSION = (80000, 8, 60000, 120000)   # Nm/rad, damping, deform / break torque (Nm)
 WING_PIVOT_R = (2.5674, 0.9421)  # the wing flexbodies' pivot (wing angle setting)
 FLAP_BEGIN, FLAP_END = "//DRS flap (round 19, f1_setup.py)", "//DRS flap end"
 
@@ -1119,6 +1120,16 @@ def drs_flap():
     rows += [" " * 9 + '{"selfCollision":true},', " " * 9 + FLAP_END]
     k = text.index("         //--BEAM WING--")
     text = text[:k] + E.join(rows) + E + text[k:]
+    # torsion bars across the flap's centre chord (as the main wing has):
+    # its six nodes lie nearly in one plane, where beams alone leave the
+    # centre free to move out of plane -- the flap flexed in the middle
+    tb = [" " * 8 + FLAP_BEGIN,
+          " " * 8 + '{"spring":%d, "damp":%d, "deform":%d, "strength":%d},' % FLAP_TORSION,
+          " " * 8 + '["drf2r","drf2","drf1","drf1l"],["drf2l","drf2","drf1","drf1r"],'
+                    '["drf2r","drf2","drf1","drf1r"],["drf2l","drf2","drf1","drf1l"],',
+          " " * 8 + FLAP_END]
+    k = text.index("        //rigidify endplates")
+    text = text[:k] + E.join(tb) + E + text[k:]
     # beams: the flap frame, and its trailing edge (hinge) held to the wing
     beams = [" " * 10 + FLAP_BEGIN,
              " " * 10 + '{"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},',
@@ -1734,6 +1745,12 @@ def halo_part():
             '    "triangles":[\r\n        ["id1:", "id2:", "id3:"],\r\n        {"triangleType":"NORMALTYPE"},\r\n'
             '        {"dragCoef":8},\r\n        {"group":"redbull_halo"},\r\n        {"groundModel":"metal"},\r\n        ' + tris +
             '\r\n        {"group":""},\r\n    ],\r\n},')
+    # without the halo: the flush covers over its mounts (build_model.py)
+    text = re.sub(r'\r\n"redbull_halo_cover":\s*\{.*?(?=\r\n"[A-Za-z0-9_]+"\s*:\s*\{|\r\n\}\s*$)', "", text, flags=re.S)
+    part += ('\r\n"redbull_halo_cover": {\r\n'
+             '    "information":{\r\n        "authors":"redbull mod (RB14 conversion)",\r\n        "name":"No Halo (mount covers)",\r\n        "value":0,\r\n    },\r\n'
+             '    "slotType" : "redbull_halo",\r\n'
+             '    "flexbodies":[\r\n        ["mesh", "[group]:", "nonFlexMaterials"],\r\n        ["redbull_halo_cover", ["redbull_body"]],\r\n    ],\r\n},')
     k = text.rindex("\r\n}")
     text = text[:k].rstrip() + part + text[k:]
     je._write(f, text)

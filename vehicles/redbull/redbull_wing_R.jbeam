@@ -35,6 +35,10 @@
         ["rwg2r","rwg2","rwg1","rwg1r"],
         ["rwg2l","rwg2","rwg1","rwg1l"],
         
+        //DRS flap (round 19, f1_setup.py)
+        {"spring":80000, "damp":8, "deform":60000, "strength":120000},
+        ["drf2r","drf2","drf1","drf1l"],["drf2l","drf2","drf1","drf1r"],["drf2r","drf2","drf1","drf1r"],["drf2l","drf2","drf1","drf1l"],
+        //DRS flap end
         //rigidify endplates
         {"spring":10000, "damp":5, "deform":20000, "strength":15000},
         ["rep2r","rep1r","rep3r","rep4r"],
