@@ -1,5 +1,8 @@
 # Hub-fix test cars (round 18)
 
+**Result (round 19): Hub Fix 15 (Combined max) was the best car and is now Baseline;
+the test cars are retired.**
+
 The problem: after a hard turn, with the steering centred, the car keeps turning
 the other way for ~2.5-5 s. The round-17 sensors (replayTurns, Baseline) show why:
 the rear toe follows the rear axle height at ~0.17 deg per mm (the offline model:

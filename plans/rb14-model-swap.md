@@ -618,6 +618,13 @@ Every config: 1.9 g at low speed, 5-6 g braking from 300 km/h.
   combined medium / strong / max, 16 strong + more toe-in, 17 / 18 static
   rear toe +-0.6 deg. 4, 8, 11 and 15 are just over the stiffness target
   (1.68-1.72). Sheet `plans/hub-fixes.md`.
+- **Round 19 (Hub Fix 15 is Baseline):** `$rear_hub_beam` 2, `$rear_brace`
+  1.5, `$rear_toe_brace` 6, `$rear_corner_mass` 12 by default. The ballast is
+  solved without the corner mass (which then comes out of the engine
+  ballast), exactly as the test car had it: 733 kg dry, 45.9 % front (the
+  mass moved rearward from the engine to the rear corners). Its stiffness
+  1.72 was over the old 1.67 target; it was the best car in the game, so the
+  target is now 1.72. Hub Fix test cars retired.
 - **Reference check (after round 18):** `check_mod.py` only checked beam-
   style node columns in the default car. It now checks every reference, in
   all 29 cars (default, 22 configurations, 6 optional parts), and runs the

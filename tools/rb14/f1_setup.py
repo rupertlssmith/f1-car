@@ -97,6 +97,9 @@ def ballast():
 
     v = sr.Vehicle("redbull", None)
     v.variables["$fuel"] = 0
+    # solved without the rear-corner mass shift: it comes out of the engine
+    # ballast below (same total; round 19's Baseline = Hub Fix 15 as tested)
+    v.variables["$rear_corner_mass"] = 0
     v._nodes()
     mr = sr.mass_report(v)
     m0, f0 = mr["total"], mr["front"] * mr["total"]
@@ -133,7 +136,7 @@ def ballast():
 # (the arms stay ~30x stiffer than the suspension, so handling barely
 # changes). Chassis and gearbox nodes get mass instead, paid for by the
 # plank ballast (solved in ballast()).
-MAX_OMEGA_DT = float(os.environ.get("RB14_MAX_OMEGA_DT", 1.67))   # round 13: Front Fix 4 at 1.67 was the best car in game
+MAX_OMEGA_DT = float(os.environ.get("RB14_MAX_OMEGA_DT", 1.72))   # round 13: Front Fix 4 at 1.67 was the best car in game; round 19: Hub Fix 15 at 1.72 (rear hub) the best, no shake
 # With damping (setup_report: sqrt((omega*dt)^2 + 2*gamma), limit 2): the F4
 # peaks at 1.97 (crash box); round 9's rear wing at 2.01 shook itself off.
 MAX_DAMPED = 1.85
@@ -1050,14 +1053,15 @@ ROUND16_VARS = [
      '"Rear wheel droop before the hard stop, x the base (~50 mm)", {"stepDis":0.1, "subCategory":"Rear"}'),
     ("$halfshaft_play", '"x", "Differentials", 1, 1, 4, "Driveshaft Plunge", '
      '"Rear driveshaft plunge before its end stops, x the base (+-5 % of its length)", {"stepDis":0.5, "subCategory":"Rear"}'),
-    # round 18 (the rear hub shifting on its upright: rear_hub_fix())
-    ("$rear_hub_beam", '"x", "Suspension", 1, 1, 4, "Rear Axle Beams", '
+    # round 18 (the rear hub shifting on its upright: rear_hub_fix()); round 19:
+    # Hub Fix 15 ("Combined max") is Baseline
+    ("$rear_hub_beam", '"x", "Suspension", 2, 1, 4, "Rear Axle Beams", '
      '"Stiffness of the beams holding the rear axle nodes to the upright, x the base", {"stepDis":0.25, "subCategory":"Rear"}'),
-    ("$rear_brace", '"x", "Suspension", 0, 0, 2, "Rear Hub Bracing", '
+    ("$rear_brace", '"x", "Suspension", 1.5, 0, 2, "Rear Hub Bracing", '
      '"Extra beams from fore / aft brace nodes on the rear upright to the axle, x the upright links", {"stepDis":0.25, "subCategory":"Rear"}'),
-    ("$rear_corner_mass", '"kg", "Suspension", 0, 0, 12, "Rear Corner Mass Shift", '
+    ("$rear_corner_mass", '"kg", "Suspension", 12, 0, 12, "Rear Corner Mass Shift", '
      '"kg per rear wheel moved from the engine ballast to its axle and upright nodes (same total; lets stiffer hub beams stay stable)", {"stepDis":0.5, "subCategory":"Rear"}'),
-    ("$rear_toe_brace", '"x", "Suspension", 0, 0, 10, "Rear Toe Brace", '
+    ("$rear_toe_brace", '"x", "Suspension", 6, 0, 10, "Rear Toe Brace", '
      '"Torsion bar holding the rear axle line against toe about the upright, x 100 kNm/rad", {"stepDis":0.5, "subCategory":"Rear"}'),
 ]
 
