@@ -17,11 +17,15 @@ before round 12 were named `redbull_YYYYMMDD-HHMMSS.zip`; delete any of
 those left there -- the game loads every copy, and their configurations
 (e.g. the old *Sweep* test cars) keep showing up in the vehicle list.
 
+Every build first runs `tools/check_mod.py` (the model check: it needs
+`numpy`, and refuses the build if the model has errors; `--no-check` skips
+it). `luajit`, if installed, lets it also run the Lua controllers.
+
 **Linux (Debian / Ubuntu)** — system-wide `pip install` is blocked there
 (PEP 668), so use the distro package:
 
 ```bash
-sudo apt install python3-xxhash
+sudo apt install python3-xxhash python3-numpy
 python3 tools/build_mod.py
 ```
 
@@ -29,18 +33,18 @@ or, if that package isn't available, a virtualenv in the repo:
 
 ```bash
 python3 -m venv .venv
-.venv/bin/pip install xxhash
+.venv/bin/pip install xxhash numpy
 .venv/bin/python tools/build_mod.py
 ```
 
 **Windows** (PowerShell or cmd, with Python 3 from python.org):
 
 ```powershell
-py -m pip install xxhash
+py -m pip install xxhash numpy
 py tools\build_mod.py
 ```
 
-**Dev container** — `xxhash` is already installed:
+**Dev container** — `xxhash` and `numpy` are already installed:
 
 ```bash
 ./docker/dev.sh python tools/build_mod.py

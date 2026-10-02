@@ -111,6 +111,10 @@ def main():
         res = subprocess.run([sys.executable, os.path.join(REPO, "tools", "check_mod.py"), "--mod", args.mod],
                              cwd=REPO, capture_output=True, text=True)
         print(res.stdout.strip().splitlines()[-1] if res.stdout.strip() else res.stderr.strip())
+        if "ModuleNotFoundError" in res.stderr:
+            sys.exit("the model check needs a Python package that is not installed (%s): see README.md "
+                     "(e.g. pip install numpy), or build with --no-check"
+                     % res.stderr.strip().splitlines()[-1])
         if res.returncode != 0:
             print("\n".join(l for l in res.stdout.splitlines() if l.startswith("ERROR")))
             sys.exit("check_mod.py found errors: not building (--no-check to build anyway)")
