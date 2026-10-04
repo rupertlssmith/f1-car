@@ -1,0 +1,13 @@
+{
+  "Config Type": "Custom",
+  "Configuration": "Shimmy Fix 10 · Roll damper + packers",
+  "Description": "Shimmy Fix car 10: 3 + 4 (the corner bounce). Everything else is Baseline (arb_damp_F 8000, packer_F 0.035). Passes every offline check.",
+  "Drivetrain": "RWD",
+  "Fuel Type": "Gasoline",
+  "Induction Type": "Turbo",
+  "Propulsion": "Hybrid",
+  "Transmission": "Sequential",
+  "Off-Road Score": 0,
+  "Population": 0,
+  "Value": 12000000
+}

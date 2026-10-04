@@ -618,6 +618,24 @@ Every config: 1.9 g at low speed, 5-6 g braking from 300 km/h.
   combined medium / strong / max, 16 strong + more toe-in, 17 / 18 static
   rear toe +-0.6 deg. 4, 8, 11 and 15 are just over the stiffness target
   (1.68-1.72). Sheet `plans/hub-fixes.md`.
+- **Round 21 (Wobble Fix 2 is Baseline; compliance steer):** front toe
+  brace 1.5 by default; offline targets raised to its values (1.835 /
+  1.875 / 1.875), as it drove a full Silverstone lap. Its lap still shimmies
+  (~8 Hz, 2 deg RMS above 3.5 g). Replay: each front wheel's toe follows its
+  own tyre load (coherence 0.55-0.71, ~1 deg per kN), and every wheel, inner
+  or outer, steers away from the corner as its load rises; the tyre loads
+  bounce at 7-8 Hz in hard corners at the rear too, where the toe stays
+  put. FEM (rack free): cornering force bends the front wishbone legs, the
+  upright moves back, the track rod turns it toe-out: 0.107 deg per kN
+  lateral, 0.239 per kN rearward; wishbones rigid -> +0.03, track rod rigid
+  -> 0.144 (worse). New variables: `$wishbone_stiff_F` (lower / upper arm
+  option row), `$balljoint_mass_F` (kg from the rim's hub nodes to fh4, the
+  mode that limits stiffer arms), `$steer_arm_F` (fh3 forward in mm; the
+  rack is at its rail's end, so lock drops ~1 % per mm), `$arb_damp_F`
+  (front ARB torsion-bar damping as wheel damping). Shimmy Fix 1-6 single
+  fixes (wishbones 2x, steering arm 20 mm, roll damper, later packers,
+  aero balance, roll balance), 7-13 combinations; 9 (wishbones 3x) is just
+  over the damping target. Sheet `plans/shimmy-fixes.md`.
 - **Round 20 (front wobble, Silverstone replay):** `handling_analysis.py`
   reads a replay at 25 Hz: each front wheel shimmies at ~6.9 Hz on its own
   (coherence with its track rod 0.92-0.94, with the driver 0.02), from

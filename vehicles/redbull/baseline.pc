@@ -31,7 +31,7 @@
     "$springheight_R": 0,
     "$tirepressure_F": 21,
     "$tirepressure_R": 19.5,
-    "$toe_F": 0.9991,
+    "$toe_F": 0.9992,
     "$toe_R": 0.9926,
     "$wing_angle_B": 3,
     "$wing_angle_F": -3,

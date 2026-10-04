@@ -20,17 +20,21 @@
         ["name", "type", "unit", "category", "default", "min", "max", "title", "description"],
         ["$camber_F", "range", "", "Wheel Alignment", 0.985, 0.97, 1.03, "Camber Adjust", "Adjusts the wheel camber angle", {"subCategory":"Front"}],
         ["$caster_F", "range", "", "Wheel Alignment", 1.018, 0.980, 1.025, "Caster Adjust", "Adjusts forward rake of the steering axis", {"subCategory":"Front"}],
-        ["$toe_F", "range", "", "Wheel Alignment", 0.9991, 0.995, 1.005, "Toe Adjust", "Adjusts the toe angle (lower: more toe-in)", {"subCategory":"Front"}],
+        ["$toe_F", "range", "", "Wheel Alignment", 0.9992, 0.995, 1.005, "Toe Adjust", "Adjusts the toe angle (lower: more toe-in)", {"subCategory":"Front"}],
         ["$tyre_carcass_F", "range", "x", "Wheels", 1.3, 1.0, 1.8, "Front Tire Carcass Stiffness", "Tread and sidewall stiffness of the front tires, x the base tire", {"stepDis":0.05, "subCategory":"Front"}],
         ["$carrier_damp_F", "range", "N/m/s", "Suspension", 600, 300, 1500, "Front Upright Damping", "Damping of the front wheel carriers (wheel judder)", {"stepDis":50, "subCategory":"Front"}],
         ["$upright_mass_F", "range", "kg", "Suspension", 2, 0, 5, "Front Upright Mass Shift", "Mass moved from each front rim to its upright (same corner weight)", {"stepDis":0.5, "subCategory":"Front"}],
         ["$steer_damper_F", "range", "x", "Suspension", 1.0, 0.2, 2.0, "Steering Damper", "Damping of the steering motion at the front uprights, x the base", {"stepDis":0.1, "subCategory":"Front"}],
-        ["$front_toe_brace", "range", "x", "Suspension", 0, 0, 10, "Front Toe Brace", "Torsion bars holding each front axle against toe about its upright's steering axis, x 100 kNm/rad", {"stepDis":0.5, "subCategory":"Front"}],
+        ["$front_toe_brace", "range", "x", "Suspension", 1.5, 0, 10, "Front Toe Brace", "Torsion bars holding each front axle against toe about its upright's steering axis, x 100 kNm/rad", {"stepDis":0.5, "subCategory":"Front"}],
         ["$front_toe_damp", "range", "Nms/rad", "Suspension", 0, 0, 3000, "Front Shimmy Damper", "Damping of each front axle's toe about its upright (the toe brace torsion bars)", {"stepDis":100, "subCategory":"Front"}],
         ["$front_hub_beam", "range", "x", "Suspension", 1, 1, 3, "Front Axle Beams", "Stiffness of the beams holding the front axle nodes to the upright, x the base", {"stepDis":0.25, "subCategory":"Front"}],
         ["$tierod_stiff", "range", "x", "Suspension", 1, 1, 2, "Track Rod Stiffness", "Stiffness of the front track rods, x the base", {"stepDis":0.1, "subCategory":"Front"}],
         ["$tierod_damp", "range", "x", "Suspension", 1, 1, 10, "Track Rod Damping", "Damping of the front track rods, x the base (150 Ns/m)", {"stepDis":0.5, "subCategory":"Front"}],
         ["$tyre_grip_F", "range", "x", "Wheels", 1, 0.9, 1.15, "Front Tire Grip", "Grip of the front dry tires, x the base", {"stepDis":0.01, "subCategory":"Front"}],
+        ["$wishbone_stiff_F", "range", "x", "Suspension", 1, 1, 5, "Front Wishbone Stiffness", "Stiffness of the front wishbone legs, x the base (cornering force bends them into toe-out)", {"stepDis":0.25, "subCategory":"Front"}],
+        ["$steer_arm_F", "range", "mm", "Suspension", 0, 0, 30, "Front Steering Arm", "Moves the front track rods' outer ends forward (longer steering arm: stiffer toe, less steering lock)", {"stepDis":5, "subCategory":"Front"}],
+        ["$balljoint_mass_F", "range", "kg", "Suspension", 0, 0, 3, "Front Ball Joint Mass Shift", "Mass moved from each front rim to its upper ball joint (same corner weight)", {"stepDis":0.5, "subCategory":"Front"}],
+        ["$arb_damp_F", "range", "N/m/s", "Suspension", 0, 0, 20000, "Anti-Roll Bar Damping", "Damping of the front anti-roll bar, as wheel damping in roll", {"stepDis":1000, "subCategory":"Front"}],
     ],
     "flexbodies": [
          ["mesh", "[group]:", "nonFlexMaterials"],
@@ -65,13 +69,13 @@
          ["fh1l", 0.7317, -1.5248, 0.2347,{"group":["redbull_hub_F","redbull_lowerarm_F"], "nodeWeight":5}],
          {"nodeWeight":5.0},
          {"group":["redbull_hub_F","redbull_upperarm_F"]},
-         ["fh4r",-0.6723, -1.5044, 0.4396, {"nodeWeight":4}],
-         ["fh4l", 0.6723, -1.5044, 0.4396, {"nodeWeight":4}],
+         ["fh4r",-0.6723, -1.5044, 0.4396, {"nodeWeight":"$=4+$balljoint_mass_F"}],
+         ["fh4l", 0.6723, -1.5044, 0.4396, {"nodeWeight":"$=4+$balljoint_mass_F"}],
          {"group":["redbull_hub_F","redbull_tierod_F"]},
          //tie rod end
          {"nodeWeight":5.5},
-         ["fh3r",-0.7119, -1.5849, 0.4299, {"group":["redbull_hub_F","redbull_tierod_FR"], "nodeWeight":"$=4+$upright_mass_F/2"}],
-         ["fh3l", 0.7119, -1.5849, 0.4299, {"group":["redbull_hub_F","redbull_tierod_FL"], "nodeWeight":"$=4+$upright_mass_F/2"}],
+         ["fh3r",-0.7119, "$=-1.5849-$steer_arm_F/1000", 0.4299, {"group":["redbull_hub_F","redbull_tierod_FR"], "nodeWeight":"$=4+$upright_mass_F/2"}],
+         ["fh3l", 0.7119, "$=-1.5849-$steer_arm_F/1000", 0.4299, {"group":["redbull_hub_F","redbull_tierod_FL"], "nodeWeight":"$=4+$upright_mass_F/2"}],
          {"nodeWeight":4.0},
          {"group":"redbull_hub_F"},
          {"collision":false},
@@ -225,7 +229,7 @@
           //lower arm
           {"deformLimitExpansion":1.5},
           {"beamDeform":125500,"beamStrength":5000500},
-          {"beamSpring":6000000,"beamDamp":1500},
+          {"beamSpring":"$=6000000*$wishbone_stiff_F","beamDamp":1500},
           
           ["fx2r","fh1r", {"breakGroup":"lowerarm_FR","beamPrecompression":"$caster_F","beamPrecompressionTime":0.5,"dampCutoffHz":500}],
           ["fx2l","fh1l", {"breakGroup":"lowerarm_FL","beamPrecompression":"$caster_F","beamPrecompressionTime":0.5,"dampCutoffHz":500}],
@@ -452,7 +456,7 @@
     "torsionbars": [
         ["id1:", "id2:", "id3:", "id4:"],
         //heave (third) spring: lengthwise axis on the centreline, hubs as arms
-        {"spring":"$=$heave_spring_F*0.5967", "damp":"$=$heave_spring_F*0.5967*0.03", "deform":40000, "strength":9999999},
+        {"spring":"$=$heave_spring_F*0.5966", "damp":"$=$heave_spring_F*0.5966*0.03", "deform":40000, "strength":9999999},
         ["fh1r", "fs1", "mt3", "fh1l"],
     ],
     "beams": [
@@ -500,9 +504,9 @@
           //IMPORTANT: if precompressionRange is ~= nil then it supersedes beamPrecompression.
           //The case() is for backwards compatibility for old configs containing the "rideheight_F" variable.
           //To change the base ride height, edit the springheight_F offset in the expression.
-          ["fh1r","fs1", {"breakGroup":["lowerarm_FR","upperarm_FR"],"name":"spring_FR", "beamPrecompression":1, "precompressionRange":"$=(($springheight_F + 0.01)*(0.5965*$spring_F + $heave_spring_F/0.5965) + 4845.0)/$spring_F",
+          ["fh1r","fs1", {"breakGroup":["lowerarm_FR","upperarm_FR"],"name":"spring_FR", "beamPrecompression":1, "precompressionRange":"$=(($springheight_F + 0.01)*(0.5964*$spring_F + $heave_spring_F/0.5964) + 4844.0)/$spring_F",
               "soundFile":"event:>Vehicle>Suspension>car_modn_med_01>spring_compress_01","colorFactor":0.4,"attackFactor":60,"volumeFactor":1.5,"decayFactor":40,"noiseFactor":0.01,"pitchFactor":1.0,"maxStress":2000}],
-          ["fh1l","fs1", {"breakGroup":["lowerarm_FL","upperarm_FL"],"name":"spring_FL", "beamPrecompression":1, "precompressionRange":"$=(($springheight_F + 0.01)*(0.5965*$spring_F + $heave_spring_F/0.5965) + 4845.0)/$spring_F",
+          ["fh1l","fs1", {"breakGroup":["lowerarm_FL","upperarm_FL"],"name":"spring_FL", "beamPrecompression":1, "precompressionRange":"$=(($springheight_F + 0.01)*(0.5964*$spring_F + $heave_spring_F/0.5964) + 4844.0)/$spring_F",
               "soundFile":"event:>Vehicle>Suspension>car_modn_med_01>spring_compress_01","colorFactor":0.4,"attackFactor":60,"volumeFactor":1.5,"decayFactor":40,"noiseFactor":0.01,"pitchFactor":1.0,"maxStress":2000}],
           //damper
           {"beamPrecompression":1, "beamType":"|BOUNDED","beamLongBound":1, "beamShortBound":1},
@@ -513,8 +517,8 @@
           //hard bump stop
           {"beamSpring":0,"beamDamp":0},
           {"beamLimitSpring":501000,"beamLimitDamp":2000},
-          ["fh1r","fs1", {"breakGroup":["lowerarm_FR","upperarm_FR"],"longBoundRange":0.04,"shortBoundRange":"$=$packer_F*0.5965","boundZone":0.012,"beamLimitDampRebound":0,"dampCutoffHz":500}],
-          ["fh1l","fs1", {"breakGroup":["lowerarm_FL","upperarm_FL"],"longBoundRange":0.04,"shortBoundRange":"$=$packer_F*0.5965","boundZone":0.012,"beamLimitDampRebound":0,"dampCutoffHz":500}],
+          ["fh1r","fs1", {"breakGroup":["lowerarm_FR","upperarm_FR"],"longBoundRange":0.04,"shortBoundRange":"$=$packer_F*0.5964","boundZone":0.012,"beamLimitDampRebound":0,"dampCutoffHz":500}],
+          ["fh1l","fs1", {"breakGroup":["lowerarm_FL","upperarm_FL"],"longBoundRange":0.04,"shortBoundRange":"$=$packer_F*0.5964","boundZone":0.012,"beamLimitDampRebound":0,"dampCutoffHz":500}],
           //fake shock stopper
           {"beamSpring":0,"beamDamp":0},
           {"beamLimitSpring":501000,"beamLimitDamp":2000},
@@ -612,7 +616,7 @@
         //28mm 4246
         //29mm 4886
         //30mm 5596
-        {"spring":"$=$arb_spring_F*0.1197", "damp":10, "deform":40000, "strength":9999999},
+        {"spring":"$=$arb_spring_F*0.1197", "damp":"$=10+$arb_damp_F*0.1197", "deform":40000, "strength":9999999},
         ["fh1r", "fx2r", "fx2l", "fh1l"],
     ],
 },

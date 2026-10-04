@@ -2,12 +2,11 @@
   "format": 2,
   "mainPartName": "redbull",
   "model": "redbull",
-  "parts": {
-    "redbull_gearset": "redbull_gearset_short"
-  },
+  "parts": {},
   "vars": {
-    "$arb_spring_F": 180000,
+    "$arb_spring_F": 260000,
     "$arb_spring_R": 110000,
+    "$balljoint_mass_F": 2,
     "$brakebias": 0.58,
     "$brakestrength": 1,
     "$camber_F": 0.985,
@@ -22,21 +21,23 @@
     "$fuel": 60,
     "$heave_spring_F": 70000,
     "$heave_spring_R": 65000,
-    "$lsdlockcoef_R": 0.3,
+    "$lsdlockcoef_R": 0.1,
     "$lsdlockcoefrev_R": 0.06,
     "$lsdpreload_R": 20,
     "$packer_F": 0.025,
     "$packer_R": 0.032,
-    "$spring_F": 300000,
-    "$spring_R": 430000,
-    "$springheight_F": 0.004,
-    "$springheight_R": 0.004,
-    "$tirepressure_F": 20,
-    "$tirepressure_R": 19,
+    "$spring_F": 355000,
+    "$spring_R": 495000,
+    "$springheight_F": 0,
+    "$springheight_R": 0,
+    "$steer_arm_F": 20,
+    "$tirepressure_F": 21,
+    "$tirepressure_R": 19.5,
     "$toe_F": 0.9992,
     "$toe_R": 0.9926,
     "$wing_angle_B": 3,
-    "$wing_angle_F": 0,
-    "$wing_angle_R": 15
+    "$wing_angle_F": -3,
+    "$wing_angle_R": 8,
+    "$wishbone_stiff_F": 2
   }
 }

@@ -1,0 +1,13 @@
+{
+  "Config Type": "Custom",
+  "Configuration": "Shimmy Fix 04 · Later front packers",
+  "Description": "Shimmy Fix car 4: front packers engage after 35 mm of wheel travel (was 25). Everything else is Baseline (packer_F 0.035). Passes every offline check.",
+  "Drivetrain": "RWD",
+  "Fuel Type": "Gasoline",
+  "Induction Type": "Turbo",
+  "Propulsion": "Hybrid",
+  "Transmission": "Sequential",
+  "Off-Road Score": 0,
+  "Population": 0,
+  "Value": 12000000
+}

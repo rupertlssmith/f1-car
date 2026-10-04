@@ -1,0 +1,13 @@
+{
+  "Config Type": "Custom",
+  "Configuration": "Shimmy Fix 07 · Wishbones + arm",
+  "Description": "Shimmy Fix car 7: 1 + 2: 0.055 deg per kN cornering, 0.136 per kN rearward, 540 Nm/deg. Everything else is Baseline (wishbone_stiff_F 2, balljoint_mass_F 2, steer_arm_F 20). Passes every offline check.",
+  "Drivetrain": "RWD",
+  "Fuel Type": "Gasoline",
+  "Induction Type": "Turbo",
+  "Propulsion": "Hybrid",
+  "Transmission": "Sequential",
+  "Off-Road Score": 0,
+  "Population": 0,
+  "Value": 12000000
+}

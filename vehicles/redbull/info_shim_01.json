@@ -1,0 +1,13 @@
+{
+  "Config Type": "Custom",
+  "Configuration": "Shimmy Fix 01 · Stiffer wishbones",
+  "Description": "Shimmy Fix car 1: front wishbone legs 2x stiffer, 2 kg per corner from the rim to the upper ball joint to carry it: toe-out per kN of cornering force 0.107 -> 0.037 deg. Everything else is Baseline (wishbone_stiff_F 2, balljoint_mass_F 2). Passes every offline check.",
+  "Drivetrain": "RWD",
+  "Fuel Type": "Gasoline",
+  "Induction Type": "Turbo",
+  "Propulsion": "Hybrid",
+  "Transmission": "Sequential",
+  "Off-Road Score": 0,
+  "Population": 0,
+  "Value": 12000000
+}

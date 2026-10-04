@@ -1,0 +1,13 @@
+{
+  "Config Type": "Custom",
+  "Configuration": "Shimmy Fix 03 · Front roll damper",
+  "Description": "Shimmy Fix car 3: damping on the front anti-roll bar, 8000 Ns/m at the wheels in roll (the 7-8 Hz corner bounce). Everything else is Baseline (arb_damp_F 8000). Passes every offline check.",
+  "Drivetrain": "RWD",
+  "Fuel Type": "Gasoline",
+  "Induction Type": "Turbo",
+  "Propulsion": "Hybrid",
+  "Transmission": "Sequential",
+  "Off-Road Score": 0,
+  "Population": 0,
+  "Value": 12000000
+}

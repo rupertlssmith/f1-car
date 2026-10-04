@@ -1,0 +1,13 @@
+{
+  "Config Type": "Custom",
+  "Configuration": "Shimmy Fix 13 · All",
+  "Description": "Shimmy Fix car 13: wishbones 2.5x + arm + roll damper + later packers + aero balance + roll balance. Everything else is Baseline (wishbone_stiff_F 2.5, balljoint_mass_F 2, steer_arm_F 20, arb_damp_F 8000, packer_F 0.035, wing_angle_F 0, wing_angle_R 6, arb_spring_F 150000, arb_spring_R 200000). Passes every offline check.",
+  "Drivetrain": "RWD",
+  "Fuel Type": "Gasoline",
+  "Induction Type": "Turbo",
+  "Propulsion": "Hybrid",
+  "Transmission": "Sequential",
+  "Off-Road Score": 0,
+  "Population": 0,
+  "Value": 12000000
+}

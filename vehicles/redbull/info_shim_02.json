@@ -1,0 +1,13 @@
+{
+  "Config Type": "Custom",
+  "Configuration": "Shimmy Fix 02 · Longer steering arm",
+  "Description": "Shimmy Fix car 2: track rods' outer ends 20 mm forward (arm 78 -> 96 mm): toe stiffness 320 -> 454 Nm/deg, toe-out per kN rearward 0.24 -> 0.16 deg; ~18 % less steering lock, slower steering. Everything else is Baseline (steer_arm_F 20). Passes every offline check.",
+  "Drivetrain": "RWD",
+  "Fuel Type": "Gasoline",
+  "Induction Type": "Turbo",
+  "Propulsion": "Hybrid",
+  "Transmission": "Sequential",
+  "Off-Road Score": 0,
+  "Population": 0,
+  "Value": 12000000
+}

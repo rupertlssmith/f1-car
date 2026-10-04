@@ -36,6 +36,9 @@ def weights(path, table):
 # corner from the front rim's 32 hub nodes (wheels()): same corner mass,
 # placed where the limiting wheel-corner mode sits (round 12 variants)
 UPRIGHT_F = "$=4+$upright_mass_F/2"
+# round 21: the upper ball joints (fh4, 4 kg) limit stiffer wishbones;
+# $balljoint_mass_F kg per corner moves there from the rim the same way
+BALLJOINT_F = "$=4+$balljoint_mass_F"
 
 
 def mass():
@@ -61,7 +64,7 @@ def mass():
     weights(f"{V}/redbull_crashbox.jbeam", {n: 1.0 for n in ("cb4r", "cb4l")})
     # uprights, brakes, wishbone ends: roughly half the F4's corner mass
     weights(f"{V}/redbull_suspension_F.jbeam", {
-        "fh1r": 5, "fh1l": 5, "fh2r": 1, "fh2l": 1, "fh3r": UPRIGHT_F, "fh3l": UPRIGHT_F, "fh4r": 4, "fh4l": 4, "fh5r": UPRIGHT_F, "fh5l": UPRIGHT_F})
+        "fh1r": 5, "fh1l": 5, "fh2r": 1, "fh2l": 1, "fh3r": UPRIGHT_F, "fh3l": UPRIGHT_F, "fh4r": BALLJOINT_F, "fh4l": BALLJOINT_F, "fh5r": UPRIGHT_F, "fh5l": UPRIGHT_F})
     weights(f"{V}/redbull_suspension_R.jbeam", {
         **{n + s: "$=%g+%g*$rear_corner_mass" % (w, REAR_CORNER_SHARE[n]) for n, w in (("rh1", 5), ("rh3", 4), ("rh4", 4)) for s in "rl"}})
     weights(f"{V}/redbull_suspension_F.jbeam", {"fh6r": 6.5, "fh6l": 6.5})  # steering rack ends (stiff rack: see stiffness())
@@ -136,17 +139,17 @@ def ballast():
 # (the arms stay ~30x stiffer than the suspension, so handling barely
 # changes). Chassis and gearbox nodes get mass instead, paid for by the
 # plank ballast (solved in ballast()).
-MAX_OMEGA_DT = float(os.environ.get("RB14_MAX_OMEGA_DT", 1.72))   # round 13: Front Fix 4 at 1.67 was the best car in game; round 19: Hub Fix 15 at 1.72 (rear hub) the best, no shake
+MAX_OMEGA_DT = float(os.environ.get("RB14_MAX_OMEGA_DT", 1.835))   # round 13: Front Fix 4 at 1.67 was the best car in game; round 19: Hub Fix 15 at 1.72 (rear hub) the best, no shake; round 21: Wobble Fix 2 (front toe brace 1.5) at 1.83, the best, a full Silverstone lap
 # With damping (setup_report: sqrt((omega*dt)^2 + 2*gamma), limit 2): the F4
 # peaks at 1.97 (crash box); round 9's rear wing at 2.01 shook itself off.
-MAX_DAMPED = 1.85
+MAX_DAMPED = 1.875    # round 21: Wobble Fix 2 (front toe brace) at 1.87, fine in game
 # Wheel-corner modes (axle, upright, hub, tyre nodes) with damping: round 10
 # (1.78) was fine, round 11's 1.83 broke the front suspension at spawn,
 # round 12's Front Fix 5 at 1.82 spawned fine -> the limit is 1.82.
 # Blind spot: Front Fix 3 (front dampers 40 % firmer, 500 Hz-filtered
 # beams) blew up at spawn and no version of this model shows it -- keep the
 # front dampers at their Baseline values in test cars.
-MAX_DAMPED_CORNER = 1.82
+MAX_DAMPED_CORNER = 1.875    # round 21: Wobble Fix 2 at 1.87 (front toe brace) drove a full lap fine
 CORNER_NODES = ("fw1", "rw1", "fh", "rh", "_hub", "_tyre")
 HUB_SPRING_SCALE = 0.65                      # hub beams vs the F4's (hub nodes 0.45 vs 0.55 kg; 0.8 put the wheel axles at 1.73, round 11)
 HUB_NODE_WEIGHT = 0.45                       # kg x 32 per rim (was 0.35; F4 0.55)
@@ -494,7 +497,7 @@ def wheels():
         aw = WHEEL_AXLE_WEIGHT if "_F_" in f else '"$=%s+%g*$rear_corner_mass"' % (WHEEL_AXLE_WEIGHT, REAR_CORNER_SHARE["rw1"])
         je.set_all(f, r'\{"nodeWeight":(?:[\d.]+|"[^"]*")\}', '{"nodeWeight":%s}' % aw)
         # rims + hubs + discs: 32 hub nodes x 0.35 kg = 11 kg per wheel (were 0.55)
-        w = '"$=%s-$upright_mass_F/32"' % HUB_NODE_WEIGHT if "_F_" in f else HUB_NODE_WEIGHT
+        w = '"$=%s-($upright_mass_F+$balljoint_mass_F)/32"' % HUB_NODE_WEIGHT if "_F_" in f else HUB_NODE_WEIGHT
         je.set_all(f, r'\{"hubNodeWeight":(?:[\d.]+|"[^"]*")\}', '{"hubNodeWeight":%s}' % w)
 
 
@@ -744,8 +747,9 @@ def _write_suspension():
         # packers: the coilover's progressive bump stop, gap in wheel travel
         _set_packers(f, a, hub)
         # ARB on its own variable (the F4's rear bar used the front one)
-        je.set_in_part(f, f"redbull_swaybar_{a}", r'\{"spring":"\$=\$arb_spring_[FR]\*[^"]*", "damp":10, "deform":\d+,',
-                       '{"spring":"$=$arb_spring_%s*%s", "damp":10, "deform":%d,' % (a, ARB_ARM2[a], TORSION_DEFORM))
+        damp = '"$=10+$arb_damp_F*%s"' % ARB_ARM2[a] if a == "F" else "10"     # round 21: front roll damping
+        je.set_in_part(f, f"redbull_swaybar_{a}", r'\{"spring":"\$=\$arb_spring_[FR]\*[^"]*", "damp":(?:10|"[^"]*"), "deform":\d+,',
+                       '{"spring":"$=$arb_spring_%s*%s", "damp":%s, "deform":%d,' % (a, ARB_ARM2[a], damp, TORSION_DEFORM))
         je.set_all(f, r'\["\$arb_spring_%s", "range", "N/m", "Suspension", [^\]]*\]' % a,
                    '["$arb_spring_%s", "range", "N/m", "Suspension", %d, 0, 400000, "Anti-Roll Bar", '
                    '"Extra wheel rate in roll from the anti-roll bar", {"stepDis":5000, "subCategory":"%s"}]' % (a, c["arb"], sub))
@@ -1631,7 +1635,8 @@ FRONT_FIX_VARS = [
     '["$steer_damper_F", "range", "x", "Suspension", 1.0, 0.2, 2.0, "Steering Damper", '
     '"Damping of the steering motion at the front uprights, x the base", {"stepDis":0.1, "subCategory":"Front"}]',
     # round 20 (front-wheel shimmy, front_wobble_fix())
-    '["$front_toe_brace", "range", "x", "Suspension", 0, 0, 10, "Front Toe Brace", '
+    # round 21: Wobble Fix 2 (toe brace 1.5) is the baseline
+    '["$front_toe_brace", "range", "x", "Suspension", 1.5, 0, 10, "Front Toe Brace", '
     '"Torsion bars holding each front axle against toe about its upright\'s steering axis, x 100 kNm/rad", {"stepDis":0.5, "subCategory":"Front"}]',
     '["$front_toe_damp", "range", "Nms/rad", "Suspension", 0, 0, 3000, "Front Shimmy Damper", '
     '"Damping of each front axle\'s toe about its upright (the toe brace torsion bars)", {"stepDis":100, "subCategory":"Front"}]',
@@ -1643,6 +1648,15 @@ FRONT_FIX_VARS = [
     '"Damping of the front track rods, x the base (150 Ns/m)", {"stepDis":0.5, "subCategory":"Front"}]',
     '["$tyre_grip_F", "range", "x", "Wheels", 1, 0.9, 1.15, "Front Tire Grip", '
     '"Grip of the front dry tires, x the base", {"stepDis":0.01, "subCategory":"Front"}]',
+    # round 21 (compliance steer, front_wobble_fix())
+    '["$wishbone_stiff_F", "range", "x", "Suspension", 1, 1, 5, "Front Wishbone Stiffness", '
+    '"Stiffness of the front wishbone legs, x the base (cornering force bends them into toe-out)", {"stepDis":0.25, "subCategory":"Front"}]',
+    '["$steer_arm_F", "range", "mm", "Suspension", 0, 0, 30, "Front Steering Arm", '
+    '"Moves the front track rods\' outer ends forward (longer steering arm: stiffer toe, less steering lock)", {"stepDis":5, "subCategory":"Front"}]',
+    '["$balljoint_mass_F", "range", "kg", "Suspension", 0, 0, 3, "Front Ball Joint Mass Shift", '
+    '"Mass moved from each front rim to its upper ball joint (same corner weight)", {"stepDis":0.5, "subCategory":"Front"}]',
+    '["$arb_damp_F", "range", "N/m/s", "Suspension", 0, 0, 20000, "Anti-Roll Bar Damping", '
+    '"Damping of the front anti-roll bar, as wheel damping in roll", {"stepDis":1000, "subCategory":"Front"}]',
 ]
 
 
@@ -1653,7 +1667,7 @@ def front_fix_vars():
     a, b = _part_block(text, "redbull_suspension_F")
     block = text[a:b]
     block = re.sub(r'        \["\$(?:tyre_carcass_F|carrier_damp_F|upright_mass_F|steer_damper_F|front_toe_brace|front_toe_damp|'
-                   r'front_hub_beam|tierod_stiff|tierod_damp|tyre_grip_F|front_axle_mass)".*\r\n', "", block)
+                   r'front_hub_beam|tierod_stiff|tierod_damp|tyre_grip_F|front_axle_mass|wishbone_stiff_F|steer_arm_F|arb_damp_F|balljoint_mass_F)".*\r\n', "", block)
     i = block.index('        ["$toe_F"')
     i = block.index("\r\n", i) + 2
     block = block[:i] + "".join("        %s,\r\n" % r for r in FRONT_FIX_VARS) + block[i:]
@@ -1884,6 +1898,26 @@ def front_wobble_fix():
                       lambda m: '{"beamSpring":"$=10000000*$tierod_stiff","beamDamp":"$=150*$tierod_damp"},' + m.group(1), text)
     if n != 1:
         raise ValueError("track rod row not found")
+    # round 21: compliance steer. Cornering force at the contact patch bends
+    # the wishbone legs, the upright moves back and the track rod turns it
+    # toe-out (FEM 0.11 deg per kN lateral, 0.24 per kN rearward); the 7-8 Hz
+    # tyre-load bounce in hard corners drives it through that path.
+    # Wishbone legs (one option row for both arms; stiffness() writes 6 MN/m)
+    a, b = _part_block(text, "redbull_suspension_F")
+    i = text.index("//lower arm", a)
+    blk, n = re.subn(r'\{"beamSpring":(?:6000000|"\$=6000000\*\$wishbone_stiff_F"),"beamDamp":1500\}',
+                     '{"beamSpring":"$=6000000*$wishbone_stiff_F","beamDamp":1500}', text[i:i + 400], count=1)
+    if n != 1:
+        raise ValueError("wishbone row not found")
+    text = text[:i] + blk + text[i + 400:]
+    # steering arm: the track rods' outer ends (fh3) $steer_arm_F mm forward;
+    # the rack can't travel further (round 10), so steering lock drops with
+    # the longer arm (78 mm -> 96 mm effective at 20 mm)
+    text, n = re.subn(r'(\["fh3[rl]",\s*-?0\.7119,\s*)(?:-1\.5849|"\$=-1\.5849-\$steer_arm_F/1000")',
+                      lambda m: m.group(1) + '"$=-1.5849-$steer_arm_F/1000"', text)
+    if n != 2:
+        raise ValueError(f"fh3 nodes: {n}, expected 2")
+    # (front anti-roll bar damping: suspension())
     je._write(f, text)
 
 

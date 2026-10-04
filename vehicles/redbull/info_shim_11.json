@@ -1,0 +1,13 @@
+{
+  "Config Type": "Custom",
+  "Configuration": "Shimmy Fix 11 · Wishbones + arm + bounce",
+  "Description": "Shimmy Fix car 11: 7 + roll damper + later packers. Everything else is Baseline (wishbone_stiff_F 2, balljoint_mass_F 2, steer_arm_F 20, arb_damp_F 8000, packer_F 0.035). Passes every offline check.",
+  "Drivetrain": "RWD",
+  "Fuel Type": "Gasoline",
+  "Induction Type": "Turbo",
+  "Propulsion": "Hybrid",
+  "Transmission": "Sequential",
+  "Off-Road Score": 0,
+  "Population": 0,
+  "Value": 12000000
+}

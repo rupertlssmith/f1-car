@@ -1,0 +1,13 @@
+{
+  "Config Type": "Custom",
+  "Configuration": "Shimmy Fix 08 · Wishbones 2.5x + arm",
+  "Description": "Shimmy Fix car 8: wishbones 2.5x + 2: 0.043 / 0.131 deg per kN, 561 Nm/deg. Everything else is Baseline (wishbone_stiff_F 2.5, balljoint_mass_F 2, steer_arm_F 20). Passes every offline check.",
+  "Drivetrain": "RWD",
+  "Fuel Type": "Gasoline",
+  "Induction Type": "Turbo",
+  "Propulsion": "Hybrid",
+  "Transmission": "Sequential",
+  "Off-Road Score": 0,
+  "Population": 0,
+  "Value": 12000000
+}

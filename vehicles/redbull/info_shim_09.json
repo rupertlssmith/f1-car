@@ -1,0 +1,13 @@
+{
+  "Config Type": "Custom",
+  "Configuration": "Shimmy Fix 09 · Wishbones 3x + arm",
+  "Description": "Shimmy Fix car 9: wishbones 3x, 2.5 kg to the ball joints + 2: 0.035 / 0.128 deg per kN, 576 Nm/deg; just over the damping target. Everything else is Baseline (wishbone_stiff_F 3, balljoint_mass_F 2.5, steer_arm_F 20). Over an offline limit (damping 1.89 > 1.88; wheel-corner damping 1.89 > 1.88): may break at spawn.",
+  "Drivetrain": "RWD",
+  "Fuel Type": "Gasoline",
+  "Induction Type": "Turbo",
+  "Propulsion": "Hybrid",
+  "Transmission": "Sequential",
+  "Off-Road Score": 0,
+  "Population": 0,
+  "Value": 12000000
+}
