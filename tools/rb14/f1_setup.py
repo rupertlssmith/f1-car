@@ -515,8 +515,9 @@ def tyres():
         dry, wet = f"tire_{axle}_redbull", f"tire_{axle}_redbull_wet"
         for part in (dry, wet):
             je.set_in_part(f, part, r'\{"nodeWeight":[\d.]+\}', '{"nodeWeight":%s}' % node_w)
-        je.set_in_part(f, dry, r'\{"noLoadCoef":[\d.]+\}', '{"noLoadCoef":%s}' % TYRE_GRIP[axle][0])
-        je.set_in_part(f, dry, r'\{"fullLoadCoef":[\d.]+\}', '{"fullLoadCoef":%s}' % TYRE_GRIP[axle][1])
+        g = (lambda x: '"$=%s*$tyre_grip_F"' % x) if axle == "F" else (lambda x: "%s" % x)     # round 20
+        je.set_in_part(f, dry, r'\{"noLoadCoef":(?:[\d.]+|"[^"]*")\}', '{"noLoadCoef":%s}' % g(TYRE_GRIP[axle][0]))
+        je.set_in_part(f, dry, r'\{"fullLoadCoef":(?:[\d.]+|"[^"]*")\}', '{"fullLoadCoef":%s}' % g(TYRE_GRIP[axle][1]))
         je.set_in_part(f, dry, r'\{"loadSensitivitySlope":[\d.]+\}', '{"loadSensitivitySlope":0.00025}')
         # wets: less grip than slicks on a dry track, tread for standing water
         je.set_in_part(f, wet, r'\{"noLoadCoef":[\d.]+\}', '{"noLoadCoef":2.10}')
@@ -1629,6 +1630,19 @@ FRONT_FIX_VARS = [
     '"Mass moved from each front rim to its upright (same corner weight)", {"stepDis":0.5, "subCategory":"Front"}]',
     '["$steer_damper_F", "range", "x", "Suspension", 1.0, 0.2, 2.0, "Steering Damper", '
     '"Damping of the steering motion at the front uprights, x the base", {"stepDis":0.1, "subCategory":"Front"}]',
+    # round 20 (front-wheel shimmy, front_wobble_fix())
+    '["$front_toe_brace", "range", "x", "Suspension", 0, 0, 10, "Front Toe Brace", '
+    '"Torsion bars holding each front axle against toe about its upright\'s steering axis, x 100 kNm/rad", {"stepDis":0.5, "subCategory":"Front"}]',
+    '["$front_toe_damp", "range", "Nms/rad", "Suspension", 0, 0, 3000, "Front Shimmy Damper", '
+    '"Damping of each front axle\'s toe about its upright (the toe brace torsion bars)", {"stepDis":100, "subCategory":"Front"}]',
+    '["$front_hub_beam", "range", "x", "Suspension", 1, 1, 3, "Front Axle Beams", '
+    '"Stiffness of the beams holding the front axle nodes to the upright, x the base", {"stepDis":0.25, "subCategory":"Front"}]',
+    '["$tierod_stiff", "range", "x", "Suspension", 1, 1, 2, "Track Rod Stiffness", '
+    '"Stiffness of the front track rods, x the base", {"stepDis":0.1, "subCategory":"Front"}]',
+    '["$tierod_damp", "range", "x", "Suspension", 1, 1, 10, "Track Rod Damping", '
+    '"Damping of the front track rods, x the base (150 Ns/m)", {"stepDis":0.5, "subCategory":"Front"}]',
+    '["$tyre_grip_F", "range", "x", "Wheels", 1, 0.9, 1.15, "Front Tire Grip", '
+    '"Grip of the front dry tires, x the base", {"stepDis":0.01, "subCategory":"Front"}]',
 ]
 
 
@@ -1638,7 +1652,8 @@ def front_fix_vars():
     text = je._read(f)
     a, b = _part_block(text, "redbull_suspension_F")
     block = text[a:b]
-    block = re.sub(r'        \["\$(?:tyre_carcass_F|carrier_damp_F|upright_mass_F|steer_damper_F)".*\r\n', "", block)
+    block = re.sub(r'        \["\$(?:tyre_carcass_F|carrier_damp_F|upright_mass_F|steer_damper_F|front_toe_brace|front_toe_damp|'
+                   r'front_hub_beam|tierod_stiff|tierod_damp|tyre_grip_F|front_axle_mass)".*\r\n', "", block)
     i = block.index('        ["$toe_F"')
     i = block.index("\r\n", i) + 2
     block = block[:i] + "".join("        %s,\r\n" % r for r in FRONT_FIX_VARS) + block[i:]
@@ -1826,6 +1841,52 @@ def remove_rear_hub_fix():
     je._write(f, text)
 
 
+# Round 20: the front wheels shimmy at ~7 Hz in fast corners (Silverstone
+# replay, tools/rb14/handling_analysis.py): each wheel turns on its own track
+# rod and hub, 2-4 deg RMS above 2.5 g, with the front tyres at 8-12 deg of
+# slip. The front corner's toe stiffness (setup_report FEM, chassis and
+# rack held) is only ~200 Nm/deg, and the F4's hub torsion bar does nothing
+# for it (its axis is tilted). Fixes, all tuning variables (Baseline: off /
+# x1): a toe brace about each upright's steering axis (fh1 -> fh4) with its
+# own damping (a shimmy damper), stiffer axle beams, stiffer / more damped
+# track rods. The understeer side uses the wing angles, the anti-roll bars
+# and $tyre_grip_F.
+TOE_BRACE_BEGIN, TOE_BRACE_END = "//front toe brace (round 20, f1_setup.py)", "//front toe brace end"
+
+
+def front_wobble_fix():
+    import re
+    f = f"{V}/redbull_suspension_F.jbeam"
+    text = je._read(f)
+    text = re.sub(r'[ \t]*%s.*?%s\r\n' % (re.escape(TOE_BRACE_BEGIN), re.escape(TOE_BRACE_END)), "", text, flags=re.S)
+    # toe brace: the axle line about the upright's steering axis (fh1 -> fh4)
+    rows = [" " * 8 + TOE_BRACE_BEGIN,
+            " " * 8 + '{"spring":"$=100000*$front_toe_brace", "damp":"$front_toe_damp", "deform":4000000, "strength":8000000},']
+    # (outer axle node only: the inner one is ~3 cm from the axis, where a
+    # torsion bar becomes a huge spring on a 4.5 kg node)
+    rows += [" " * 8 + '["fw1%s%s", "fh1%s", "fh4%s", "fh3%s"],' % (s_, s_, s_, s_, s_) for s_ in "rl"]
+    rows += [" " * 8 + '{"spring":80000, "damp":0, "deform":100000, "strength":400000},', " " * 8 + TOE_BRACE_END]
+    a, b = _part_block(text, "redbull_suspension_F")
+    k = text.index('        ["fw1ll", "fw1l", "fh1l", "fh3l"],', a)
+    k = text.index("\n", k) + 1
+    text = text[:k] + "\r\n".join(rows) + "\r\n" + text[k:]
+    # axle-to-upright beams (after stiffness(), which writes the capped value)
+    a, b = _part_block(text, "redbull_suspension_F")
+    i = text.index("//attach to wheel", a)
+    j = text.index('{"optional":false}', i)
+    blk, n = re.subn(r'"beamSpring":(?:6000000|"\$=6000000\*\$front_hub_beam")(,"beamDamp":"\$=\$carrier_damp_F")',
+                     lambda m: '"beamSpring":"$=6000000*$front_hub_beam"' + m.group(1), text[i:j])
+    if n != 5:
+        raise ValueError(f"front axle beams: {n} rows, expected 5")
+    text = text[:i] + blk + text[j:]
+    # track rods
+    text, n = re.subn(r'\{"beamSpring":(?:10000000|"\$=10000000\*\$tierod_stiff"),"beamDamp":(?:150|"\$=150\*\$tierod_damp")\},(\r\n\s*\["fh3r","fh6r")',
+                      lambda m: '{"beamSpring":"$=10000000*$tierod_stiff","beamDamp":"$=150*$tierod_damp"},' + m.group(1), text)
+    if n != 1:
+        raise ValueError("track rod row not found")
+    je._write(f, text)
+
+
 def rear_hub_fix():
     import re
     f = f"{V}/redbull_suspension_R.jbeam"
@@ -1922,6 +1983,7 @@ if __name__ == "__main__":
     stiffness()
     torque_paths()
     rear_hub_fix()
+    front_wobble_fix()
     wheels()
     tyres()
     fuel()

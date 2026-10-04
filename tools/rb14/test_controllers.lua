@@ -306,5 +306,15 @@ local expect = -math.deg(math.atan(0.010 / 0.27))   -- outer end forward on the 
 check(math.abs(e.sn_RL_toe - expect) < 0.05 and math.abs(e.sn_RR_toe) < 1e-6,
       string.format("RL outer node 10 mm forward: RL toe %+.2f deg (expect %+.2f), RR unchanged", e.sn_RL_toe, expect))
 
+moved.rw1ll = nil
+-- front-wheel wobble: a 7 Hz, +-2 deg oscillation of the FL wheel at 60 fps
+for k = 1, 120 do
+  local a = math.rad(2) * math.sin(2 * math.pi * 7 * k / 60)
+  moved.fw1ll = vec3(0, -0.27 * math.sin(a), 0)
+  sn.updateGFX(1 / 60)
+end
+check(e.sn_FL_wobble > 0.8 and e.sn_FL_wobble < 2.0 and e.sn_FR_wobble < 0.05,
+      string.format("7 Hz +-2 deg FL wobble reads %.2f deg RMS (FR %.2f)", e.sn_FL_wobble, e.sn_FR_wobble))
+
 print(failures == 0 and "all controller checks passed" or (failures .. " check(s) FAILED"))
 os.exit(failures == 0 and 0 or 1)

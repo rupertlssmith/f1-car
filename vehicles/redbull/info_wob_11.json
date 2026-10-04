@@ -1,0 +1,13 @@
+{
+  "Config Type": "Custom",
+  "Configuration": "Wobble Fix 11 · Brace + track rods",
+  "Description": "Wobble Fix car 11: 1 + track rods 1.5x stiffer, 10x damping (418 Nm/deg). Everything else is Baseline (front_toe_brace 1, tierod_stiff 1.5, tierod_damp 10). Over an offline limit (stiffness 1.73 > 1.72): may break at spawn.",
+  "Drivetrain": "RWD",
+  "Fuel Type": "Gasoline",
+  "Induction Type": "Turbo",
+  "Propulsion": "Hybrid",
+  "Transmission": "Sequential",
+  "Off-Road Score": 0,
+  "Population": 0,
+  "Value": 12000000
+}

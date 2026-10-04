@@ -25,6 +25,12 @@
         ["$carrier_damp_F", "range", "N/m/s", "Suspension", 600, 300, 1500, "Front Upright Damping", "Damping of the front wheel carriers (wheel judder)", {"stepDis":50, "subCategory":"Front"}],
         ["$upright_mass_F", "range", "kg", "Suspension", 2, 0, 5, "Front Upright Mass Shift", "Mass moved from each front rim to its upright (same corner weight)", {"stepDis":0.5, "subCategory":"Front"}],
         ["$steer_damper_F", "range", "x", "Suspension", 1.0, 0.2, 2.0, "Steering Damper", "Damping of the steering motion at the front uprights, x the base", {"stepDis":0.1, "subCategory":"Front"}],
+        ["$front_toe_brace", "range", "x", "Suspension", 0, 0, 10, "Front Toe Brace", "Torsion bars holding each front axle against toe about its upright's steering axis, x 100 kNm/rad", {"stepDis":0.5, "subCategory":"Front"}],
+        ["$front_toe_damp", "range", "Nms/rad", "Suspension", 0, 0, 3000, "Front Shimmy Damper", "Damping of each front axle's toe about its upright (the toe brace torsion bars)", {"stepDis":100, "subCategory":"Front"}],
+        ["$front_hub_beam", "range", "x", "Suspension", 1, 1, 3, "Front Axle Beams", "Stiffness of the beams holding the front axle nodes to the upright, x the base", {"stepDis":0.25, "subCategory":"Front"}],
+        ["$tierod_stiff", "range", "x", "Suspension", 1, 1, 2, "Track Rod Stiffness", "Stiffness of the front track rods, x the base", {"stepDis":0.1, "subCategory":"Front"}],
+        ["$tierod_damp", "range", "x", "Suspension", 1, 1, 10, "Track Rod Damping", "Damping of the front track rods, x the base (150 Ns/m)", {"stepDis":0.5, "subCategory":"Front"}],
+        ["$tyre_grip_F", "range", "x", "Wheels", 1, 0.9, 1.15, "Front Tire Grip", "Grip of the front dry tires, x the base", {"stepDis":0.01, "subCategory":"Front"}],
     ],
     "flexbodies": [
          ["mesh", "[group]:", "nonFlexMaterials"],
@@ -95,6 +101,12 @@
         //rigidify steering arm
         ["fw1rr", "fw1r", "fh1r", "fh3r"],
         ["fw1ll", "fw1l", "fh1l", "fh3l"],
+        //front toe brace (round 20, f1_setup.py)
+        {"spring":"$=100000*$front_toe_brace", "damp":"$front_toe_damp", "deform":4000000, "strength":8000000},
+        ["fw1rr", "fh1r", "fh4r", "fh3r"],
+        ["fw1ll", "fh1l", "fh4l", "fh3l"],
+        {"spring":80000, "damp":0, "deform":100000, "strength":400000},
+        //front toe brace end
     ],
     "beams": [
           ["id1:", "id2:"],
@@ -183,27 +195,27 @@
 
           //attach to wheel
           {"optional":true},
-          {"beamSpring":6000000,"beamDamp":"$=$carrier_damp_F"},
+          {"beamSpring":"$=6000000*$front_hub_beam","beamDamp":"$=$carrier_damp_F"},
           {"beamDeform":450500,"beamStrength":4000500},
           {"breakGroup":"wheel_FR"},
           ["fh1r","fw1r", {"name":"axle_FR"}],
-          ["fh3r","fw1r", {"beamSpring":6000000,"beamDamp":"$=$carrier_damp_F"}],
+          ["fh3r","fw1r", {"beamSpring":"$=6000000*$front_hub_beam","beamDamp":"$=$carrier_damp_F"}],
           ["fh4r","fw1r"],
           ["fh5r","fw1r"],
           ["fw2r","fw1r", {"beamSpring":3501000,"beamDamp":50}],
           ["fh1r","fw1rr"],
-          ["fh3r","fw1rr", {"beamSpring":6000000,"beamDamp":"$=$carrier_damp_F"}],
+          ["fh3r","fw1rr", {"beamSpring":"$=6000000*$front_hub_beam","beamDamp":"$=$carrier_damp_F"}],
           ["fh4r","fw1rr", {"beamDeform":437500}],
           ["fh5r","fw1rr"],
           ["fw2r","fw1rr", {"beamSpring":3501000,"beamDamp":50}],
           {"breakGroup":"wheel_FL"},
           ["fh1l","fw1l", {"name":"axle_FL"}],
-          ["fh3l","fw1l", {"beamSpring":6000000,"beamDamp":"$=$carrier_damp_F"}],
+          ["fh3l","fw1l", {"beamSpring":"$=6000000*$front_hub_beam","beamDamp":"$=$carrier_damp_F"}],
           ["fh4l","fw1l"],
           ["fh5l","fw1l"],
           ["fw2l","fw1l", {"beamSpring":3501000,"beamDamp":50}],
           ["fh1l","fw1ll"],
-          ["fh3l","fw1ll", {"beamSpring":6000000,"beamDamp":"$=$carrier_damp_F"}],
+          ["fh3l","fw1ll", {"beamSpring":"$=6000000*$front_hub_beam","beamDamp":"$=$carrier_damp_F"}],
           ["fh4l","fw1ll", {"beamDeform":437500}],
           ["fh5l","fw1ll"],
           ["fw2l","fw1ll", {"beamSpring":3501000,"beamDamp":50}],
@@ -656,7 +668,7 @@
             {"disableMeshBreaking":false},
             ["fh6r","fh6l"],
             //also sets camber, tierods
-            {"beamSpring":10000000,"beamDamp":150},
+            {"beamSpring":"$=10000000*$tierod_stiff","beamDamp":"$=150*$tierod_damp"},
             ["fh3r","fh6r", {"beamPrecompression":"$=$camber_F*$toe_F","beamPrecompressionTime":0.5,"deformGroup":"tierod_R","deformationTriggerRatio":0.01}],
             ["fh3l","fh6l", {"beamPrecompression":"$=$camber_F*$toe_F","beamPrecompressionTime":0.5,"deformGroup":"tierod_L","deformationTriggerRatio":0.01}],
             //steering damper

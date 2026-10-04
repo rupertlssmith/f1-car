@@ -1,0 +1,13 @@
+{
+  "Config Type": "Custom",
+  "Configuration": "Wobble Fix 05 · Stiffer track rods",
+  "Description": "Wobble Fix car 5: front track rods 1.5x stiffer. Everything else is Baseline (tierod_stiff 1.5). Passes every offline check.",
+  "Drivetrain": "RWD",
+  "Fuel Type": "Gasoline",
+  "Induction Type": "Turbo",
+  "Propulsion": "Hybrid",
+  "Transmission": "Sequential",
+  "Off-Road Score": 0,
+  "Population": 0,
+  "Value": 12000000
+}

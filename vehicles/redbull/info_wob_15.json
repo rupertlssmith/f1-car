@@ -1,0 +1,13 @@
+{
+  "Config Type": "Custom",
+  "Configuration": "Wobble Fix 15 · All: brace",
+  "Description": "Wobble Fix car 15: brace + track rods + aero balance + roll balance + front grip +6 %. Everything else is Baseline (front_toe_brace 1, tierod_stiff 1.5, tierod_damp 10, wing_angle_F 0, wing_angle_R 6, arb_spring_F 150000, arb_spring_R 200000, tyre_grip_F 1.06). Over an offline limit (stiffness 1.73 > 1.72): may break at spawn.",
+  "Drivetrain": "RWD",
+  "Fuel Type": "Gasoline",
+  "Induction Type": "Turbo",
+  "Propulsion": "Hybrid",
+  "Transmission": "Sequential",
+  "Off-Road Score": 0,
+  "Population": 0,
+  "Value": 12000000
+}

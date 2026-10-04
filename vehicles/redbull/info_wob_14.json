@@ -1,0 +1,13 @@
+{
+  "Config Type": "Custom",
+  "Configuration": "Wobble Fix 14 · Damper + balance",
+  "Description": "Wobble Fix car 14: 3 + aero balance to weight + roll balance rearward. Everything else is Baseline (front_toe_damp 150, wing_angle_F 0, wing_angle_R 6, arb_spring_F 150000, arb_spring_R 200000). Passes every offline check.",
+  "Drivetrain": "RWD",
+  "Fuel Type": "Gasoline",
+  "Induction Type": "Turbo",
+  "Propulsion": "Hybrid",
+  "Transmission": "Sequential",
+  "Off-Road Score": 0,
+  "Population": 0,
+  "Value": 12000000
+}

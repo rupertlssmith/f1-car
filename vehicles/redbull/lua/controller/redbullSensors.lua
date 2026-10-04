@@ -20,6 +20,8 @@
 --   hub_<in|out>_<rh1|rh3|rh4>   axle node to upright node distances (mm):
 --                      is the hub shifting on its upright?
 --   link_<rxN>_<rhN>   the six upright-to-gearbox link lengths (mm)
+-- Front: sn_FL_wobble / sn_FR_wobble (deg RMS of the front wheel's angle
+-- above ~3 Hz, over 0.5 s, at frame rate).
 -- Plus: sn_rearYaw (deg, gearbox frame vs tub frame: the rear structure
 -- turning on the tub), sn_FL_toe / sn_FR_toe (tub frame), sn_rack (rack
 -- node to rail end, mm), sn_FL_tierod / sn_FR_tierod (mm), and the wheel
@@ -64,7 +66,23 @@ end
 
 local REAR_LINKS = {{"rx2", "rh1"}, {"rx1", "rh1"}, {"rx4", "rh3"}, {"rx3", "rh4"}, {"rx3", "rh3"}, {"rx4", "rh4"}}
 
-local function measure()
+-- front-wheel wobble (round 20): each front wheel's angle high-passed at
+-- ~3 Hz (minus its 50 ms-smoothed trend) and RMS-averaged over 0.5 s, at the
+-- game's frame rate (finer than a replay's ~30 frames/s, so a fast shimmy
+-- shows here even when a replay would alias it)
+local wob = {FL = {lp = nil, ms = 0}, FR = {lp = nil, ms = 0}}
+local WOB_TAU, WOB_AVG = 0.05, 0.5
+
+local function wobble(S, toe, dt)
+  local w = wob[S]
+  if not w.lp then w.lp = toe end
+  w.lp = w.lp + (toe - w.lp) * math.min(1, dt / WOB_TAU)
+  local r = toe - w.lp
+  w.ms = w.ms + (r * r - w.ms) * math.min(1, dt / WOB_AVG)
+  return math.sqrt(w.ms)
+end
+
+local function measure(dt)
   local ev = electrics.values
   local tf, tl, tu = frame("fx1r", "fx1l", "fx2r", "fx2l")
   local gf, gl, gu = frame("rx1r", "rx1l", "rx2r", "rx2l")
@@ -95,6 +113,7 @@ local function measure()
     if ok["F" .. S] then
       local toe = angles("fw1" .. s, "fw1" .. s .. s, sign, tf, tl, tu)
       ev["sn_F" .. S .. "_toe"] = toe
+      if dt and dt > 0 then ev["sn_F" .. S .. "_wobble"] = wobble("F" .. S, toe, dt) end
       ev["sn_F" .. S .. "_tierod"] = dist("fh3" .. s, "fh6" .. s)
     end
   end
@@ -109,14 +128,16 @@ local enabled = true
 
 local function updateGFX(dt)
   if not enabled then return end
-  local fine, err = pcall(measure)
+  local fine, err = pcall(measure, dt)
   if not fine then
     enabled = false
     log("E", "redbullSensors", "disabled: " .. tostring(err))
   end
 end
 
-local function reset() end
+local function reset()
+  wob = {FL = {lp = nil, ms = 0}, FR = {lp = nil, ms = 0}}
+end
 
 local function init(jbeamData)
   cid = {}

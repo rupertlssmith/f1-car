@@ -27,15 +27,43 @@ import f1_setup as fs  # noqa: E402
 V = "vehicles/redbull"
 
 
-PREFIX, LABEL, SHEET = "test", "Test", "plans/round19-tests.md"
+PREFIX, LABEL, SHEET = "wob", "Wobble Fix", "plans/wobble-fixes.md"
+BRACE = {"$front_toe_brace": 1}                        # 201 -> 373 Nm/deg front toe stiffness
+DAMPER = {"$front_toe_damp": 150}
+RODS = {"$tierod_stiff": 1.5, "$tierod_damp": 10}
+BALANCE = {"$wing_angle_F": 0, "$wing_angle_R": 6}     # aero 41 -> 46 % front (weight 46 %)
+ARB = {"$arb_spring_F": 150000, "$arb_spring_R": 200000}
 FIXES = [   # (short name, what it changes, {vars}, {slot: part})
-    ("No halo", "Baseline (round 18's Hub Fix 15) without the halo: its part (mesh, mounts, logo, 6 kg of nodes, "
-     "beams and collision triangles) replaced by flush covers over the mounts", {}, {"redbull_halo": "redbull_halo_cover"}),
+    ("Front toe brace", "torsion bar holding each front axle against toe about its upright's steering axis "
+     "(100 kNm/rad): front toe stiffness 201 -> 373 Nm/deg", BRACE, {}),
+    ("Toe brace strong", "toe brace 150 kNm/rad (395 Nm/deg; just over the stiffness target)",
+     {"$front_toe_brace": 1.5}, {}),
+    ("Shimmy damper", "damping of each front axle's toe about its upright, 150 Nms/rad (about half critical)",
+     DAMPER, {}),
+    ("Shimmy damper strong", "shimmy damper 200 Nms/rad, uprights +2 kg (from the rims) to carry it; "
+     "just over the stiffness target", {"$front_toe_damp": 200, "$upright_mass_F": 4}, {}),
+    ("Stiffer track rods", "front track rods 1.5x stiffer", {"$tierod_stiff": 1.5}, {}),
+    ("Damped track rods", "front track rods 10x damping (1500 Ns/m)", {"$tierod_damp": 10}, {}),
+    ("Front wing +3 deg", "front wing 0 deg (was -3): aero balance 41 -> 45 % front, +5 % downforce",
+     {"$wing_angle_F": 0}, {}),
+    ("Aero balance to weight", "front wing 0 deg, rear wing 6 deg (was 8): aero balance 46 % front like the "
+     "weight, drag -5 %", BALANCE, {}),
+    ("Roll balance rearward", "front anti-roll bar 150 kN/m (was 260), rear 200 kN/m (was 110)", ARB, {}),
+    ("Front grip +6 %", "front dry tyres 6 % more grip", {"$tyre_grip_F": 1.06}, {}),
+    ("Brace + track rods", "1 + track rods 1.5x stiffer, 10x damping (418 Nm/deg)", {**BRACE, **RODS}, {}),
+    ("Damper + track rods", "3 + track rods 1.5x stiffer, 10x damping", {**DAMPER, **RODS}, {}),
+    ("Brace + balance", "1 + aero balance to weight + roll balance rearward", {**BRACE, **BALANCE, **ARB}, {}),
+    ("Damper + balance", "3 + aero balance to weight + roll balance rearward", {**DAMPER, **BALANCE, **ARB}, {}),
+    ("All: brace", "brace + track rods + aero balance + roll balance + front grip +6 %",
+     {**BRACE, **RODS, **BALANCE, **ARB, "$tyre_grip_F": 1.06}, {}),
+    ("All: damper", "shimmy damper + track rods + aero balance + roll balance + front grip +6 %",
+     {**DAMPER, **RODS, **BALANCE, **ARB, "$tyre_grip_F": 1.06}, {}),
 ]
 
 
 def variants(b):
-    """(title, what it tries, {vars}, {slot: part}). Round 19: one car."""
+    """(title, what it tries, {vars}, {slot: part}). Round 20: front-wheel
+    shimmy (~7 Hz, 2-4 deg in fast corners) and the understeer behind it."""
     return [(name, tries, over, parts) for name, tries, over, parts in FIXES]
 
 
@@ -76,21 +104,29 @@ def gates(v):
 def thumbnail(label, path):
     subprocess.run(["convert", f"{V}/baseline.jpg", "-gravity", "South", "-fill", "white",
                     "-undercolor", "#000000B0", "-font", "DejaVu-Sans-Bold", "-pointsize", "40",
-                    "-annotate", "+0+24", f" {label} ", "-quality", "85", path], check=True)
+                    "-annotate", "+0+24", " %s " % label.replace("%", "%%"), "-quality", "85", path], check=True)
 
 
 def main():
     os.chdir(REPO)
-    for pre in ("fix", "steer", "rear", "test", "drift", "hub"):  # earlier rounds' test cars too
+    for pre in ("fix", "steer", "rear", "drift", "hub", "wob"):  # earlier rounds' test cars (test_01, no halo, stays)
         for f in glob.glob(f"{V}/{pre}_*") + glob.glob(f"{V}/info_{pre}_*"):
             os.remove(f)
     base = json.load(open(f"{V}/baseline.pc"))
     base_info = json.load(open(f"{V}/info_baseline.json"))
     bv = {k: float(x) for k, x in base["vars"].items()}
-    sheet = ["# Round 19 test cars", "",
-             "Baseline is round 18's Hub Fix 15 (Combined max). This round re-cut the body panels",
-             "along the RB14's real panel lines (with lips on every cut edge), made the DRS flap a",
-             "hinged part of its own, and moved the halo into its own part. In the game: *Test N · ...*.", "",
+    sheet = ["# Wobble-fix test cars (round 20)", "",
+             "Silverstone replay (tools/rb14/handling_analysis.py): each front wheel shimmies at ~7 Hz on its",
+             "own track rod and hub, 2-4 deg RMS in fast corners (it grows with lateral g), not from the",
+             "driver, the rack or the bounce (5 Hz). Behind it: heavy understeer -- front tyres at 8-12 deg of",
+             "slip against 2.5-3.6 at the rear, yaw at 24-46 % of geometric, aero balance 41 % front against",
+             "46 % weight -- and a soft front corner: ~200 Nm/deg toe stiffness (FEM, chassis and rack held),",
+             "most of it the hub turning on its upright. Baseline is unchanged (Hub Fix 15, with halo).",
+             "Every car now records sn_FL_wobble / sn_FR_wobble (deg RMS above ~3 Hz, at frame rate).",
+             "In the game: *Wobble Fix N · ...*.", "",
+             "Test drive per car: a few fast corners (Silverstone's Copse / Maggotts / Stowe are ideal), then",
+             "`python3 tools/rb14/handling_analysis.py <replay>`: shimmy RMS by lateral g, yaw / geometric,",
+             "front / rear slip angles.", "",
              "| # | Car | Change |", "|---|---|---|"] + [
              "| %d | %s | %s |" % (i + 1, n, w) for i, (n, w, _, _) in enumerate(FIXES)] + ["",
              "Offline checks: stiffness = highest omega*dt (target <= %.2f), damped = with"

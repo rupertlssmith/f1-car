@@ -618,6 +618,23 @@ Every config: 1.9 g at low speed, 5-6 g braking from 300 km/h.
   combined medium / strong / max, 16 strong + more toe-in, 17 / 18 static
   rear toe +-0.6 deg. 4, 8, 11 and 15 are just over the stiffness target
   (1.68-1.72). Sheet `plans/hub-fixes.md`.
+- **Round 20 (front wobble, Silverstone replay):** `handling_analysis.py`
+  reads a replay at 25 Hz: each front wheel shimmies at ~6.9 Hz on its own
+  (coherence with its track rod 0.92-0.94, with the driver 0.02), from
+  0.1 deg RMS below 0.5 g lateral to 2.3 deg above 3.5 g; front slip 8-12
+  deg against 2.5-3.6 rear, yaw 0.24-0.46 of geometric, aero balance 41 %
+  front against 46 % weight; FEM front toe stiffness only 201 Nm/deg (the
+  old hub torsion bar does nothing for toe). New variables (Baseline
+  unchanged at 1.72 / 1.82 / 1.82): `$front_toe_brace` (torsion bar, outer
+  axle node about the upright, x 100 kNm/rad), `$front_toe_damp` (the same
+  bar as a damper only, Nms/rad), `$front_hub_beam`, `$tierod_stiff`,
+  `$tierod_damp`, `$tyre_grip_F`. redbullSensors adds sn_FL_wobble /
+  sn_FR_wobble (toe RMS above ~3 Hz over 0.5 s). Wobble Fix 1-6 structural
+  (brace 1 / 1.5, damper 150 / 200, track rods stiff / damped), 7-10
+  balance (front wing 0, aero balance to weight, roll balance rearward,
+  front grip +6 %), 11-16 combinations. 2, 4, 11, 12, 15, 16 are just over
+  a stiffness target (1.73-1.87). Test 01 (no halo) kept. Sheet
+  `plans/wobble-fixes.md`.
 - **Round 19 c (fixes from the game):** the DRS flap flexed in the middle:
   its six nodes lie nearly in one plane, so beams alone left the centre free
   to move out of plane (a zero-stiffness mode in setup_report's FEM). Four

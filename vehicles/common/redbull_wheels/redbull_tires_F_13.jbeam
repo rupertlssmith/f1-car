@@ -63,9 +63,9 @@
             {"treadCoef":0},
     
             //advanced friction values
-            {"noLoadCoef":2.65},
+            {"noLoadCoef":"$=2.65*$tyre_grip_F"},
             {"loadSensitivitySlope":0.00025},
-            {"fullLoadCoef":1.07},
+            {"fullLoadCoef":"$=1.07*$tyre_grip_F"},
             {"softnessCoef":1},
     
             //deform values

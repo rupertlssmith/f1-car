@@ -59,7 +59,7 @@
         ],
         [
             "vehicles/common/redbull_wheels/redbull_tires_F_13.jbeam",
-            "9aae169b56503b2c"
+            "5e5109381cf28ca0"
         ],
         [
             "vehicles/common/redbull_wheels/redbull_tires_R_13.jbeam",
@@ -102,6 +102,70 @@
             "ea9d9b2571b277d4"
         ],
         [
+            "vehicles/redbull/info_wob_01.json",
+            "421646e59696b8f6"
+        ],
+        [
+            "vehicles/redbull/info_wob_02.json",
+            "2d4e6f0a051a3efc"
+        ],
+        [
+            "vehicles/redbull/info_wob_03.json",
+            "21c784268a15d05a"
+        ],
+        [
+            "vehicles/redbull/info_wob_04.json",
+            "64e770d591eaec48"
+        ],
+        [
+            "vehicles/redbull/info_wob_05.json",
+            "501d8b729b5910a6"
+        ],
+        [
+            "vehicles/redbull/info_wob_06.json",
+            "687f75a0ab1c4271"
+        ],
+        [
+            "vehicles/redbull/info_wob_07.json",
+            "80ee5e42467d42ca"
+        ],
+        [
+            "vehicles/redbull/info_wob_08.json",
+            "9508742e3711067a"
+        ],
+        [
+            "vehicles/redbull/info_wob_09.json",
+            "7b2ae54791769241"
+        ],
+        [
+            "vehicles/redbull/info_wob_10.json",
+            "1a5b38aff74b7b9f"
+        ],
+        [
+            "vehicles/redbull/info_wob_11.json",
+            "35cc3b9d0cfd374d"
+        ],
+        [
+            "vehicles/redbull/info_wob_12.json",
+            "054f1703550f1812"
+        ],
+        [
+            "vehicles/redbull/info_wob_13.json",
+            "a3f03750e9bbec3c"
+        ],
+        [
+            "vehicles/redbull/info_wob_14.json",
+            "f3e682641b54caed"
+        ],
+        [
+            "vehicles/redbull/info_wob_15.json",
+            "dce5b008aff0ae0e"
+        ],
+        [
+            "vehicles/redbull/info_wob_16.json",
+            "4477eb0022f165b1"
+        ],
+        [
             "vehicles/redbull/inputmaps/keyboard.json",
             "20dc9b260cb76d8a"
         ],
@@ -131,7 +195,7 @@
         ],
         [
             "vehicles/redbull/lua/controller/redbullSensors.lua",
-            "cdc82445b2ad3e03"
+            "549ca9aab5755466"
         ],
         [
             "vehicles/redbull/lua/controller/redbullSteerCheck.lua",
@@ -391,7 +455,7 @@
         ],
         [
             "vehicles/redbull/redbull_suspension_F.jbeam",
-            "152a34e87a5b838f"
+            "f20a73413436c880"
         ],
         [
             "vehicles/redbull/redbull_suspension_R.jbeam",
@@ -436,6 +500,134 @@
         [
             "vehicles/redbull/test_01.pc",
             "75af9849be81c82c"
+        ],
+        [
+            "vehicles/redbull/wob_01.jpg",
+            "2614259ea16dec11"
+        ],
+        [
+            "vehicles/redbull/wob_01.pc",
+            "0dfa5f22290909ca"
+        ],
+        [
+            "vehicles/redbull/wob_02.jpg",
+            "1beccdb54bcb297f"
+        ],
+        [
+            "vehicles/redbull/wob_02.pc",
+            "e5c7f530de00e0d1"
+        ],
+        [
+            "vehicles/redbull/wob_03.jpg",
+            "5803703865f7607e"
+        ],
+        [
+            "vehicles/redbull/wob_03.pc",
+            "7b277dcdfd3b2bc2"
+        ],
+        [
+            "vehicles/redbull/wob_04.jpg",
+            "22cec497acddee61"
+        ],
+        [
+            "vehicles/redbull/wob_04.pc",
+            "46c8aa17aff47683"
+        ],
+        [
+            "vehicles/redbull/wob_05.jpg",
+            "af095f46acd89725"
+        ],
+        [
+            "vehicles/redbull/wob_05.pc",
+            "5955974b37a477c9"
+        ],
+        [
+            "vehicles/redbull/wob_06.jpg",
+            "20880e85e62f32b0"
+        ],
+        [
+            "vehicles/redbull/wob_06.pc",
+            "a9c6ad697609de7e"
+        ],
+        [
+            "vehicles/redbull/wob_07.jpg",
+            "2876d780e2eda2d3"
+        ],
+        [
+            "vehicles/redbull/wob_07.pc",
+            "2c689b29f328d7f8"
+        ],
+        [
+            "vehicles/redbull/wob_08.jpg",
+            "550034c67e962484"
+        ],
+        [
+            "vehicles/redbull/wob_08.pc",
+            "5e74c05bce0f0df1"
+        ],
+        [
+            "vehicles/redbull/wob_09.jpg",
+            "0cdd30d71e5b828c"
+        ],
+        [
+            "vehicles/redbull/wob_09.pc",
+            "1f1248108adbcc0e"
+        ],
+        [
+            "vehicles/redbull/wob_10.jpg",
+            "40fa9ecbaf613f19"
+        ],
+        [
+            "vehicles/redbull/wob_10.pc",
+            "49515f6058bb1020"
+        ],
+        [
+            "vehicles/redbull/wob_11.jpg",
+            "f1fee177e459cc39"
+        ],
+        [
+            "vehicles/redbull/wob_11.pc",
+            "83e0d9b7d1c20ff5"
+        ],
+        [
+            "vehicles/redbull/wob_12.jpg",
+            "4c52e936150f4465"
+        ],
+        [
+            "vehicles/redbull/wob_12.pc",
+            "0045e6ebb2931e8f"
+        ],
+        [
+            "vehicles/redbull/wob_13.jpg",
+            "01c572092ca5ce36"
+        ],
+        [
+            "vehicles/redbull/wob_13.pc",
+            "61ec78484c3b0ca7"
+        ],
+        [
+            "vehicles/redbull/wob_14.jpg",
+            "2830c22f92e68dbb"
+        ],
+        [
+            "vehicles/redbull/wob_14.pc",
+            "617c38cca5bee8b3"
+        ],
+        [
+            "vehicles/redbull/wob_15.jpg",
+            "e44e4d9007fc8681"
+        ],
+        [
+            "vehicles/redbull/wob_15.pc",
+            "59d636cb4c72c873"
+        ],
+        [
+            "vehicles/redbull/wob_16.jpg",
+            "305e5344966e5466"
+        ],
+        [
+            "vehicles/redbull/wob_16.pc",
+            "ecef49fe7242c098"
         ]
     ]
 }

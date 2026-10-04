@@ -1,0 +1,13 @@
+{
+  "Config Type": "Custom",
+  "Configuration": "Wobble Fix 08 · Aero balance to weight",
+  "Description": "Wobble Fix car 8: front wing 0 deg, rear wing 6 deg (was 8): aero balance 46 % front like the weight, drag -5 %. Everything else is Baseline (wing_angle_F 0, wing_angle_R 6). Passes every offline check.",
+  "Drivetrain": "RWD",
+  "Fuel Type": "Gasoline",
+  "Induction Type": "Turbo",
+  "Propulsion": "Hybrid",
+  "Transmission": "Sequential",
+  "Off-Road Score": 0,
+  "Population": 0,
+  "Value": 12000000
+}
